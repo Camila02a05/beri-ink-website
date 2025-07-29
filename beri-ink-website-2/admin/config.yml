@@ -1,0 +1,135 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "products"
+    label: "Temporary Tattoo Products"
+    folder: "_products"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Product Name", name: "title", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Price", name: "price", widget: "string"}
+      - {label: "Product Image", name: "image", widget: "image"}
+      - {label: "Etsy Link", name: "etsy_link", widget: "string", default: "https://www.etsy.com/shop/BeriInk"}
+      - {label: "Featured", name: "featured", widget: "boolean", default: false}
+
+  - name: "gallery"
+    label: "Gallery Photos"
+    folder: "_gallery"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Photo Title", name: "title", widget: "string"}
+      - {label: "Gallery Image", name: "image", widget: "image"}
+      - {label: "Alt Text", name: "alt", widget: "string"}
+      - {label: "Order", name: "order", widget: "number", default: 1}
+
+  - name: "artist"
+    label: "Artist Photos"
+    folder: "_artist"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Photo Title", name: "title", widget: "string"}
+      - {label: "Artist Image", name: "image", widget: "image"}
+      - {label: "Alt Text", name: "alt", widget: "string"}
+      - {label: "Order", name: "order", widget: "number", default: 1}
+
+  - name: "pages"
+    label: "Page Content"
+    files:
+      - label: "Gallery Page"
+        name: "gallery"
+        file: "_data/gallery-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "Gallery"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Fine Line Tattoo Gallery"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text", default: "Explore my collection of delicate, minimalist tattoo designs"}
+          - {label: "Gallery Description", name: "gallery_description", widget: "text"}
+          - {label: "CTA Text", name: "cta_text", widget: "string", default: "Let's create something beautiful together"}
+          - {label: "CTA Button Text", name: "cta_button", widget: "string", default: "Book Consultation"}
+
+      - label: "Artist Page"
+        name: "artist_page"
+        file: "_data/artist-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "Meet the Artist"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Meet the Artist"}
+          - {label: "Artist Name", name: "artist_name", widget: "string", default: "Beri"}
+          - {label: "Artist Bio", name: "bio", widget: "markdown"}
+          - {label: "Experience Years", name: "experience", widget: "string"}
+          - {label: "Specialties", name: "specialties", widget: "list"}
+          - {label: "CTA Text", name: "cta_text", widget: "string", default: "Let's create something beautiful together"}
+
+      - label: "Appointment Page"
+        name: "appointment"
+        file: "_data/appointment-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "Appointment"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Book Your Appointment"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
+          - {label: "Consultation Info", name: "consultation_info", widget: "markdown"}
+          - {label: "Pricing Info", name: "pricing_info", widget: "markdown"}
+          - {label: "Deposit Info", name: "deposit_info", widget: "markdown"}
+          - {label: "Booking Instructions", name: "booking_instructions", widget: "markdown"}
+          - {label: "Contact Email", name: "contact_email", widget: "string"}
+          - {label: "Instagram Handle", name: "instagram", widget: "string"}
+
+      - label: "Vegan & Eco-Friendly Page"
+        name: "vegan"
+        file: "_data/vegan-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "Vegan & Eco-Friendly"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Vegan & Eco-Friendly Tattoos"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
+          - {label: "Main Content", name: "content", widget: "markdown"}
+          - {label: "Vegan Products List", name: "vegan_products", widget: "list"}
+          - {label: "Eco Practices", name: "eco_practices", widget: "markdown"}
+
+      - label: "Store Page"
+        name: "store"
+        file: "_data/store-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "Temporary Tattoo Shop"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Temporary Tattoo Shop"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
+          - {label: "Why Temporary Tattoos Title", name: "why_title", widget: "string", default: "Why Temporary Tattoos?"}
+          - {label: "Why Temporary Tattoos Content", name: "why_content", widget: "text"}
+          - {label: "Shop Description", name: "shop_description", widget: "text"}
+
+      - label: "FAQ Page"
+        name: "faq"
+        file: "_data/faq-page.yml"
+        fields:
+          - {label: "Page Title", name: "title", widget: "string", default: "FAQ"}
+          - {label: "Hero Title", name: "hero_title", widget: "string", default: "Frequently Asked Questions"}
+          - {label: "Hero Subtitle", name: "hero_subtitle", widget: "text"}
+          - {label: "FAQ Items", name: "faq_items", widget: "list", fields: [
+              {label: "Question", name: "question", widget: "string"},
+              {label: "Answer", name: "answer", widget: "markdown"}
+            ]}
+
+  - name: "settings"
+    label: "Site Settings"
+    files:
+      - label: "General Settings"
+        name: "general"
+        file: "_data/settings.yml"
+        fields:
+          - {label: "Site Title", name: "site_title", widget: "string", default: "Beri Ink"}
+          - {label: "Site Description", name: "site_description", widget: "text"}
+          - {label: "Contact Email", name: "contact_email", widget: "string"}
+          - {label: "Instagram URL", name: "instagram_url", widget: "string"}
+          - {label: "Facebook URL", name: "facebook_url", widget: "string"}
+          - {label: "TikTok URL", name: "tiktok_url", widget: "string"}
+          - {label: "YouTube URL", name: "youtube_url", widget: "string"}
+          - {label: "Etsy Shop URL", name: "etsy_url", widget: "string", default: "https://www.etsy.com/shop/BeriInk"}
+          - {label: "Footer Copyright", name: "footer_copyright", widget: "string", default: "© 2025 Beri Ink Tattoo. All rights reserved."}
+          - {label: "Mailing List Text", name: "mailing_list_text", widget: "string", default: "Join our mailing list for new tattoo designs and flash sales."}
+
