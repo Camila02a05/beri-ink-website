@@ -14,14 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
             productCard.innerHTML = `
-                <div class="product-image">
-                    <img src="images/placeholder-temp-tattoo.jpg" alt="Design ${i}" loading="lazy">
+                <div class=\"product-image\">
+                    <img src=\"images/placeholder-temp-tattoo.jpg\" alt=\"Design ${i}\" loading=\"lazy\">
                 </div>
-                <div class="product-info">
-                    <h3 class="product-title">Design ${i} - Edit This Title</h3>
-                    <p class="product-description">Add your product description here for design ${i}...</p>
-                    <div class="product-price">$0.00</div>
-                    <a href="#" class="product-button add-to-cart">Add to cart</a>
+                <div class=\"product-info\">
+                    <h3 class=\"product-title\">Design ${i} - Edit This Title</h3>
+                    <p class=\"product-description\">Add your product description here for design ${i}...</p>
+                    <div class=\"product-price\">$0.00</div>
+                    <div class=\"product-actions\">
+                        <a href=\"#\" class=\"product-button quick-view\">Quick view</a>
+                        <a href=\"#\" class=\"product-button add-to-cart\">Add to cart</a>
+                    </div>
                 </div>
             `;
             productsGrid.appendChild(productCard);
