@@ -1077,11 +1077,7 @@ a[href^="mailto:"]:hover {
 
 
 /* Rotate only the second artist photo to vertical */
-.artist-carousel .carousel-slide:nth-child(2) .artist-img {
-    transform: rotate(90deg);
-    object-fit: cover;
-    object-position: center;
-}
+/* Remove forced rotation so all artist images display correctly */
 
 
 

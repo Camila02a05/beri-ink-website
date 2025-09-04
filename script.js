@@ -171,11 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCarousel();
         });
         
-        // Auto-play carousel
-        setInterval(function() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateCarousel();
-        }, 5000);
+        // Remove auto-play; navigate only on arrow click
     }
 
     // Smooth scrolling for anchor links
