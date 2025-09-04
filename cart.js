@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        const qv = e.target.closest('.quick-view');
+        const qv = e.target.closest('.quick-view, .product-image img');
         if (qv) {
             e.preventDefault();
             const card = qv.closest('.product-card, .store-item');
