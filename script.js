@@ -152,26 +152,37 @@ document.addEventListener('DOMContentLoaded', function() {
     const carouselNext = document.getElementById('carouselNext');
     
     if (carouselTrack && carouselPrev && carouselNext) {
-        let currentSlide = 0;
-        const slides = carouselTrack.children;
-        const totalSlides = slides.length;
-        
-        function updateCarousel() {
-            const translateX = -currentSlide * 100;
-            carouselTrack.style.transform = `translateX(${translateX}%)`;
+        let currentIndex = 0;
+        const slides = Array.from(carouselTrack.children);
+        const container = carouselTrack.parentElement;
+        const gap = parseInt(getComputedStyle(carouselTrack).gap) || 0;
+        const itemWidth = slides[0]?.getBoundingClientRect().width || 250;
+        const step = itemWidth + gap;
+        const visible = Math.max(1, Math.floor(container.clientWidth / step));
+        const maxIndex = Math.max(0, slides.length - visible);
+
+        function update() {
+            const translateX = -currentIndex * step;
+            carouselTrack.style.transform = `translateX(${translateX}px)`;
         }
-        
-        carouselNext.addEventListener('click', function() {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateCarousel();
+
+        carouselNext.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % (maxIndex + 1);
+            update();
         });
-        
-        carouselPrev.addEventListener('click', function() {
-            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-            updateCarousel();
+
+        carouselPrev.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + (maxIndex + 1)) % (maxIndex + 1);
+            update();
         });
-        
-        // Remove auto-play; navigate only on arrow click
+
+        window.addEventListener('resize', () => {
+            // On resize, snap back to first to avoid partial gaps
+            currentIndex = Math.min(currentIndex, Math.max(0, slides.length - Math.max(1, Math.floor(container.clientWidth / (slides[0]?.getBoundingClientRect().width || itemWidth + gap)))));
+            update();
+        });
+
+        update();
     }
 
     // Smooth scrolling for anchor links
@@ -230,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
     if (artistCarouselTrack) {
         let currentSlide = 0;
         const totalSlides = artistCarouselTrack.children.length;
-        let autoSlideInterval;
         
         function updateCarousel() {
             const translateX = -currentSlide * 100;
@@ -257,50 +267,20 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCarousel();
         }
         
-        // Auto-slide functionality (like Jane Lee's website)
-        function startAutoSlide() {
-            autoSlideInterval = setInterval(nextSlide, 4000); // Change slide every 4 seconds
-        }
-        
-        function stopAutoSlide() {
-            clearInterval(autoSlideInterval);
-        }
-        
-        // Event listeners
+        // Event listeners (no auto-advance)
         if (artistCarouselNext) {
-            artistCarouselNext.addEventListener('click', () => {
-                stopAutoSlide();
-                nextSlide();
-                startAutoSlide(); // Restart auto-slide after manual interaction
-            });
+            artistCarouselNext.addEventListener('click', nextSlide);
         }
         
         if (artistCarouselPrev) {
-            artistCarouselPrev.addEventListener('click', () => {
-                stopAutoSlide();
-                prevSlide();
-                startAutoSlide(); // Restart auto-slide after manual interaction
-            });
+            artistCarouselPrev.addEventListener('click', prevSlide);
         }
         
         // Dot navigation
         artistDots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                stopAutoSlide();
-                goToSlide(index);
-                startAutoSlide(); // Restart auto-slide after manual interaction
-            });
+            dot.addEventListener('click', () => { goToSlide(index); });
         });
-        
-        // Pause auto-slide on hover
-        const artistCarousel = document.querySelector('.artist-carousel');
-        if (artistCarousel) {
-            artistCarousel.addEventListener('mouseenter', stopAutoSlide);
-            artistCarousel.addEventListener('mouseleave', startAutoSlide);
-        }
-        
-        // Start auto-slide
-        startAutoSlide();
+
         updateCarousel();
     }
 });
