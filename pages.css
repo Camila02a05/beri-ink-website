@@ -213,7 +213,7 @@
 /* Appointment Page */
 .appointment-hero {
     text-align: center;
-    padding: 3rem 0;
+    padding: 2rem 0;
 }
 
 .appointment-content {
@@ -221,14 +221,9 @@
     gap: 4rem;
 }
 
-.appointment-section {
-    padding: 2rem 0;
-}
+.appointment-section { padding: 1rem 0; }
 
-.appointment-section h2 {
-    color: #8b7355;
-    margin-bottom: 2rem;
-}
+.appointment-section h2 { color: #8b7355; margin-bottom: 0.5rem; }
 
 .pricing-grid {
     display: grid;
@@ -629,6 +624,7 @@
 
 .artist-carousel .carousel-slide {
     flex: 0 0 100%;
+    padding: 0.5rem; /* ensure inner rounding is visible */
 }
 
 .artist-carousel {

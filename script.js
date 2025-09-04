@@ -152,37 +152,42 @@ document.addEventListener('DOMContentLoaded', function() {
     const carouselNext = document.getElementById('carouselNext');
     
     if (carouselTrack && carouselPrev && carouselNext) {
-        let currentIndex = 0;
-        const slides = Array.from(carouselTrack.children);
-        const container = carouselTrack.parentElement;
-        const gap = parseInt(getComputedStyle(carouselTrack).gap) || 0;
-        const itemWidth = slides[0]?.getBoundingClientRect().width || 250;
-        const step = itemWidth + gap;
-        const visible = Math.max(1, Math.floor(container.clientWidth / step));
-        const maxIndex = Math.max(0, slides.length - visible);
+        const gap = () => parseInt(getComputedStyle(carouselTrack).gap) || 0;
+        const step = () => (carouselTrack.children[0]?.getBoundingClientRect().width || 250) + gap();
 
-        function update() {
-            const translateX = -currentIndex * step;
-            carouselTrack.style.transform = `translateX(${translateX}px)`;
+        function goNext() {
+            const distance = step();
+            carouselTrack.style.transition = 'transform 0.3s ease';
+            carouselTrack.style.transform = `translateX(-${distance}px)`;
+            const onEnd = () => {
+                carouselTrack.style.transition = 'none';
+                // move first slide to end
+                if (carouselTrack.children.length > 0) {
+                    carouselTrack.appendChild(carouselTrack.children[0]);
+                }
+                carouselTrack.style.transform = 'translateX(0)';
+                // force reflow to apply none -> next transitions correctly
+                void carouselTrack.offsetWidth;
+                carouselTrack.removeEventListener('transitionend', onEnd);
+            };
+            carouselTrack.addEventListener('transitionend', onEnd);
         }
 
-        carouselNext.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % (maxIndex + 1);
-            update();
-        });
+        function goPrev() {
+            const distance = step();
+            // move last to front first
+            if (carouselTrack.children.length > 0) {
+                carouselTrack.insertBefore(carouselTrack.lastElementChild, carouselTrack.firstElementChild);
+            }
+            carouselTrack.style.transition = 'none';
+            carouselTrack.style.transform = `translateX(-${distance}px)`;
+            void carouselTrack.offsetWidth;
+            carouselTrack.style.transition = 'transform 0.3s ease';
+            carouselTrack.style.transform = 'translateX(0)';
+        }
 
-        carouselPrev.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + (maxIndex + 1)) % (maxIndex + 1);
-            update();
-        });
-
-        window.addEventListener('resize', () => {
-            // On resize, snap back to first to avoid partial gaps
-            currentIndex = Math.min(currentIndex, Math.max(0, slides.length - Math.max(1, Math.floor(container.clientWidth / (slides[0]?.getBoundingClientRect().width || itemWidth + gap)))));
-            update();
-        });
-
-        update();
+        carouselNext.addEventListener('click', goNext);
+        carouselPrev.addEventListener('click', goPrev);
     }
 
     // Smooth scrolling for anchor links
