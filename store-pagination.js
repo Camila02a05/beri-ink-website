@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     <p class=\"product-description\">Add your product description here for design ${i}...</p>
                     <div class=\"product-price\">$0.00</div>
                     <div class=\"product-actions\">
-                        <a href=\"#\" class=\"product-button quick-view\">Quick view</a>
                         <a href=\"#\" class=\"product-button add-to-cart\">Add to cart</a>
                     </div>
                 </div>
