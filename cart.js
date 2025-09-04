@@ -99,9 +99,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    checkoutBtn.addEventListener('click', () => {
-        // Placeholder: Stripe Checkout session creation will go here
-        alert('Checkout demo — wiring Stripe next.');
+    checkoutBtn.addEventListener('click', async () => {
+        if (cart.items.length === 0) return;
+        try {
+            const res = await fetch('/.netlify/functions/create-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: cart.items }),
+            });
+            if (!res.ok) throw new Error('Checkout failed');
+            const data = await res.json();
+            window.location.href = data.url;
+        } catch (e) {
+            console.error(e);
+            alert('Unable to start checkout. Please try again.');
+        }
     });
 });
 
