@@ -136,6 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.body.appendChild(lightbox);
         document.body.style.overflow = 'hidden';
+        // Ensure visible per CSS (which shows .lightbox.active)
+        requestAnimationFrame(() => lightbox.classList.add('active'));
         
         // Close lightbox
         lightbox.addEventListener('click', function(e) {

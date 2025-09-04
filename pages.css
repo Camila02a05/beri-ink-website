@@ -620,10 +620,13 @@
 .artist-carousel .carousel-track {
     display: flex;
     transition: transform 0.5s ease;
+    gap: 0;
 }
 
 .artist-carousel .carousel-slide {
     flex: 0 0 100%;
+    min-width: 100%;
+    width: 100%;
     border-radius: 12px;
     overflow: hidden; /* clip image corners */
 }
@@ -640,7 +643,7 @@
     object-fit: cover;
     object-position: center;
     display: block;
-    border-radius: 12px;
+    border-radius: 0; /* rely on parent rounding so all corners match */
 }
 
 .artist-carousel .carousel-btn {
