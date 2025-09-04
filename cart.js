@@ -66,6 +66,48 @@ document.addEventListener('DOMContentLoaded', () => {
         openCart();
     }
 
+    function handleQuickViewOpen(card) {
+        const overlay = document.getElementById('quickViewOverlay');
+        const modal = document.getElementById('quickViewModal');
+        const titleEl = card.querySelector('.product-title, h3');
+        const priceEl = card.querySelector('.product-price, .price');
+        const imgEl = card.querySelector('img');
+        document.getElementById('qvTitle').textContent = titleEl ? titleEl.textContent.trim() : 'Item';
+        document.getElementById('qvPrice').textContent = priceEl ? priceEl.textContent.trim() : '';
+        document.getElementById('qvDescription').textContent = card.querySelector('.product-description')?.textContent || '';
+        document.getElementById('qvImage').src = imgEl ? imgEl.src : 'images/placeholder-temp-tattoo.jpg';
+        document.getElementById('qvQty').value = 1;
+        overlay.classList.add('open');
+        modal.classList.add('open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+        modal.dataset.pid = titleEl ? titleEl.textContent.trim() : String(Date.now());
+    }
+
+    function closeQuickView() {
+        const overlay = document.getElementById('quickViewOverlay');
+        const modal = document.getElementById('quickViewModal');
+        overlay.classList.remove('open');
+        modal.classList.remove('open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('quickViewClose')?.addEventListener('click', closeQuickView);
+    document.getElementById('quickViewOverlay')?.addEventListener('click', closeQuickView);
+
+    document.getElementById('qvAddToCart')?.addEventListener('click', () => {
+        const modal = document.getElementById('quickViewModal');
+        const pid = modal.dataset.pid;
+        const qty = Math.max(1, parseInt(document.getElementById('qvQty').value, 10) || 1);
+        const title = document.getElementById('qvTitle').textContent;
+        const priceText = document.getElementById('qvPrice').textContent.replace(/[^0-9.]/g, '');
+        const cents = Math.round(parseFloat(priceText || '0') * 100);
+        const image = document.getElementById('qvImage').src;
+        addToCart({ id: pid, title, price: cents, image });
+        closeQuickView();
+    });
+
     document.body.addEventListener('click', (e) => {
         const btn = e.target.closest('.add-to-cart');
         if (btn) {
@@ -84,6 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 price: isNaN(cents) ? 0 : cents,
                 image: img ? img.src : 'images/placeholder-temp-tattoo.jpg',
             });
+        }
+
+        const qv = e.target.closest('.quick-view');
+        if (qv) {
+            e.preventDefault();
+            const card = qv.closest('.product-card, .store-item');
+            if (card) handleQuickViewOpen(card);
         }
 
         if (e.target === overlay || e.target === closeBtn) {
