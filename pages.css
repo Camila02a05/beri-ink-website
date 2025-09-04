@@ -1024,3 +1024,4 @@ a[href^="mailto:"]:hover {
     margin-top: 2rem;
 }
 
+.store-cta { display: none !important; }
