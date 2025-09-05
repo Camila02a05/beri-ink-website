@@ -381,12 +381,16 @@
 
 .store-item img {
     width: 100%;
-    height: 250px;
+    height: 200px;
     object-fit: cover;
 }
 
 .store-item-content {
-    padding: 1.5rem;
+    padding: 1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-height: 210px;
 }
 
 .store-item h3 {
@@ -396,26 +400,33 @@
 
 .store-item p {
     color: #666;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-size: 0.9rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .store-item .price {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 500;
     color: #8b7355;
-    margin-bottom: 1rem;
+    text-align: center;
+    margin-top: auto;
 }
 
 .store-item .btn {
     display: inline-block;
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     background: #8b7355;
     color: white;
     text-decoration: none;
     border-radius: 6px;
     font-size: 0.9rem;
     transition: background 0.3s ease;
+    align-self: center;
 }
 
 .store-item .btn:hover {

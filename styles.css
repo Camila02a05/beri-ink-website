@@ -94,8 +94,10 @@ p {
 }
 
 .logo-img {
-    height: 25px;
+    height: auto;
+    max-height: 56px;
     width: auto;
+    object-fit: contain;
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
