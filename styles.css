@@ -688,8 +688,16 @@ main {
         margin-bottom: 2rem;
     }
 
-    /* Home carousel: reduce image height to avoid visual crop on phones */
-    .temp-tattoo-carousel .carousel-item img { height: 160px; }
+    /* Home carousel: avoid crop on phones */
+    .temp-tattoo-carousel .carousel-item img {
+        height: 180px;
+        object-fit: contain;
+        background: #fff;
+        display: block;
+    }
+    .temp-tattoo-carousel .carousel-item { flex: 0 0 220px; }
+    .temp-tattoo-carousel .carousel-item-content { padding: 1rem; }
+    .temp-tattoo-carousel .carousel-container { padding-bottom: 20px; }
     
     /* Buttons Mobile */
     .cta-button {
