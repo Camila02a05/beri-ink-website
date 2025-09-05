@@ -556,6 +556,13 @@ main {
 }
 
 /* Responsive Design - Mobile First */
+@media (max-width: 1024px) {
+    /* Switch to compact header earlier to avoid logo/nav overlap */
+    .nav { display: none; }
+    .social-icons { display: none; }
+    .mobile-menu-btn { display: flex; position: absolute; right: 1rem; top: 0.75rem; }
+}
+
 @media (max-width: 768px) {
     /* Header Mobile */
     .header {
@@ -628,10 +635,10 @@ main {
     }
     
     .mobile-nav-link {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
         color: #333;
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 300;
     }
     
     /* Gallery Mobile */
@@ -652,6 +659,7 @@ main {
         height: 100%;
         object-fit: cover;
         transition: transform 0.3s ease;
+        border-radius: 8px;
     }
     
     .gallery-item:hover img {
