@@ -690,14 +690,14 @@ main {
 
     /* Home carousel: avoid crop on phones */
     .temp-tattoo-carousel .carousel-item img {
-        height: 180px;
+        height: 170px;
         object-fit: contain;
-        background: #fff;
+        background: transparent;
         display: block;
     }
-    .temp-tattoo-carousel .carousel-item { flex: 0 0 220px; }
-    .temp-tattoo-carousel .carousel-item-content { padding: 1rem; }
-    .temp-tattoo-carousel .carousel-container { padding-bottom: 20px; }
+    .temp-tattoo-carousel .carousel-item { flex: 0 0 210px; background: #fff; }
+    .temp-tattoo-carousel .carousel-item-content { padding: .9rem; }
+    .temp-tattoo-carousel .carousel-container { padding-bottom: 14px; }
     
     /* Buttons Mobile */
     .cta-button {
