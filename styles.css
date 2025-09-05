@@ -577,6 +577,10 @@ main {
         border: none;
         cursor: pointer;
         padding: 8px;
+        position: absolute;
+        right: 1rem;
+        top: 0.75rem;
+        z-index: 1001;
     }
     
     .mobile-menu-btn span {
