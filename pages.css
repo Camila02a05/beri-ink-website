@@ -167,17 +167,17 @@
 
 .values-content {
     display: grid;
-    gap: 4rem;
+    gap: 3rem;
 }
 
 .value-section {
-    padding: 3rem 0;
+    padding: 2rem 0;
 }
 
 .value-section:nth-child(even) {
     background: #f9f9f9;
     margin: 0 -20px;
-    padding: 3rem 20px;
+    padding: 2rem 20px;
 }
 
 .value-section h2 {
@@ -218,12 +218,19 @@
 
 .appointment-content {
     display: grid;
-    gap: 4rem;
+    gap: 3rem;
 }
 
-.appointment-section { padding: 1.5rem 0; }
+.appointment-section { padding: 2rem 0; }
 
-.appointment-section h2 { color: #8b7355; margin-bottom: 0.75rem; }
+.appointment-section h2 { color: #8b7355; margin-bottom: 1rem; }
+
+/* Appointment subsection headings */
+.appointment-section h3 {
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+}
 
 .pricing-grid {
     display: grid;
