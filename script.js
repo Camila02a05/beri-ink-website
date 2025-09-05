@@ -211,6 +211,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+
+    // Mobile navigation: open/close
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', toggleMobileMenu);
+    }
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
 });
 
 // FIXED MOBILE MENU FUNCTIONALITY
