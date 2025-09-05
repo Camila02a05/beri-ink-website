@@ -204,7 +204,7 @@
 
 .value-section li::before {
     content: '•';
-    color: #8b7355;
+    color: #000;
     position: absolute;
     left: 0;
     font-weight: bold;
