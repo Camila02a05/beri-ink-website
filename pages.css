@@ -461,17 +461,17 @@
 
 .product-card .product-image img { width: 100%; height: 260px; object-fit: cover; }
 @media (max-width: 768px) {
-    .product-card .product-image img { height: 160px; }
+    .product-card .product-image img { height: 150px; }
 }
 
 .product-card .product-info {
-    padding: .6rem .9rem .85rem;
+    padding: .5rem .85rem .75rem;
     display: flex;
     flex-direction: column;
-    gap: .3rem;
+    gap: .2rem;
     min-height: 0; /* eliminate tall white gap under image */
 }
-.product-card .product-title { margin: .2rem 0 0; }
+.product-card .product-title { margin: .1rem 0 0; }
 .product-card .product-actions { display: flex; justify-content: center; }
 
 .product-card .product-title { min-height: 1.3em; color: #2c2c2c; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
@@ -481,7 +481,7 @@
     display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
 .product-card .product-price { text-align: center; color: #8b7355; font-weight: 500; margin-top: auto; margin-bottom:.3rem; }
-.product-card .product-button { align-self: center; padding: .45rem 1rem; border-radius: 6px; white-space: nowrap; text-align: center; }
+.product-card .product-button { align-self: center; padding: .45rem 1rem; border-radius: 6px; white-space: nowrap; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
 
 /* Temporary Tattoo Info Section */
 .temp-tattoo-info {

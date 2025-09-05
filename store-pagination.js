@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalProducts = 36; // Total number of designs
     const totalPages = Math.ceil(totalProducts / productsPerPage);
     
+    // Map from index to DOM for deep-linking
+    const indexToCard = new Map();
+
     // Generate all 36 product cards
     function generateProductCards() {
         const productsGrid = document.getElementById('productsGrid');
@@ -27,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
             productsGrid.appendChild(productCard);
+            indexToCard.set(i, productCard);
         }
     }
     
@@ -65,6 +69,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     generateProductCards();
     showPage(currentPage);
+
+    // Deep-link support: /store.html?p=12 scrolls to that item
+    const params = new URLSearchParams(window.location.search);
+    const p = parseInt(params.get('p') || '');
+    if (!Number.isNaN(p) && p >= 1 && p <= totalProducts) {
+        const targetPage = Math.ceil(p / productsPerPage);
+        if (targetPage !== currentPage) {
+            currentPage = targetPage;
+            showPage(currentPage);
+        }
+        const target = indexToCard.get(p);
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
     
     // Add pagination controls
     const productsSection = document.querySelector('.products-section');

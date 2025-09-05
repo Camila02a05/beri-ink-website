@@ -695,8 +695,9 @@ main {
         background: transparent;
         display: block;
     }
-    .temp-tattoo-carousel .carousel-item { flex: 0 0 210px; background: #fff; }
-    .temp-tattoo-carousel .carousel-item-content { padding: .9rem; }
+    .temp-tattoo-carousel .carousel-item { flex: 0 0 230px; background: #fff; }
+    .temp-tattoo-carousel .carousel-item-content { padding: .75rem 1rem; }
+    .temp-tattoo-carousel .carousel-item h3 { font-size: 1rem; line-height: 1.2; margin: 0.25rem 0 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .temp-tattoo-carousel .carousel-container { padding-bottom: 14px; }
     
     /* Buttons Mobile */
@@ -759,7 +760,8 @@ main {
         gap: 10px;
     }
     
-    .carousel-item {
+    /* Scope sizing to artist carousel only so home carousel can grow with content */
+    .artist-carousel .carousel-item {
         flex: 0 0 280px;
         height: 200px;
     }

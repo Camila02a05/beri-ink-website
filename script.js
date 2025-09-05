@@ -190,6 +190,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         carouselNext.addEventListener('click', goNext);
         carouselPrev.addEventListener('click', goPrev);
+
+        // Navigate to store product when clicking an item
+        Array.from(carouselTrack.children).forEach((item, index) => {
+            item.style.cursor = 'pointer';
+            item.addEventListener('click', () => {
+                const productIndex = index + 1; // 1-based for readability
+                const url = new URL('store.html', window.location.href);
+                url.searchParams.set('p', String(productIndex));
+                window.location.href = url.toString();
+            });
+        });
     }
 
     // Smooth scrolling for anchor links
