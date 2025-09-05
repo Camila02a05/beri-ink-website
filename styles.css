@@ -79,6 +79,9 @@ p {
     padding: 0 2rem;
 }
 
+/* Avoid any hidden overflow around the header/logo */
+.header { overflow: visible; }
+
 .nav {
     display: flex;
     align-items: center;
@@ -681,6 +684,9 @@ main {
         font-size: 1rem;
         margin-bottom: 2rem;
     }
+
+    /* Home carousel: reduce image height to avoid visual crop on phones */
+    .temp-tattoo-carousel .carousel-item img { height: 160px; }
     
     /* Buttons Mobile */
     .cta-button {
