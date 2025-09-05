@@ -471,7 +471,7 @@
     gap: .18rem;
     min-height: 0; /* eliminate tall white gap under image */
 }
-.product-card .product-title { margin: .08rem 0 0; }
+.product-card .product-title { margin: .02rem 0 0; }
 .product-card .product-actions { display: flex; justify-content: center; }
 
 .product-card .product-title { min-height: 1.3em; color: #2c2c2c; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }

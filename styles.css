@@ -690,7 +690,7 @@ main {
 
     /* Home carousel: avoid crop on phones */
     .temp-tattoo-carousel .carousel-item img {
-        height: 170px;
+        height: 165px;
         object-fit: contain;
         background: transparent;
         display: block;

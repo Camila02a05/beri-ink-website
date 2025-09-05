@@ -203,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const productIndex = Math.max(1, childIndex);
                 const url = new URL('store.html', window.location.href);
                 url.searchParams.set('p', String(productIndex));
+                url.hash = `product-${productIndex}`;
                 window.location.href = url.toString();
             });
         });

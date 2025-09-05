@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
         for (let i = 1; i <= totalProducts; i++) {
             const productCard = document.createElement('div');
             productCard.className = 'product-card';
+            productCard.id = `product-${i}`;
             productCard.innerHTML = `
                 <div class=\"product-image\">
                     <img src=\"images/placeholder-temp-tattoo.jpg\" alt=\"Design ${i}\" loading=\"lazy\">
@@ -81,7 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         const target = indexToCard.get(p);
         if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
     }
     
