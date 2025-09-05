@@ -599,9 +599,7 @@ main {
         padding: 2rem;
     }
     
-    .mobile-menu.active {
-        display: block;
-    }
+    .mobile-menu.active { display: block; }
     
     .mobile-nav-list {
         list-style: none;
@@ -945,11 +943,11 @@ main {
     
     .gallery-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.25rem;
+        gap: 0.5rem;
     }
     
     .gallery-item img {
-        height: 150px;
+        height: auto;
     }
     
     .container {
@@ -974,12 +972,12 @@ main {
     }
     
     .gallery-grid {
-        grid-template-columns: 1fr;
-        gap: 0.25rem;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
     }
     
     .gallery-item img {
-        height: 200px;
+        height: auto;
     }
     
     .artist-carousel {
