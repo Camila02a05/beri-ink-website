@@ -564,6 +564,9 @@ main {
     .nav { display: none; }
     .social-icons { display: none; }
     .mobile-menu-btn { display: flex; position: absolute; right: 1rem; top: 0.75rem; }
+    .logo { position: static; left: auto; }
+    .header-content { padding: 0 1rem; }
+    .logo-img { max-height: 44px !important; }
 }
 
 @media (max-width: 768px) {
