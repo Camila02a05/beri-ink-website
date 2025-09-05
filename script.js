@@ -191,11 +191,16 @@ document.addEventListener('DOMContentLoaded', function() {
         carouselNext.addEventListener('click', goNext);
         carouselPrev.addEventListener('click', goPrev);
 
+        // Tag children with stable indices so click -> product mapping survives DOM reordering
+        Array.from(carouselTrack.children).forEach((child, idx) => child.setAttribute('data-index', String(idx + 1)));
+
         // Navigate to store product when clicking an item
         Array.from(carouselTrack.children).forEach((item, index) => {
             item.style.cursor = 'pointer';
             item.addEventListener('click', () => {
-                const productIndex = index + 1; // 1-based for readability
+                // Normalize index across infinite loop by reading a data-index if present
+                const childIndex = item.getAttribute('data-index') ? parseInt(item.getAttribute('data-index')) : (index + 1);
+                const productIndex = Math.max(1, childIndex);
                 const url = new URL('store.html', window.location.href);
                 url.searchParams.set('p', String(productIndex));
                 window.location.href = url.toString();
