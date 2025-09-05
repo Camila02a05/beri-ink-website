@@ -218,12 +218,12 @@
 
 .appointment-content {
     display: grid;
-    gap: 3.5rem;
+    gap: 3rem;
 }
 
-.appointment-section { padding: 2.5rem 0; }
+.appointment-section { padding: 2rem 0; }
 
-.appointment-section h2 { color: #8b7355; margin-bottom: 1.25rem; }
+.appointment-section h2 { color: #8b7355; margin-bottom: 2rem; }
 
 /* Appointment subsection headings */
 .appointment-section h3 {
