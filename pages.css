@@ -471,6 +471,7 @@
     flex-direction: column;
     gap: .1rem;
     min-height: 0;
+    margin-top: -8px; /* pull content closer to the image */
 }
 .product-card .product-title { margin: 0; }
 .product-card .product-actions { display: flex; justify-content: center; }
@@ -486,6 +487,7 @@
 /* Mobile: compress description further to shorten the card */
 @media (max-width: 768px) {
     .product-card .product-description { -webkit-line-clamp: 1; }
+    .product-card .product-info { margin-top: -10px; }
 }
 .product-card .product-button { align-self: center; padding: .45rem 1rem; border-radius: 6px; white-space: nowrap; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
 
