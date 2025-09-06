@@ -440,6 +440,7 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 2rem;
     margin: 3rem 0;
+    align-items: start; /* align card tops evenly */
 }
 
 @media (max-width: 1024px) {
@@ -465,13 +466,13 @@
 }
 
 .product-card .product-info {
-    padding: .45rem .8rem .65rem;
+    padding: .35rem .9rem .6rem; /* tighter spacing under image */
     display: flex;
     flex-direction: column;
-    gap: .18rem;
-    min-height: 0; /* eliminate tall white gap under image */
+    gap: .15rem; /* reduce gaps between title/desc/price */
+    min-height: 0;
 }
-.product-card .product-title { margin: .02rem 0 0; }
+.product-card .product-title { margin: 0; }
 .product-card .product-actions { display: flex; justify-content: center; }
 
 .product-card .product-title { min-height: 1.3em; color: #2c2c2c; display:-webkit-box; -webkit-line-clamp:1; -webkit-box-orient:vertical; overflow:hidden; }
