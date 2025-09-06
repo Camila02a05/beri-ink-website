@@ -625,6 +625,12 @@
         grid-template-columns: 1fr;
         gap: 2rem;
     }
+    /* Make page titles fit on one line on mobile */
+    .values-hero h1,
+    .store-hero h1,
+    .appointment-hero h1,
+    .faq-hero h1,
+    .artist-text h1 { font-size: 1.7rem; line-height: 1.15; }
     
     .artist-photo {
         height: 300px;
