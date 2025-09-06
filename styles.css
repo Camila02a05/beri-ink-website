@@ -1083,18 +1083,24 @@ main {
 
 /* FINAL mobile overrides for home shop carousel (ensure titles are visible) */
 @media (max-width: 768px) {
-    .temp-tattoo-carousel .carousel-item { height: auto; flex: 0 0 220px; }
+    .temp-tattoo-carousel .carousel-item {
+        height: auto;
+        flex: 0 0 220px;
+        min-height: 360px;
+    }
     .temp-tattoo-carousel .carousel-item {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center; /* center content vertically in the card */
+        padding: 8px 0 14px;
     }
     .temp-tattoo-carousel .carousel-item img {
         height: 180px;
         object-fit: contain;
         display: block;
         width: 95%;
-        margin: 12px auto 0;
+        margin: 0 auto 0;
         border-radius: 8px;
     }
     .temp-tattoo-carousel .carousel-item-content {
