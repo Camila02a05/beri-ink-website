@@ -487,10 +487,11 @@
 /* Mobile: compress description further to shorten the card */
 @media (max-width: 768px) {
     .product-card .product-description { -webkit-line-clamp: 1; margin: 0 !important; line-height: 1.3; }
-    .product-card .product-info { padding: 0 .9rem .35rem !important; gap: .06rem !important; margin-top: -16px !important; }
+    .product-card .product-info { padding: 0 .9rem .3rem !important; gap: .05rem !important; margin-top: -22px !important; }
     .product-card .product-title { min-height: 0; margin: 0; }
     .product-card .product-price { margin-top: 0 !important; }
     .product-card .product-image img { display: block !important; }
+    .product-card .product-image { line-height: 0 !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
 }
 .product-card .product-button { align-self: center; padding: .45rem 1rem; border-radius: 6px; white-space: nowrap; text-align: center; display: inline-flex; align-items: center; justify-content: center; }
 
