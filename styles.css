@@ -1086,21 +1086,20 @@ main {
     .temp-tattoo-carousel .carousel-item {
         height: auto;
         flex: 0 0 220px;
-        min-height: 360px;
-    }
-    .temp-tattoo-carousel .carousel-item {
+        min-height: 420px;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center; /* center content vertically in the card */
-        padding: 8px 0 14px;
+        justify-content: space-around;
+        padding: 10px 0 14px;
     }
+    /* (card layout handled above) */
     .temp-tattoo-carousel .carousel-item img {
-        height: 180px;
+        height: 200px;
         object-fit: contain;
         display: block;
-        width: 95%;
-        margin: 0 auto 0;
+        width: 94%;
+        margin: 0 auto;
         border-radius: 8px;
     }
     .temp-tattoo-carousel .carousel-item-content {
@@ -1109,14 +1108,14 @@ main {
         text-align: center;
     }
     .temp-tattoo-carousel .carousel-item h3 {
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        margin: .2rem 0 0;
+        margin: 0;
         line-height: 1.25;
     }
-    .temp-tattoo-carousel .carousel-item p { font-size: 1rem; }
+    .temp-tattoo-carousel .carousel-item p { font-size: 1.05rem; margin: 0; }
 }
 
