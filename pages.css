@@ -466,10 +466,10 @@
 }
 
 .product-card .product-info {
-    padding: .45rem .8rem .65rem; /* desktop/default spacing */
+    padding: .6rem .9rem .7rem; /* desktop/default: slightly more space under image */
     display: flex;
     flex-direction: column;
-    gap: .18rem;
+    gap: .22rem;
     min-height: 0;
     margin-top: 0;
 }
