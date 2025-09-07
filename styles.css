@@ -85,8 +85,8 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 3rem;
-    margin-right: 3rem;
+    margin-left: 2rem;
+    margin-right: 5rem;
     gap: 2rem;
     position: relative;
     z-index: 10;
@@ -566,8 +566,8 @@ main {
     .nav {
         display: flex;
         align-items: center;
-        margin-left: 3rem;
-        margin-right: 3rem;
+        margin-left: 2rem;
+        margin-right: 5rem;
         gap: 2rem;
     }
     
