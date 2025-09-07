@@ -25,19 +25,15 @@ async function calculateShipping(address, items) {
     } else {
       // Domestic shipping - use Pitney Bowes for accurate rates
       try {
-        const pitneyBowesResponse = await fetch(`${process.env.URL}/.netlify/functions/pitney-bowes-shipping`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'calculate',
-            shippingAddress: address,
-            items: items
-          })
+        const axios = require('axios');
+        const pitneyBowesResponse = await axios.post(`${process.env.URL}/.netlify/functions/pitney-bowes-shipping`, {
+          action: 'calculate',
+          shippingAddress: address,
+          items: items
         });
         
-        if (pitneyBowesResponse.ok) {
-          const pitneyBowesRate = await pitneyBowesResponse.json();
-          return pitneyBowesRate;
+        if (pitneyBowesResponse.status === 200) {
+          return pitneyBowesResponse.data;
         }
       } catch (error) {
         console.error('Pitney Bowes integration failed:', error);
