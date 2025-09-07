@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-// Helper function to calculate shipping
-async function calculateShipping(address, items) {
+// Helper function to calculate shipping (simplified)
+function calculateShipping(address, items) {
   const isInternational = address.country !== 'US';
   
   // Calculate total order value
@@ -23,23 +23,7 @@ async function calculateShipping(address, items) {
         description: 'Free shipping for orders over $35'
       };
     } else {
-      // Domestic shipping - use Pitney Bowes for accurate rates
-      try {
-        const axios = require('axios');
-        const pitneyBowesResponse = await axios.post(`${process.env.URL}/.netlify/functions/pitney-bowes-shipping`, {
-          action: 'calculate',
-          shippingAddress: address,
-          items: items
-        });
-        
-        if (pitneyBowesResponse.status === 200) {
-          return pitneyBowesResponse.data;
-        }
-      } catch (error) {
-        console.error('Pitney Bowes integration failed:', error);
-      }
-      
-      // Fallback to flat rate if Pitney Bowes fails
+      // Domestic shipping - flat rate
       return {
         amount: 78, // $0.78 in cents
         name: 'Domestic Shipping',

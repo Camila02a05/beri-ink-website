@@ -85,16 +85,16 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 1rem; /* Moved closer to logo */
-    margin-right: 8rem; /* More space for cart button */
-    gap: 2rem;
+    margin-left: 0.25rem; /* Very close to logo */
+    margin-right: 12rem; /* Much more space for cart button */
+    gap: 1.5rem; /* Reduced gap even more */
     position: relative;
     z-index: 10;
 }
 
 .cart-button-container {
     position: absolute;
-    right: 5rem; /* Moved closer to social icons */
+    right: 3rem; /* Moved even closer to social icons */
     top: 50%;
     transform: translateY(-50%);
 }
@@ -138,7 +138,7 @@ p {
 
 .logo-img {
     height: auto;
-    max-height: 40px; /* Reduced from 56px */
+    max-height: 32px; /* Even smaller logo */
     width: auto;
     object-fit: contain;
     background: transparent !important;
@@ -149,7 +149,7 @@ p {
 .nav-list {
     display: flex;
     list-style: none;
-    gap: 2.5rem;
+    gap: 2rem; /* Reduced gap to save space */
     margin: 0;
 }
 
