@@ -85,9 +85,9 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 3rem; /* Move navigation away from logo */
-    margin-right: 3rem; /* Move navigation away from cart/social icons */
-    gap: 2rem;
+    margin-left: 0.25rem; /* Move navigation VERY CLOSE to logo */
+    margin-right: 10rem; /* Move navigation FAR AWAY from cart/social icons */
+    gap: 1.5rem; /* Reduce gap between nav items */
     position: relative;
     z-index: 10;
 }
