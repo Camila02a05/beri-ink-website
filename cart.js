@@ -24,13 +24,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateCartCount() {
         const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        console.log('Updating cart count:', totalItems, 'cartCount element:', cartCount);
         if (cartCount) {
             cartCount.textContent = totalItems;
-            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+            cartCount.style.display = 'flex'; // Always show the count, even when 0
         }
     }
 
     // Initialize cart on page load
+    console.log('Cart initialized with items:', cart.items);
     renderCart();
     updateCartCount();
 

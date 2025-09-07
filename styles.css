@@ -85,16 +85,16 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 0.25rem; /* Very close to logo */
-    margin-right: 12rem; /* Even more space for cart button */
-    gap: 0.75rem; /* Very small gaps between nav items */
+    margin-left: 3rem; /* Move navigation further from logo */
+    margin-right: 15rem; /* Much more space for cart button */
+    gap: 1.5rem; /* Slightly larger gaps between nav items */
     position: relative;
     z-index: 10;
 }
 
 .cart-button-container {
     position: absolute;
-    right: 6rem; /* Move cart button FAR from social icons */
+    right: 8rem; /* Move cart button even further from social icons */
     top: 50%;
     transform: translateY(-50%);
 }
