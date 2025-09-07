@@ -147,11 +147,10 @@ const enhancedProducts = [
 // Categories for filtering
 const categories = [
     { id: "all", name: "All Products" },
-    { id: "floral", name: "Floral" },
-    { id: "script", name: "Script" },
-    { id: "botanical", name: "Botanical" },
-    { id: "symbols", name: "Symbols" },
-    { id: "animals", name: "Animals" }
+    { id: "animals", name: "Animals" },
+    { id: "botanical", name: "Botanicals" },
+    { id: "ornamental", name: "Ornamentals" },
+    { id: "others", name: "Others" }
 ];
 
 // Make available globally

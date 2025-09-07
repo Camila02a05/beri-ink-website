@@ -32,6 +32,8 @@ function createCategoryFilter() {
         { id: "ornamental", name: "Ornamentals" },
         { id: "others", name: "Others" }
     ];
+    
+    console.log('Categories being used:', categories);
 
     // Create category filter
     const filterContainer = document.createElement('div');
