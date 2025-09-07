@@ -55,6 +55,11 @@ function updateWebsiteWithCMSData() {
     if (cmsData.products && cmsData.products.length > 0) {
         window.enhancedProducts = cmsData.products;
         console.log('Updated products from CMS');
+        
+        // Trigger store re-render if on store page
+        if (typeof renderProducts === 'function') {
+            renderProducts();
+        }
     }
     
     // Update gallery photos
@@ -87,11 +92,11 @@ function updateGalleryPhotos(photos) {
 
 // Update artist photos
 function updateArtistPhotos(photos) {
-    const artistCarousel = document.querySelector('.artist-carousel-track');
+    const artistCarousel = document.getElementById('artistCarouselTrack');
     if (artistCarousel && photos.length > 0) {
         artistCarousel.innerHTML = photos.map(photo => `
-            <div class="artist-carousel-item">
-                <img src="${photo.src}" alt="${photo.name}" loading="lazy">
+            <div class="carousel-slide">
+                <img src="${photo.src}" alt="${photo.name}" loading="lazy" class="artist-img">
             </div>
         `).join('');
     }

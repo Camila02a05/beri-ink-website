@@ -1,38 +1,32 @@
 // Content Integration Script
 document.addEventListener('DOMContentLoaded', function() {
-    const content = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
-    console.log('Content integration loaded:', content);
-    
-    // Load products from CMS
-    const cmsProducts = JSON.parse(localStorage.getItem('beri-ink-products') || '[]');
-    if (cmsProducts && cmsProducts.length > 0) {
-        console.log('Loading products from CMS:', cmsProducts);
-        window.enhancedProducts = cmsProducts;
-    }
-    
-    // Update homepage content
-    if (content.homepage) {
-        updateHomepageContent(content.homepage);
-    }
-    
-    // Load gallery photos from CMS
-    const galleryPhotos = JSON.parse(localStorage.getItem('beri-ink-gallery-photos') || '[]');
-    if (galleryPhotos && galleryPhotos.length > 0) {
-        console.log('Loading gallery photos from CMS:', galleryPhotos);
-        updateGalleryPhotos(galleryPhotos);
-    }
-    
-    // Update artist page content
-    if (content.artist) {
-        updateArtistContent(content.artist);
-    }
-    
-    // Load artist photos from CMS
-    const artistPhotos = JSON.parse(localStorage.getItem('beri-ink-artist-photos') || '[]');
-    if (artistPhotos && artistPhotos.length > 0) {
-        console.log('Loading artist photos from CMS:', artistPhotos);
-        updateArtistPhotos(artistPhotos);
-    }
+    // Wait for simple-data-loader to finish
+    setTimeout(() => {
+        const content = window.cmsData?.content || {};
+        console.log('Content integration loaded:', content);
+        
+        // Update homepage content
+        if (content.homepage) {
+            updateHomepageContent(content.homepage);
+        }
+        
+        // Update artist page content
+        if (content.artist) {
+            updateArtistContent(content.artist);
+        }
+        
+        // Update gallery photos
+        if (window.cmsData?.galleryPhotos && window.cmsData.galleryPhotos.length > 0) {
+            console.log('Loading gallery photos from CMS:', window.cmsData.galleryPhotos);
+            updateGalleryPhotos(window.cmsData.galleryPhotos);
+        }
+        
+        // Update artist photos
+        if (window.cmsData?.artistPhotos && window.cmsData.artistPhotos.length > 0) {
+            console.log('Loading artist photos from CMS:', window.cmsData.artistPhotos);
+            updateArtistPhotos(window.cmsData.artistPhotos);
+        }
+    }, 200);
     
     // Update vegan page content
     if (content.vegan) {

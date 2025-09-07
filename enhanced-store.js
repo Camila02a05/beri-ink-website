@@ -1,20 +1,21 @@
 // Enhanced Store with Variations, Multiple Photos, and Categories
 document.addEventListener('DOMContentLoaded', function() {
-    loadProductsFromCMS();
-    initializeEnhancedStore();
+    // Wait a bit for simple-data-loader to finish
+    setTimeout(() => {
+        loadProductsFromCMS();
+        initializeEnhancedStore();
+    }, 100);
 });
 
 let currentProducts = [];
 let currentCategory = 'all';
 
 function loadProductsFromCMS() {
-    // Try to load products from CMS first - check the correct localStorage key
-    const cmsProducts = JSON.parse(localStorage.getItem('beri-ink-products') || '[]');
-    
-    if (cmsProducts && cmsProducts.length > 0) {
-        console.log('Loading products from CMS:', cmsProducts);
-        currentProducts = [...cmsProducts];
-        window.enhancedProducts = cmsProducts;
+    // Wait for simple-data-loader to load CMS data
+    if (window.cmsData && window.cmsData.products && window.cmsData.products.length > 0) {
+        console.log('Loading products from CMS:', window.cmsData.products);
+        currentProducts = [...window.cmsData.products];
+        window.enhancedProducts = window.cmsData.products;
     } else {
         // Fallback to default products
         console.log('No CMS products found, using default products');
