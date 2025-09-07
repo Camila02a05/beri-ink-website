@@ -199,6 +199,37 @@ function openQuickView(productId) {
     document.getElementById('qvDescription').textContent = product.description;
     document.getElementById('qvQty').value = 1;
     
+    // Add image gallery to modal if it doesn't exist
+    let imageGallery = modal.querySelector('.qv-image-gallery');
+    if (!imageGallery) {
+        imageGallery = document.createElement('div');
+        imageGallery.className = 'qv-image-gallery';
+        imageGallery.innerHTML = `
+            <div class="qv-main-image-container">
+                <img id="qvMainImage" src="${product.images[0]}" alt="${product.title}" class="qv-main-image">
+            </div>
+            <div class="qv-thumbnails">
+                ${product.images.map((img, index) => `
+                    <img src="${img}" alt="${product.title}" class="qv-thumbnail ${index === 0 ? 'active' : ''}" 
+                         onclick="changeQvMainImage('${img}', this)" loading="lazy">
+                `).join('')}
+            </div>
+        `;
+        
+        // Insert image gallery before the existing image
+        const existingImage = document.getElementById('qvImage');
+        existingImage.parentNode.insertBefore(imageGallery, existingImage);
+        existingImage.style.display = 'none'; // Hide the old single image
+    } else {
+        // Update existing gallery
+        imageGallery.querySelector('#qvMainImage').src = product.images[0];
+        const thumbnails = imageGallery.querySelectorAll('.qv-thumbnail');
+        thumbnails.forEach((thumb, index) => {
+            thumb.src = product.images[index] || product.images[0];
+            thumb.classList.toggle('active', index === 0);
+        });
+    }
+    
     // Create variation options for modal
     const variationSelect = document.createElement('select');
     variationSelect.className = 'modal-variation-select';
@@ -216,6 +247,19 @@ function openQuickView(productId) {
     modal.setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     modal.dataset.pid = productId;
+}
+
+// Function to change main image in quick view
+function changeQvMainImage(imageSrc, thumbnail) {
+    const mainImage = document.getElementById('qvMainImage');
+    const thumbnails = document.querySelectorAll('.qv-thumbnail');
+    
+    // Update main image
+    mainImage.src = imageSrc;
+    
+    // Update active thumbnail
+    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+    thumbnail.classList.add('active');
 }
 
 function initializeDragAndDrop() {
@@ -278,3 +322,4 @@ window.changeMainImage = changeMainImage;
 window.updatePrice = updatePrice;
 window.addToCartWithVariation = addToCartWithVariation;
 window.openQuickView = openQuickView;
+window.changeQvMainImage = changeQvMainImage;
