@@ -33,8 +33,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize cart on page load
     console.log('Cart initialized with items:', cart.items);
+    console.log('Cart count element found:', cartCount);
     renderCart();
     updateCartCount();
+    
+    // Force update cart count after a short delay to ensure DOM is ready
+    setTimeout(() => {
+        console.log('Force updating cart count after delay');
+        updateCartCount();
+    }, 100);
+    
+    // Update cart count when page becomes visible (in case of tab switching)
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            console.log('Page became visible, updating cart count');
+            updateCartCount();
+        }
+    });
+    
+    // Update cart count when window gains focus
+    window.addEventListener('focus', () => {
+        console.log('Window focused, updating cart count');
+        updateCartCount();
+    });
 
     // Cart button click handler
     if (cartButton) {
