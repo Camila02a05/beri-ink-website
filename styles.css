@@ -94,7 +94,7 @@ p {
 
 .cart-button-container {
     position: absolute;
-    right: 7rem; /* More space between cart and social icons */
+    right: 4rem; /* Move cart button AWAY from FAQ */
     top: 50%;
     transform: translateY(-50%);
 }
