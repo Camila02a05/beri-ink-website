@@ -41,6 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Content integration complete');
 });
 
+// Test function to manually trigger content updates
+window.testContentIntegration = function() {
+    console.log('Testing content integration...');
+    const content = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+    console.log('Current content:', content);
+    
+    if (content.homepage && content.homepage.galleryPhotos) {
+        console.log('Found gallery photos in content:', content.homepage.galleryPhotos);
+        updateGalleryPhotos(content.homepage.galleryPhotos);
+    } else {
+        console.log('No gallery photos found in content');
+    }
+    
+    return content;
+};
+
 function updateHomepageContent(homepage) {
     console.log('Updating homepage content');
     
@@ -168,6 +184,11 @@ function updateStoreContent(store) {
     if (store.carouselProducts && store.carouselProducts.length > 0) {
         updateCarouselProducts(store.carouselProducts);
     }
+    
+    // Store products
+    if (store.products && store.products.length > 0) {
+        updateStoreProducts(store.products);
+    }
 }
 
 function updateFooterContent(footer) {
@@ -196,13 +217,20 @@ function updateFooterContent(footer) {
 }
 
 function updateGalleryPhotos(photos) {
+    console.log('updateGalleryPhotos called with:', photos);
     const galleryContainer = document.getElementById('galleryGrid');
-    if (galleryContainer) {
+    console.log('Gallery container found:', galleryContainer);
+    
+    if (galleryContainer && photos && photos.length > 0) {
+        console.log('Updating gallery with', photos.length, 'photos');
         galleryContainer.innerHTML = photos.map(photo => `
             <div class="gallery-item" data-src="${photo.src}">
                 <img src="${photo.src}" alt="${photo.name}" loading="lazy">
             </div>
         `).join('');
+        console.log('Gallery updated successfully');
+    } else {
+        console.log('Gallery update failed - container:', galleryContainer, 'photos:', photos);
     }
 }
 
@@ -227,5 +255,28 @@ function updateCarouselProducts(products) {
                 <p class="price">$${product.price}</p>
             </div>
         `).join('');
+    }
+}
+
+function updateStoreProducts(products) {
+    console.log('Updating store products with:', products);
+    
+    // Update the global products array
+    if (window.enhancedProducts) {
+        window.enhancedProducts = products;
+    }
+    
+    // If the store is already initialized, re-render
+    if (typeof renderProducts === 'function') {
+        renderProducts();
+    }
+    
+    // Also update the products grid directly
+    const productsGrid = document.getElementById('productsGrid');
+    if (productsGrid && products.length > 0) {
+        // This will be handled by the store script, but we can trigger a refresh
+        if (typeof initializeEnhancedStore === 'function') {
+            initializeEnhancedStore();
+        }
     }
 }

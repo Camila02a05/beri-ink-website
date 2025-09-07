@@ -2977,6 +2977,7 @@ Plenty of parking is available for your convenience.</textarea>
                             name: file.name
                         });
                         renderGalleryPhotos();
+                        saveGalleryPhotos();
                     };
                     reader.readAsDataURL(file);
                 });
@@ -3032,6 +3033,7 @@ Plenty of parking is available for your convenience.</textarea>
                         galleryPhotos[targetIndex] = draggedPhoto;
                         
                         renderGalleryPhotos();
+                        saveGalleryPhotos();
                     }
                 });
             });
@@ -3040,6 +3042,7 @@ Plenty of parking is available for your convenience.</textarea>
         function removeGalleryPhoto(index) {
             galleryPhotos.splice(index, 1);
             renderGalleryPhotos();
+            saveGalleryPhotos();
         }
         
         function loadGalleryPhotos() {
@@ -3052,6 +3055,12 @@ Plenty of parking is available for your convenience.</textarea>
         
         function saveGalleryPhotos() {
             localStorage.setItem('beri-ink-gallery-photos', JSON.stringify(galleryPhotos));
+            
+            // Also save to the main content structure for content integration
+            const existingContent = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            if (!existingContent.homepage) existingContent.homepage = {};
+            existingContent.homepage.galleryPhotos = galleryPhotos;
+            localStorage.setItem('beri-ink-content', JSON.stringify(existingContent));
         }
         
         // Artist Photos Management
@@ -3074,6 +3083,7 @@ Plenty of parking is available for your convenience.</textarea>
                             name: file.name
                         });
                         renderArtistPhotos();
+                        saveArtistPhotos();
                     };
                     reader.readAsDataURL(file);
                 });
@@ -3129,6 +3139,7 @@ Plenty of parking is available for your convenience.</textarea>
                         artistPhotos[targetIndex] = draggedPhoto;
                         
                         renderArtistPhotos();
+                        saveArtistPhotos();
                     }
                 });
             });
@@ -3137,6 +3148,7 @@ Plenty of parking is available for your convenience.</textarea>
         function removeArtistPhoto(index) {
             artistPhotos.splice(index, 1);
             renderArtistPhotos();
+            saveArtistPhotos();
         }
         
         function loadArtistPhotos() {
@@ -3149,6 +3161,12 @@ Plenty of parking is available for your convenience.</textarea>
         
         function saveArtistPhotos() {
             localStorage.setItem('beri-ink-artist-photos', JSON.stringify(artistPhotos));
+            
+            // Also save to the main content structure for content integration
+            const existingContent = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            if (!existingContent.artist) existingContent.artist = {};
+            existingContent.artist.photos = artistPhotos;
+            localStorage.setItem('beri-ink-content', JSON.stringify(existingContent));
         }
         
         // Shop Carousel Management

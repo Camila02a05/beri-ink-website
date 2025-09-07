@@ -11,10 +11,10 @@
     margin-top: 1rem;
     text-align: center;
     font-weight: 500;
-    background: #d4edda;
+    background: transparent;
     padding: 0.75rem;
     border-radius: 8px;
-    border: 1px solid #c3e6cb;
+    border: none;
 }
 
 .category-filter {
