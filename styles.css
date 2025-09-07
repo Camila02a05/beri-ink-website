@@ -85,10 +85,10 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    gap: 1rem;
+    margin-left: 1rem; /* Close to logo */
+    margin-right: 9rem; /* Lots of space for cart button */
+    gap: 1.5rem;
+    position: relative;
     z-index: 10;
 }
 
