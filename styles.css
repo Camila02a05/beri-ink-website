@@ -625,8 +625,8 @@ main {
     /* Switch to compact header earlier to avoid logo/nav overlap */
     .nav { display: none; }
     .social-icons { display: none; }
-    .mobile-menu-btn { display: flex; position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); }
-    .cart-button-container { position: absolute; right: 3.5rem; top: 50%; transform: translateY(-50%); }
+    .mobile-menu-btn { display: flex; position: absolute; right: 1rem; top: 45%; transform: translateY(-50%); }
+    .cart-button-container { position: absolute; right: 4rem; top: 50%; transform: translateY(-50%); }
     .logo { position: static; left: auto; }
     .header-content { padding: 0 1rem; }
     .logo-img { max-height: 32px !important; }
@@ -667,14 +667,14 @@ main {
         padding: 8px;
         position: absolute;
         right: 1rem;
-        top: 50%;
+        top: 45%;
         transform: translateY(-50%);
         z-index: 1001;
     }
     
     .cart-button-container {
         position: absolute;
-        right: 3.5rem;
+        right: 4rem;
         top: 50%;
         transform: translateY(-50%);
     }
@@ -900,6 +900,11 @@ main {
         margin-top: auto;
     }
     
+    /* Hide thumbnails on mobile - only show main image */
+    .desktop-only {
+        display: none !important;
+    }
+    
     /* Fix mobile card alignment issues */
     .product-grid {
         align-items: start;
@@ -1016,6 +1021,11 @@ main {
     .product-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Show thumbnails on desktop */
+    .desktop-only {
+        display: block !important;
     }
 }
 

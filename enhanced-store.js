@@ -102,7 +102,7 @@ function createProductCard(product) {
                 <div class="product-image-gallery">
                     <img src="${mainImage}" alt="${product.title}" class="main-image clickable-image" 
                          onclick="openQuickView('${product.id}')" loading="lazy" style="cursor: pointer;">
-                    <div class="image-thumbnails">
+                    <div class="image-thumbnails desktop-only">
                         ${product.images.slice(0, 5).map((img, index) => `
                             <img src="${img}" alt="${product.title}" class="thumbnail ${index === 0 ? 'active' : ''}" 
                                  onclick="changeMainImage(this, '${product.id}')" loading="lazy">
