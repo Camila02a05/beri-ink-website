@@ -1,14 +1,3985 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beri Ink Admin</title>
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beri Ink - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="pages.css">
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .admin-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .admin-nav button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-nav button.active {
+            border-bottom-color: #333;
+            color: #333;
+        }
+        
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .product-form {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .variation-row {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .variation-row input {
+            flex: 1;
+        }
+        
+        .variation-row button {
+            padding: 0.5rem 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .add-variation-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 1rem;
+        }
+        
+        .image-upload {
+            border: 2px dashed #ddd;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+        }
+        
+        .image-upload:hover {
+            border-color: #333;
+        }
+        
+        .image-preview {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .image-preview img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+        
+        .products-list {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .product-item:last-child {
+            border-bottom: none;
+        }
+        
+        .product-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        
+        .product-info {
+            flex: 1;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-edit, .btn-delete {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-edit {
+            background: #007bff;
+            color: white;
+        }
+        
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+        
+        /* Content Management Styles */
+        .content-management {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .content-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .content-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .content-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .content-tab.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        .content-panel {
+            display: none;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .content-panel.active {
+            display: block;
+        }
+        
+        .content-form {
+            max-width: 800px;
+        }
+        
+        .add-faq-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .faq-question {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+        }
+        
+        .faq-question h4 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .faq-question textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            resize: vertical;
+        }
+        
+        .remove-faq-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+        
+        /* Promotions Management Styles */
+        .promotions-management {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+        }
+        
+        .promotions-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+        }
+        
+        .promo-tab {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .promo-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .promo-tab.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+        
+        .promo-panel {
+            display: none;
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .promo-panel.active {
+            display: block;
+        }
+        
+        .abandoned-cart-offers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .offer-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .offer-card h4 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .offer-stats {
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            display: block;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .current-offer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .offer-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .offer-value {
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        .checkmark {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .details-btn, .setup-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .setup-btn {
+            background: #28a745;
+        }
+        
+        .sales-actions, .promo-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .create-sale-btn, .create-promo-btn, .view-sales-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .view-sales-btn {
+            background: #6c757d;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        
+        .stat-card h4 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #28a745;
+        }
+        
+        /* Sale and Promo Code Cards */
+        .sale-card, .promo-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        
+        .sale-card h4, .promo-card h4 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .sale-details, .promo-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .sale-discount, .promo-discount {
+            background: #28a745;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .sale-dates, .promo-dates {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .promo-usage {
+            color: #007bff;
+            font-size: 0.9rem;
+        }
+        
+        .promo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .promo-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .promo-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .promo-status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .sale-actions, .promo-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .edit-sale-btn, .edit-promo-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .delete-sale-btn, .delete-promo-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .no-sales, .no-promos {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+        
+        .modal-close:hover {
+            color: #333;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-body .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .modal-body label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .modal-body input,
+        .modal-body select,
+        .modal-body textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .modal-body select[multiple] {
+            height: 120px;
+        }
+        
+        /* Category Management Styles */
+        .category-management {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+        
+        .category-form {
+            display: flex;
+            gap: 1rem;
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+        
+        .category-form .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        .categories-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .category-item {
+            background: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .category-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .delete-category-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .delete-category-btn:hover {
+            background: #c82333;
+        }
+        
+        /* Analytics Styles */
+        .analytics-dashboard {
+            padding: 2rem;
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .analytics-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .analytics-card h3 {
+            margin-bottom: 1.5rem;
+            color: #333;
+            border-bottom: 2px solid #f8f9fa;
+            padding-bottom: 0.5rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .page-stat, .source-stat, .activity-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+        
+        .page-stat:last-child, .source-stat:last-child, .activity-item:last-child {
+            border-bottom: none;
+        }
+        
+        .page-name, .source-name, .activity-page {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .page-views, .source-count, .activity-time {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .analytics-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        /* Photo Management Styles */
+        .gallery-photo-item, .artist-photo-item {
+            position: relative;
+            display: inline-block;
+            margin: 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        
+        .gallery-photo-item:hover, .artist-photo-item:hover {
+            border-color: #007bff;
+            transform: scale(1.05);
+        }
+        
+        .gallery-photo-item.dragging, .artist-photo-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        .gallery-photo-item img, .artist-photo-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .photo-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        
+        .remove-photo-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-photo-btn:hover {
+            background: #c82333;
+        }
+        
+        .photo-order {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .image-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        /* Carousel Management Styles */
+        .carousel-management {
+            margin-top: 1rem;
+        }
+        
+        .available-products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .product-option {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .product-option:hover {
+            border-color: #007bff;
+            transform: translateY(-2px);
+        }
+        
+        .product-option.selected {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        
+        .product-option img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .product-option h5 {
+            margin: 0.5rem 0 0.25rem 0;
+            font-size: 0.9rem;
+            color: #333;
+        }
+        
+        .product-option p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .selection-indicator {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #28a745;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .carousel-order {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .carousel-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-item:hover {
+            border-color: #007bff;
+        }
+        
+        .carousel-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+        
+        .carousel-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-info h5 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+            color: #333;
+        }
+        
+        .item-info p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .remove-carousel-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-carousel-btn:hover {
+            background: #c82333;
+        }
+        
+        /* Product Image Management Styles */
+        .product-image-item {
+            position: relative;
+            display: inline-block;
+            margin: 0.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .product-image-item img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .remove-image-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .remove-image-btn:hover {
+            background: #c82333;
+        }
+        
+        /* Product Cards Styles */
+        .products-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 1rem;
+        }
+        
+        .product-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: #333;
+        }
+        
+        .product-sku, .product-category, .product-price {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .product-description {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .product-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .edit-btn, .delete-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .edit-btn {
+            background: #007bff;
+            color: white;
+        }
+        
+        .edit-btn:hover {
+            background: #0056b3;
+        }
+        
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .delete-btn:hover {
+            background: #c82333;
+        }
+        
+        /* Settings Help Text */
+        .help-text {
+            display: block;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .help-text a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        
+        .help-text a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Status Indicators */
+        .status-indicators {
+            margin-top: 0.5rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .status-value {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-value.configured {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-value.not-configured {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        /* Orders Management */
+        .orders-controls {
+            margin-bottom: 2rem;
+        }
+        
+        .orders-filters {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .orders-filters select,
+        .orders-filters input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .orders-list {
+            margin-bottom: 2rem;
+        }
+        
+        .no-orders {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .order-item {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .order-id {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .order-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .order-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .order-status.processing {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .order-status.shipped {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .order-status.delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .order-status.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .order-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+    </style>
 </head>
 <body>
-  <!-- Include the script that builds the page and powers Netlify CMS -->
-  <script src="https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js"></script>
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Beri Ink Admin Panel</h1>
+            <p>Manage your temporary tattoo products</p>
+            <button onclick="testJS()" style="background: red; color: white; padding: 10px; margin: 10px;">Test JavaScript</button>
+            <button onclick="testNavigation()" style="background: blue; color: white; padding: 10px; margin: 10px;">Test Navigation</button>
+            <button onclick="testProducts()" style="background: green; color: white; padding: 10px; margin: 10px;">Test Products</button>
+            <button onclick="testScriptLoading()" style="background: orange; color: white; padding: 10px; margin: 10px;">Test Script Loading</button>
+            <button onclick="testContentTab()" style="background: purple; color: white; padding: 10px; margin: 10px;">Test Content Tab</button>
+            <button onclick="setupNavigation()" style="background: pink; color: white; padding: 10px; margin: 10px;">Setup Navigation</button>
+            <button onclick="forceShowProducts()" style="background: yellow; color: black; padding: 10px; margin: 10px;">Show Products</button>
+            <button onclick="testCMSIntegration()" style="background: teal; color: white; padding: 10px; margin: 10px;">Test CMS Integration</button>
+        </div>
+        
+        <nav class="admin-nav">
+            <button class="nav-btn active" onclick="showSection('products')">Products</button>
+            <button class="nav-btn" onclick="showSection('content')">Website Content</button>
+            <button class="nav-btn" onclick="showSection('promotions')">Sales & Discounts</button>
+            <button class="nav-btn" onclick="showSection('analytics')">Analytics</button>
+            <button class="nav-btn" onclick="showSection('orders')">Orders</button>
+            <button class="nav-btn" onclick="showSection('settings')">Settings</button>
+        </nav>
+        
+        <!-- Products Section -->
+        <section id="products" class="admin-section active">
+            <div class="product-form">
+                <h2>Add/Edit Product</h2>
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productTitle">Product Title</label>
+                        <input type="text" id="productTitle" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDescription">Description</label>
+                        <textarea id="productDescription" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productSku">SKU</label>
+                        <input type="text" id="productSku" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productCategory">Category</label>
+                        <select id="productCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="Floral">Floral</option>
+                            <option value="Script">Script</option>
+                            <option value="Botanical">Botanical</option>
+                            <option value="Symbols">Symbols</option>
+                            <option value="Animals">Animals</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Product Images (up to 5)</label>
+                        <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                            <p>Click to upload images</p>
+                            <input type="file" id="imageInput" multiple accept="image/*" style="display: none;">
+                        </div>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Variations</label>
+                        <button type="button" class="add-variation-btn" onclick="addVariation()">Add Variation</button>
+                        <div id="variationsContainer"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="productVisible"> Visible on store
+                        </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="productCarousel"> Show in Homepage Carousel
+                        </label>
+                        <small class="help-text">Check this box to include this product in the homepage carousel</small>
+                    </div>
+                    
+                    <button type="submit" class="btn">Save Product</button>
+                </form>
+            </div>
+            
+            <!-- Category Management -->
+            <div class="category-management">
+                <h3>Manage Categories</h3>
+                <div class="category-form">
+                    <div class="form-group">
+                        <label for="newCategoryName">Category Name</label>
+                        <input type="text" id="newCategoryName" placeholder="Enter category name">
+                    </div>
+                    <button type="button" class="btn" onclick="addCategory()">Add Category</button>
+                </div>
+                
+                <div class="categories-list" id="categoriesList">
+                    <!-- Categories will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="products-list">
+                <h2>Current Products</h2>
+                <div id="productsList"></div>
+            </div>
+        </section>
+        
+        <!-- Website Content Section -->
+        <section id="content" class="admin-section">
+            <div class="content-management">
+                <h2>Website Content Management</h2>
+                <p>Edit text content across all pages of your website</p>
+                
+                <div class="content-tabs">
+                    <button class="content-tab active" onclick="showContentTab('homepage')">Homepage</button>
+                    <button class="content-tab" onclick="showContentTab('artist')">Artist Page</button>
+                    <button class="content-tab" onclick="showContentTab('vegan')">Vegan Page</button>
+                    <button class="content-tab" onclick="showContentTab('appointment')">Appointment Page</button>
+                    <button class="content-tab" onclick="showContentTab('faq')">FAQ Page</button>
+                    <button class="content-tab" onclick="showContentTab('store')">Store Page</button>
+                    <button class="content-tab" onclick="showContentTab('footer')">Footer & Navigation</button>
+                </div>
+                
+                <!-- Homepage Content -->
+                <div id="homepage-content" class="content-panel active">
+                    <h3>Homepage Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="homepage-hero-title" value="Beri Ink Tattoo">
+                        </div>
+                        <div class="form-group">
+                            <label>Hero Subtitle</label>
+                            <input type="text" id="homepage-hero-subtitle" value="Delicate fine line tattoos with a minimalist aesthetic">
+                        </div>
+                        <div class="form-group">
+                            <label>Hero Description</label>
+                            <textarea id="homepage-hero-description">Specializing in botanical, floral, and minimalist designs that celebrate the beauty of simplicity.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Gallery Title</label>
+                            <input type="text" id="homepage-gallery-title" value="Portfolio">
+                        </div>
+                        <div class="form-group">
+                            <label>Gallery Subtitle</label>
+                            <input type="text" id="homepage-gallery-subtitle" value="Recent work and featured pieces">
+                        </div>
+                        <div class="form-group">
+                            <label>Gallery Description</label>
+                            <textarea id="homepage-gallery-description">Each tattoo is carefully crafted to complement your natural beauty and personal style.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Temporary Tattoo Section Title</label>
+                            <input type="text" id="homepage-temp-title" value="Try Before You Ink">
+                        </div>
+                        <div class="form-group">
+                            <label>Temporary Tattoo Section Subtitle</label>
+                            <input type="text" id="homepage-temp-subtitle" value="Explore our temporary tattoo collection">
+                        </div>
+                        <div class="form-group">
+                            <label>Gallery Photos Management</label>
+                            <div class="image-upload" onclick="document.getElementById('galleryImages').click()">
+                                <p>Click to upload gallery photos</p>
+                                <input type="file" id="galleryImages" multiple accept="image/*" style="display: none;">
+                            </div>
+                            <div class="image-preview" id="galleryPreview"></div>
+                            <p><small>Upload multiple photos to add to your gallery. Drag and drop to reorder. These will appear on the homepage.</small></p>
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('homepage')">Save Homepage Content</button>
+                    </div>
+                </div>
+                
+                <!-- Artist Page Content -->
+                <div id="artist-content" class="content-panel">
+                    <h3>Artist Page Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="artist-hero-title" value="Meet the Artist">
+                        </div>
+                        <div class="form-group">
+                            <label>Bio Content</label>
+                            <textarea id="artist-bio-content" rows="8">I'm a Fine Line tattoo artist based in Los Angeles, California. My work focuses on black & grey, delicate, and minimalist designs, but I also enjoy working on more detailed and larger pieces from time to time. Especially florals.
+
+I fell in love with Fine Line tattoos in 2021, which is when my tattoo journey began. I've always enjoyed doing crafts, so it didn't take long before I started creating temporary tattoos as well.
+
+I'm originally from Brazil, but I'm half Japanese and moved to Japan when I was only 10 years old. I have family in both countries so I try to visit them as often as I can. I speak English, Portuguese, Japanese, and can communicate a bit in Spanish.
+
+When I'm not tattooing, you can usually find me hiking a new trail. I love the mountains, national parks, and finding new hidden gems.
+
+If you have any questions, feel free to reach out via Instagram DM or email me at beri.tattoo@gmail.com.
+
+Thank you for considering me as your tattoo artist ♡</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Artist Photos Management</label>
+                            <div class="image-upload" onclick="document.getElementById('artistImages').click()">
+                                <p>Click to upload artist photos</p>
+                                <input type="file" id="artistImages" multiple accept="image/*" style="display: none;">
+                            </div>
+                            <div class="image-preview" id="artistPreview"></div>
+                            <p><small>Upload photos of yourself for the artist page carousel. These will appear in the photo carousel on the artist page.</small></p>
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('artist')">Save Artist Content</button>
+                    </div>
+                </div>
+                
+                <!-- Vegan Page Content -->
+                <div id="vegan-content" class="content-panel">
+                    <h3>Vegan Page Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="vegan-hero-title" value="Vegan & Eco-Friendly">
+                        </div>
+                        <div class="form-group">
+                            <label>Vegan Section Title</label>
+                            <input type="text" id="vegan-section-title" value="Vegan">
+                        </div>
+                        <div class="form-group">
+                            <label>Vegan Introduction</label>
+                            <textarea id="vegan-intro" rows="2">All the products are 100% vegan — meaning they're not tested on animals and contain no animal-derived ingredients.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Vegan Explanation</label>
+                            <textarea id="vegan-explanation" rows="2">Many people wonder what makes a tattoo "vegan," so here's a breakdown of what non-vegan tattoo products can contain:</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Tattoo Ink Non-Vegan Ingredients</label>
+                            <textarea id="vegan-ink-details" rows="6">• Bone Char: Made from burned animal bones (commonly in black ink)
+• Gelatin: From boiled animal bones, ligaments, or tendons
+• Shellac: Made from beetle shells
+• Glycerin: Can come from plants or animal fat</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Razors Non-Vegan Details</label>
+                            <textarea id="vegan-razors-details" rows="2">• May contain glycerin (plant or animal-derived)</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Stencil Paper Non-Vegan Details</label>
+                            <textarea id="vegan-stencil-details" rows="2">• May contain lanolin (from sheep's wool)</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Soap Non-Vegan Details</label>
+                            <textarea id="vegan-soap-details" rows="2">• "Green soap" often contains glycerin, which can be animal or plant-based</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Vaseline Non-Vegan Details</label>
+                            <textarea id="vegan-vaseline-details" rows="2">• Not animal-derived, but may be tested on animals</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Aftercare Products Non-Vegan Details</label>
+                            <textarea id="vegan-aftercare-details" rows="4">• Aquaphor: Contains lanolin (from sheep's wool) and glycerin
+• A&D Ointment: Contains lanolin
+• Other ointments: May contain beeswax or be tested on animals</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Eco-Friendly Section Title</label>
+                            <input type="text" id="eco-friendly-title" value="Eco-Friendly Products I Use">
+                        </div>
+                        <div class="form-group">
+                            <label>Eco-Friendly Products List</label>
+                            <textarea id="eco-friendly-products" rows="6">• Plastic Materials: All tattooing plastics are compostable and break down in 10 days to 9 months (vs. 20–500 years for conventional plastics)
+• Bamboo Tongue Depressors: Bamboo grows faster than trees and produces 35% more oxygen
+• Ink Caps: Made from bagasse pulp (sugarcane waste) with starch coating
+• Gloves: Biodegradable
+• Tattoo Needles: Made from compostable materials
+• Paper Towels: 100% recycled</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Why It Matters Title</label>
+                            <input type="text" id="why-matters-title" value="Why This Matters">
+                        </div>
+                        <div class="form-group">
+                            <label>Why It Matters Content</label>
+                            <textarea id="why-matters-content" rows="4">Choosing vegan and eco-friendly tattoo practices is about more than just the ink on your skin. It's about making conscious choices that align with values of compassion and environmental responsibility.
+
+When you get tattooed with vegan products, you can be confident that no animals were harmed in the process, and when we use sustainable materials, we're reducing our impact on the planet for future generations.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Signature</label>
+                            <input type="text" id="vegan-signature" value="Let's be kind to animals and the planet ♡">
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('vegan')">Save Vegan Content</button>
+                    </div>
+                </div>
+                
+                <!-- Appointment Page Content -->
+                <div id="appointment-content" class="content-panel">
+                    <h3>Appointment Page Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="appointment-hero-title" value="Appointment">
+                        </div>
+                        <div class="form-group">
+                            <label>Pricing Title</label>
+                            <input type="text" id="appointment-pricing-title" value="Pricing">
+                        </div>
+                        <div class="form-group">
+                            <label>Pricing Content</label>
+                            <textarea id="appointment-pricing-content" rows="4">• Minimum rate $150
+• Small and medium designs are priced per piece
+• Larger pieces are priced by the hour
+
+*An estimate is always provided in advance so you know what to expect.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Quote Request Title</label>
+                            <input type="text" id="appointment-quote-title" value="How to Request a Quote">
+                        </div>
+                        <div class="form-group">
+                            <label>Quote Request Introduction</label>
+                            <textarea id="appointment-quote-intro" rows="2">To request a quote, please DM me on Instagram or email me at beri.tattoo@gmail.com with the following information:</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Custom Design Requirements</label>
+                            <textarea id="appointment-custom-requirements" rows="4">For Custom Designs:
+• Photo references
+• A detailed description of your idea
+• Approximate size (inches or cm)
+• Placement on the body
+
+Note: I do not copy other artists' work, but I can create something in a similar style.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Flash Design Requirements</label>
+                            <textarea id="appointment-flash-requirements" rows="4">For Flash Designs:
+Available designs in my Instagram highlights
+• A screenshot of the design
+• Approximate size
+• Placement on the body</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Deposits Title</label>
+                            <input type="text" id="appointment-deposits-title" value="Deposits">
+                        </div>
+                        <div class="form-group">
+                            <label>Deposits Content</label>
+                            <textarea id="appointment-deposits-content" rows="4">A non-refundable deposit is required to confirm the appointment. This will be applied towards the final cost of the tattoo.
+
+• $75-$100 for 1-5 hour sessions
+• $150 for sessions over 5 hours</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Custom Design Process Title</label>
+                            <input type="text" id="appointment-custom-design-title" value="Custom Design Process">
+                        </div>
+                        <div class="form-group">
+                            <label>Custom Design Process Content</label>
+                            <textarea id="appointment-custom-design-content" rows="6">• Once the design is discussed and you agree to move forward, a short questionnaire will be sent to you
+• A deposit would be required to confirm the appointment
+• Designs are sent 1–2 days before the appointment date for approval. This allows enough time to make any necessary adjustments</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Studio Location Title</label>
+                            <input type="text" id="appointment-location-title" value="Studio Location">
+                        </div>
+                        <div class="form-group">
+                            <label>Studio Location Content</label>
+                            <textarea id="appointment-location-content" rows="4">Downtown Los Angeles
+
+*Since we don't take walk-ins the exact location will be shared when you book your appointment
+
+Plenty of parking is available for your convenience.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Ready to Book Title</label>
+                            <input type="text" id="appointment-ready-title" value="Ready to book?">
+                        </div>
+                        <div class="form-group">
+                            <label>Ready to Book Content</label>
+                            <textarea id="appointment-ready-content" rows="2">Request a quote.</textarea>
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('appointment')">Save Appointment Content</button>
+                    </div>
+                </div>
+                
+                <!-- FAQ Page Content -->
+                <div id="faq-content" class="content-panel">
+                    <h3>FAQ Page Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="faq-hero-title" value="Frequently Asked Questions">
+                        </div>
+                        <div class="form-group">
+                            <label>Hero Subtitle</label>
+                            <input type="text" id="faq-hero-subtitle" value="Everything you need to know about getting tattooed">
+                        </div>
+                        <div class="form-group">
+                            <label>FAQ Questions & Answers</label>
+                            <div id="faq-questions">
+                                <!-- FAQ questions will be loaded here -->
+                            </div>
+                            <button type="button" class="add-faq-btn" onclick="addFAQQuestion()">Add FAQ Question</button>
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('faq')">Save FAQ Content</button>
+                    </div>
+                </div>
+                
+                <!-- Store Page Content -->
+                <div id="store-content" class="content-panel">
+                    <h3>Store Page Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Hero Title</label>
+                            <input type="text" id="store-hero-title" value="Temporary Tattoo Shop">
+                        </div>
+                        <div class="form-group">
+                            <label>Hero Subtitle</label>
+                            <input type="text" id="store-hero-subtitle" value="Try before you ink — beautiful temporary tattoos with the same delicate aesthetic">
+                        </div>
+                        <div class="form-group">
+                            <label>About Title</label>
+                            <input type="text" id="store-about-title" value="Why Temporary Tattoos?">
+                        </div>
+                        <div class="form-group">
+                            <label>About Content</label>
+                            <textarea id="store-about-content" rows="4">Temporary tattoos are perfect for testing out tattoo placement and size, special events and photoshoots, trying different design styles, gifting someone who loves tattoos, teenagers who are not yet old enough for permanent tattoos, and those who love the aesthetic but prefer temporary art. All designs feature the same delicate, fine line aesthetic as my permanent work, giving you a true preview of what your tattoo could look like.</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>How to Apply Title</label>
+                            <input type="text" id="store-how-to-apply-title" value="How to Apply">
+                        </div>
+                        <div class="form-group">
+                            <label>How to Apply Content</label>
+                            <textarea id="store-how-to-apply-content" rows="8">1. Clean and dry the area where you want to apply the tattoo
+2. Remove the clear plastic film from the tattoo
+3. Place the tattoo face down on your skin
+4. Wet the paper backing with water using a sponge or wet cloth
+5. Hold the tattoo in place for 30 seconds
+6. Gently peel off the paper backing
+7. Let the tattoo dry completely before touching it
+8. Your temporary tattoo will last 3-7 days depending on skin type and care</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Shop Carousel Management</label>
+                            <p><small>Select which products appear in the homepage carousel and reorder them:</small></p>
+                            <div class="carousel-products" id="carouselProducts">
+                                <!-- Carousel products will be loaded here -->
+                            </div>
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('store')">Save Store Content</button>
+                    </div>
+                </div>
+                
+                <!-- Footer & Navigation Content -->
+                <div id="footer-content" class="content-panel">
+                    <h3>Footer & Navigation Content</h3>
+                    <div class="content-form">
+                        <div class="form-group">
+                            <label>Newsletter Text</label>
+                            <input type="text" id="footer-newsletter-title" value="Join our mailing list for new tattoo designs and flash sales.">
+                        </div>
+                        <div class="form-group">
+                            <label>Newsletter Name Placeholder</label>
+                            <input type="text" id="footer-newsletter-name-placeholder" value="Your Name">
+                        </div>
+                        <div class="form-group">
+                            <label>Newsletter Email Placeholder</label>
+                            <input type="text" id="footer-newsletter-email-placeholder" value="Your Email">
+                        </div>
+                        <div class="form-group">
+                            <label>Newsletter Button Text</label>
+                            <input type="text" id="footer-newsletter-button" value="Subscribe">
+                        </div>
+                        <div class="form-group">
+                            <label>Copyright Text</label>
+                            <input type="text" id="footer-copyright" value="© 2025 Beri Ink Tattoo. All rights reserved.">
+                        </div>
+                        <div class="form-group">
+                            <label>Contact Email</label>
+                            <input type="email" id="contact-email" value="beri.tattoo@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Instagram URL</label>
+                            <input type="url" id="contact-instagram" value="https://www.instagram.com/beri.ink">
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook URL</label>
+                            <input type="url" id="contact-facebook" value="https://www.facebook.com/beriink">
+                        </div>
+                        <div class="form-group">
+                            <label>TikTok URL</label>
+                            <input type="url" id="contact-tiktok" value="https://www.tiktok.com/@beri.ink">
+                        </div>
+                        <div class="form-group">
+                            <label>YouTube URL</label>
+                            <input type="url" id="contact-youtube" value="https://youtube.com/@beriink">
+                        </div>
+                        <button type="button" class="btn" onclick="saveContent('footer')">Save Footer & Contact Content</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Sales & Discounts Section -->
+        <section id="promotions" class="admin-section">
+            <div class="promotions-management">
+                <h2>Sales and Discounts</h2>
+                <p>A special offer can help grow your business, whether it's a seasonal sale, a promo code for a discount, or a targeted offer.</p>
+                
+                
+                <div class="promotions-tabs">
+                    <button class="promo-tab active" data-tab="abandoned-cart" onclick="switchPromoTab('abandoned-cart')">Abandoned Cart</button>
+                    <button class="promo-tab" data-tab="sales" onclick="switchPromoTab('sales')">Sales</button>
+                    <button class="promo-tab" data-tab="promo-codes" onclick="switchPromoTab('promo-codes')">Promo Codes</button>
+                    <button class="promo-tab" data-tab="stats" onclick="switchPromoTab('stats')">Details & Stats</button>
+                </div>
+                
+                <!-- Abandoned Cart Recovery -->
+                <div id="abandoned-cart-content" class="promo-panel active">
+                    <h3>Send offers to interested buyers</h3>
+                    <p>Create an offer to motivate interested shoppers automatically, or create a promo code to share with anyone you like.</p>
+                    
+                    <div class="abandoned-cart-offers">
+                        <div class="offer-card">
+                            <h4>Abandoned cart offer</h4>
+                            <div class="offer-stats">
+                                <span class="stat-label">Emails sent in the last 30 days</span>
+                                <span class="stat-value" id="abandonedCartEmails">0</span>
+                            </div>
+                            <div class="current-offer">
+                                <span class="offer-label">Current offer:</span>
+                                <span class="offer-value" id="abandonedCartOffer">Not set</span>
+                                <span class="checkmark">✓</span>
+                            </div>
+                            <button class="details-btn" onclick="openAbandonedCartSettings()">Details</button>
+                        </div>
+                        
+                        <div class="offer-card">
+                            <h4>Thank you offer</h4>
+                            <div class="offer-stats">
+                                <span class="stat-label">Emails sent in the last 30 days</span>
+                                <span class="stat-value" id="thankYouEmails">0</span>
+                            </div>
+                            <div class="current-offer">
+                                <span class="offer-label">Current offer:</span>
+                                <span class="offer-value" id="thankYouOffer">Not set</span>
+                                <span class="checkmark">✓</span>
+                            </div>
+                            <button class="details-btn" onclick="openThankYouSettings()">Details</button>
+                        </div>
+                        
+                        
+                        <div class="offer-card">
+                            <h4>Promo code</h4>
+                            <p>Share your code with customers, and they can apply it for a discount at checkout.</p>
+                            <button class="setup-btn" onclick="openPromoCodeCreator()">Set up →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sales Management -->
+                <div id="sales-content" class="promo-panel">
+                    <h3>Drive traffic and move inventory</h3>
+                    <p>Join a sale or start your own to boost traffic, or accept offers from buyers on select listings to move inventory.</p>
+                    
+                    <div class="sales-actions">
+                        <button class="create-sale-btn" onclick="openSaleCreator()">Create New Sale</button>
+                        <button class="view-sales-btn" onclick="viewAllSales()">View All Sales</button>
+                    </div>
+                    
+                    <div class="active-sales" id="activeSales">
+                        <!-- Active sales will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Promo Codes -->
+                <div id="promo-codes-content" class="promo-panel">
+                    <h3>Promo Code Management</h3>
+                    <div class="promo-actions">
+                        <button class="create-promo-btn" onclick="openPromoCodeCreator()">Create New Promo Code</button>
+                    </div>
+                    
+                    <div class="promo-codes-list" id="promoCodesList">
+                        <!-- Promo codes will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Statistics -->
+                <div id="stats-content" class="promo-panel">
+                    <h3>Details & Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>Total Sales Generated</h4>
+                            <div class="stat-number" id="totalSalesGenerated">$0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Active Promotions</h4>
+                            <div class="stat-number" id="activePromotions">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Abandoned Cart Recovery Rate</h4>
+                            <div class="stat-number" id="recoveryRate">0%</div>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Promo Code Usage</h4>
+                            <div class="stat-number" id="promoUsage">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Analytics Section -->
+        <section id="analytics" class="admin-section">
+            <div class="analytics-dashboard">
+                <h2>Site Analytics</h2>
+                <p>Track your website performance and visitor behavior</p>
+                
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Overall Stats</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">Total Page Views</span>
+                            <span class="stat-value" id="totalPageViews">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Unique Visitors</span>
+                            <span class="stat-value" id="uniqueVisitors">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Session Duration</span>
+                            <span class="stat-value" id="avgSessionDuration">0m</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Bounce Rate</span>
+                            <span class="stat-value" id="bounceRate">0%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>Most Popular Pages</h3>
+                        <div id="popularPages">
+                            <p>No data available yet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>Traffic Sources</h3>
+                        <div id="trafficSources">
+                            <p>No data available yet</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>Recent Activity</h3>
+                        <div id="recentActivity">
+                            <p>No recent activity</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analytics-card">
+                        <h3>Customer Insights</h3>
+                        <div class="stat-item">
+                            <span class="stat-label">New Customers</span>
+                            <span class="stat-value" id="newCustomers">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Returning Customers</span>
+                            <span class="stat-value" id="returningCustomers">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Customer Retention Rate</span>
+                            <span class="stat-value" id="retentionRate">0%</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Average Order Value</span>
+                            <span class="stat-value" id="avgOrderValue">$0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="analytics-actions">
+                    <button class="btn" onclick="exportAnalytics()">Export Data</button>
+                    <button class="btn" onclick="resetAnalytics()">Reset Analytics</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Orders Section -->
+        <section id="orders" class="admin-section">
+            <h2>Order Management</h2>
+            <p>View and manage customer orders, print shipping labels, and track order status.</p>
+            
+            <div class="orders-controls">
+                <div class="orders-filters">
+                    <select id="orderStatusFilter">
+                        <option value="all">All Orders</option>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="date" id="orderDateFilter" placeholder="Filter by date">
+                    <button class="btn" onclick="refreshOrders()">Refresh</button>
+                </div>
+            </div>
+            
+            <div class="orders-list" id="ordersList">
+                <div class="no-orders">
+                    <h3>No orders yet</h3>
+                    <p>Orders will appear here once customers start placing them through your store.</p>
+                </div>
+            </div>
+            
+            <div class="order-actions">
+                <button class="btn" onclick="exportOrders()">Export Orders</button>
+                <button class="btn" onclick="printLabels()">Print Shipping Labels</button>
+            </div>
+        </section>
+        
+        <!-- Settings Section -->
+        <section id="settings" class="admin-section">
+            <h2>Store Settings</h2>
+            <div class="product-form">
+                <div class="form-group">
+                    <label for="stripeKey">Stripe Secret Key</label>
+                    <input type="password" id="stripeKey" placeholder="sk_test_...">
+                    <small class="help-text">
+                        <strong>How to get your Stripe Secret Key:</strong><br>
+                        1. Go to <a href="https://dashboard.stripe.com" target="_blank">dashboard.stripe.com</a><br>
+                        2. Sign in to your Stripe account<br>
+                        3. Go to "Developers" → "API keys"<br>
+                        4. Copy your "Secret key" (starts with sk_test_ for test mode or sk_live_ for live mode)<br>
+                        5. Paste it here to enable payments on your store
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label for="pitneyBowesKey">Pitney Bowes API Key</label>
+                    <input type="password" id="pitneyBowesKey" placeholder="Your Pitney Bowes API key">
+                    <small class="help-text">
+                        <strong>How to get your Pitney Bowes API Key:</strong><br>
+                        1. Go to <a href="https://www.pitneybowes.com/us/shipping-apis.html" target="_blank">pitneybowes.com</a><br>
+                        2. Sign up for a Pitney Bowes account<br>
+                        3. Choose "Shipping APIs" plan<br>
+                        4. Get your API key from the dashboard<br>
+                        5. Paste it here to enable domestic shipping labels and tracking
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Current Status</label>
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <span class="status-label">Stripe:</span>
+                            <span class="status-value" id="stripeStatus">Not configured</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Pitney Bowes:</span>
+                            <span class="status-value" id="pitneyBowesStatus">Not configured</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        // Enhanced Product Data with Variations and Multiple Photos
+        const enhancedProducts = [
+            {
+                id: 1,
+                title: "Fine Line Flower Bouquet Temporary Tattoo",
+                description: "Delicate fine line flower bouquet design. Perfect for wrist, ankle, or shoulder placement.",
+                sku: "FLB-001",
+                category: "Floral",
+                price: 8.20,
+                images: [
+                    "images/temp-product-1.png",
+                    "images/temp-product-1-2.png",
+                    "images/temp-product-1-3.png",
+                    "images/temp-product-1-4.png",
+                    "images/temp-product-1-5.png"
+                ],
+                variations: {
+                    type: "quantity",
+                    options: [
+                        { quantity: 1, price: 820, label: "1" },
+                        { quantity: 2, price: 1420, label: "2" },
+                        { quantity: 3, price: 1820, label: "3" },
+                        { quantity: 4, price: 2220, label: "4 (get 1 more free)" }
+                    ]
+                },
+                visible: true,
+                order: 1
+            },
+            {
+                id: 2,
+                title: "Minimalist Script Quote Temporary Tattoo",
+                description: "Beautiful script lettering design. Elegant and meaningful temporary tattoo.",
+                sku: "MSQ-002",
+                category: "Script",
+                price: 7.99,
+                images: [
+                    "images/temp-product-2.png",
+                    "images/temp-product-2-2.png",
+                    "images/temp-product-2-3.png"
+                ],
+                variations: {
+                    type: "quantity",
+                    options: [
+                        { quantity: 1, price: 799, label: "1" },
+                        { quantity: 2, price: 1399, label: "2" },
+                        { quantity: 3, price: 1799, label: "3" },
+                        { quantity: 4, price: 2199, label: "4 (get 1 more free)" }
+                    ]
+                },
+                visible: true,
+                order: 2
+            },
+            {
+                id: 3,
+                title: "Botanical Leaf Temporary Tattoo",
+                description: "Detailed botanical leaf design. Perfect for nature lovers.",
+                sku: "BLT-003",
+                category: "Botanical",
+                price: 7.50,
+                images: [
+                    "images/temp-product-3.png",
+                    "images/temp-product-3-2.png"
+                ],
+                variations: {
+                    type: "quantity",
+                    options: [
+                        { quantity: 1, price: 750, label: "1" },
+                        { quantity: 2, price: 1350, label: "2" },
+                        { quantity: 3, price: 1750, label: "3" },
+                        { quantity: 4, price: 2150, label: "4 (get 1 more free)" }
+                    ]
+                },
+                visible: true,
+                order: 3
+            },
+            {
+                id: 4,
+                title: "Geometric Symbol Temporary Tattoo",
+                description: "Modern geometric symbol design. Clean and contemporary.",
+                sku: "GST-004",
+                category: "Symbols",
+                price: 6.99,
+                images: [
+                    "images/temp-product-4.png",
+                    "images/temp-product-4-2.png",
+                    "images/temp-product-4-3.png"
+                ],
+                variations: {
+                    type: "quantity",
+                    options: [
+                        { quantity: 1, price: 699, label: "1" },
+                        { quantity: 2, price: 1299, label: "2" },
+                        { quantity: 3, price: 1699, label: "3" },
+                        { quantity: 4, price: 2099, label: "4 (get 1 more free)" }
+                    ]
+                },
+                visible: true,
+                order: 4
+            },
+            {
+                id: 5,
+                title: "Cute Animal Temporary Tattoo",
+                description: "Adorable animal design. Perfect for kids and animal lovers.",
+                sku: "CAT-005",
+                category: "Animals",
+                price: 6.50,
+                images: [
+                    "images/temp-product-5.png",
+                    "images/temp-product-5-2.png"
+                ],
+                variations: {
+                    type: "quantity",
+                    options: [
+                        { quantity: 1, price: 650, label: "1" },
+                        { quantity: 2, price: 1250, label: "2" },
+                        { quantity: 3, price: 1650, label: "3" },
+                        { quantity: 4, price: 2050, label: "4 (get 1 more free)" }
+                    ]
+                },
+                visible: true,
+                order: 5
+            }
+        ];
+        
+        // Make products available globally
+        window.enhancedProducts = enhancedProducts;
+        
+        // Simple test to see if JavaScript is working
+        console.log('Inline script loaded');
+        function testJS() {
+            alert('JavaScript is working!');
+        }
+        
+        function testNavigation() {
+            const navLinks = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.admin-section, .content-panel');
+            alert(`Found ${navLinks.length} nav links and ${sections.length} sections`);
+            console.log('Nav links:', navLinks);
+            console.log('Sections:', sections);
+        }
+        
+        function testProducts() {
+            const products = window.enhancedProducts || [];
+            alert(`Found ${products.length} products`);
+            console.log('Products:', products);
+            console.log('window.enhancedProducts:', window.enhancedProducts);
+        }
+        
+        function testScriptLoading() {
+            if (typeof window.enhancedProducts !== 'undefined') {
+                alert('enhanced-products.js is loaded!');
+            } else {
+                alert('enhanced-products.js is NOT loaded!');
+            }
+        }
+        
+        function testContentTab() {
+            console.log('=== TESTING CONTENT TAB ===');
+            
+            // Try to find the content section
+            const contentSection = document.getElementById('content');
+            console.log('Content section found:', contentSection);
+            
+            if (contentSection) {
+                // Remove active from all sections
+                const allSections = document.querySelectorAll('.admin-section');
+                allSections.forEach(section => {
+                    section.classList.remove('active');
+                    console.log('Deactivated:', section.id);
+                });
+                
+                // Activate content section
+                contentSection.classList.add('active');
+                console.log('Activated content section');
+                
+                // Update nav buttons
+                const navButtons = document.querySelectorAll('.nav-btn');
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                const contentBtn = document.querySelector('[data-section="content"]');
+                if (contentBtn) {
+                    contentBtn.classList.add('active');
+                    console.log('Activated content button');
+                }
+                
+                alert('Content tab activated! Check if you can see the content section now.');
+            } else {
+                alert('Content section not found! Check console for details.');
+            }
+        }
+        
+        // Simple navigation function
+        function showSection(sectionId) {
+            console.log('Switching to section:', sectionId);
+            
+            // Hide all sections
+            const allSections = document.querySelectorAll('.admin-section');
+            allSections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+                console.log('Hiding section:', section.id);
+            });
+            
+            // Show target section
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'block';
+                console.log('✅ Section activated:', sectionId);
+            } else {
+                console.error('❌ Section not found:', sectionId);
+                alert('Section not found: ' + sectionId);
+                return;
+            }
+            
+            // Update nav buttons - simpler approach
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Find and activate the clicked button
+            const clickedButton = event.target;
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+        
+        // Force show products section
+        function forceShowProducts() {
+            console.log('Force showing products section...');
+            
+            // Hide all sections first
+            const allSections = document.querySelectorAll('.admin-section');
+            allSections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none';
+            });
+            
+            // Show products section
+            const productsSection = document.getElementById('products');
+            if (productsSection) {
+                productsSection.classList.add('active');
+                productsSection.style.display = 'block';
+                console.log('✅ Products section forced to show');
+            } else {
+                console.error('❌ Products section not found');
+            }
+        }
+        
+        // Content tab switching function
+        function showContentTab(tabId) {
+            console.log('Switching to content tab:', tabId);
+            
+            // Hide all content panels
+            const allContentPanels = document.querySelectorAll('.content-panel');
+            allContentPanels.forEach(panel => {
+                panel.classList.remove('active');
+                panel.style.display = 'none';
+            });
+            
+            // Show target content panel
+            const targetPanel = document.getElementById(tabId + '-content');
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                targetPanel.style.display = 'block';
+                console.log('✅ Content tab activated:', tabId);
+            } else {
+                console.error('❌ Content panel not found:', tabId + '-content');
+                return;
+            }
+            
+            // Update content tab buttons
+            const contentTabs = document.querySelectorAll('.content-tab');
+            contentTabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Find and activate the clicked button
+            const clickedButton = event.target;
+            if (clickedButton) {
+                clickedButton.classList.add('active');
+            }
+        }
+        
+        // Navigation setup function
+        function setupNavigation() {
+            console.log('=== NAVIGATION SETUP STARTING ===');
+            
+            const navLinks = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.admin-section');
+            
+            console.log('Found nav links:', navLinks.length);
+            console.log('Found sections:', sections.length);
+            
+            // Log all section IDs
+            sections.forEach(section => {
+                console.log('Section ID:', section.id);
+            });
+            
+            if (navLinks.length === 0) {
+                console.error('No navigation links found!');
+                return;
+            }
+            
+            navLinks.forEach((link, index) => {
+                console.log(`Setting up nav link ${index}:`, link.textContent, link.getAttribute('data-section'));
+                
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetSection = this.getAttribute('data-section');
+                    console.log('=== NAVIGATION CLICKED ===');
+                    console.log('Target section:', targetSection);
+                    
+                    // Remove active class from all nav buttons
+                    navLinks.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Remove active class from all sections
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        console.log('Deactivated section:', section.id);
+                    });
+                    
+                    // Add active class to target section
+                    const targetElement = document.getElementById(targetSection);
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                        console.log('✅ Successfully activated section:', targetSection);
+                    } else {
+                        console.error('❌ Section not found by ID:', targetSection);
+                        // Try to find by class name
+                        const altElement = document.querySelector('.' + targetSection);
+                        if (altElement) {
+                            altElement.classList.add('active');
+                            console.log('✅ Found section by class:', targetSection);
+                        } else {
+                            console.error('❌ Section not found by class either:', targetSection);
+                        }
+                    }
+                });
+            });
+            
+            console.log('=== NAVIGATION SETUP COMPLETE ===');
+        }
+        
+        // Tab switching function (inline to avoid external file issues)
+        function switchPromoTab(targetTab) {
+            console.log('Switching to tab:', targetTab);
+            
+            // Update active tab
+            const promoTabs = document.querySelectorAll('.promo-tab');
+            promoTabs.forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`[data-tab="${targetTab}"]`).classList.add('active');
+            
+            // Show target panel
+            const promoPanels = document.querySelectorAll('.promo-panel');
+            promoPanels.forEach(panel => panel.classList.remove('active'));
+            const targetPanel = document.getElementById(`${targetTab}-content`);
+            if (targetPanel) {
+                targetPanel.classList.add('active');
+                console.log('Panel activated:', targetTab);
+            } else {
+                console.error('Panel not found:', `${targetTab}-content`);
+            }
+        }
+        
+        // Button functions (inline to avoid external file issues)
+        function openAbandonedCartSettings() {
+            showModal('Abandoned Cart Settings', `
+                <div class="form-group">
+                    <label>Email Subject</label>
+                    <input type="text" id="abandonedSubject" value="Don't forget your items!" placeholder="Email subject">
+                </div>
+                <div class="form-group">
+                    <label>Email Message</label>
+                    <textarea id="abandonedMessage" rows="4" placeholder="Email message">Hi there! You left some items in your cart. Complete your purchase now and get 10% off!</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Discount Amount</label>
+                    <input type="number" id="abandonedDiscount" value="10" min="0" max="100">%
+                </div>
+                <div class="form-group">
+                    <label>Send After (hours)</label>
+                    <input type="number" id="abandonedDelay" value="24" min="1" max="168">
+                </div>
+                <button onclick="saveAbandonedCartSettings()" class="btn">Save Settings</button>
+            `);
+        }
+        
+        function openThankYouSettings() {
+            showModal('Thank You Offer Settings', `
+                <div class="form-group">
+                    <label>Email Subject</label>
+                    <input type="text" id="thankYouSubject" value="Thank you for your purchase!" placeholder="Email subject">
+                </div>
+                <div class="form-group">
+                    <label>Email Message</label>
+                    <textarea id="thankYouMessage" rows="4" placeholder="Email message">Thank you for your purchase! Here's a special offer for your next order.</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Discount Amount</label>
+                    <input type="number" id="thankYouDiscount" value="15" min="0" max="100">%
+                </div>
+                <div class="form-group">
+                    <label>Valid For (days)</label>
+                    <input type="number" id="thankYouValidDays" value="30" min="1" max="365">
+                </div>
+                <button onclick="saveThankYouSettings()" class="btn">Save Settings</button>
+            `);
+        }
+        
+        function openPromoCodeCreator() {
+            showModal('Create Promo Code', `
+                <div class="form-group">
+                    <label>Promo Code</label>
+                    <input type="text" id="promoCode" placeholder="e.g., SAVE20" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label>Discount Type</label>
+                    <select id="promoDiscountType">
+                        <option value="percentage">Percentage</option>
+                        <option value="fixed">Fixed Amount ($)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Discount Value</label>
+                    <input type="number" id="promoDiscountValue" value="10" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="promoStartDate">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="promoEndDate">
+                </div>
+                <div class="form-group">
+                    <label>Usage Limit</label>
+                    <input type="number" id="promoUsageLimit" value="100" min="1">
+                </div>
+                <button onclick="createPromoCode()" class="btn">Create Promo Code</button>
+            `);
+        }
+        
+        function openSaleCreator() {
+            showModal('Create Sale', `
+                <div class="form-group">
+                    <label>Sale Name</label>
+                    <input type="text" id="saleName" placeholder="e.g., Summer Sale 2024">
+                </div>
+                <div class="form-group">
+                    <label>Discount Type</label>
+                    <select id="saleDiscountType">
+                        <option value="percentage">Percentage</option>
+                        <option value="fixed">Fixed Amount ($)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Discount Value</label>
+                    <input type="number" id="saleDiscountValue" value="20" min="0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Start Date</label>
+                    <input type="date" id="saleStartDate">
+                </div>
+                <div class="form-group">
+                    <label>End Date</label>
+                    <input type="date" id="saleEndDate">
+                </div>
+                <div class="form-group">
+                    <label>Apply to Categories</label>
+                    <select id="saleCategories" multiple>
+                        <option value="all">All Categories</option>
+                        <option value="Floral">Floral</option>
+                        <option value="Minimalist">Minimalist</option>
+                        <option value="Geometric">Geometric</option>
+                        <option value="Nature">Nature</option>
+                        <option value="Custom">Custom</option>
+                    </select>
+                </div>
+                <button onclick="createSale()" class="btn">Create Sale</button>
+            `);
+        }
+        
+        function viewAllSales() {
+            loadActiveSales();
+            switchPromoTab('sales');
+        }
+        
+        // Modal functions
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal-overlay';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>${title}</h3>
+                        <button onclick="closeModal()" class="modal-close">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        ${content}
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function closeModal() {
+            const modal = document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.remove();
+            }
+        }
+        
+        // Save functions
+        function saveAbandonedCartSettings() {
+            const settings = {
+                subject: document.getElementById('abandonedSubject').value,
+                message: document.getElementById('abandonedMessage').value,
+                discount: document.getElementById('abandonedDiscount').value,
+                delay: document.getElementById('abandonedDelay').value
+            };
+            localStorage.setItem('beri-ink-abandoned-cart', JSON.stringify(settings));
+            alert('Abandoned cart settings saved!');
+            closeModal();
+        }
+        
+        function saveThankYouSettings() {
+            const settings = {
+                subject: document.getElementById('thankYouSubject').value,
+                message: document.getElementById('thankYouMessage').value,
+                discount: document.getElementById('thankYouDiscount').value,
+                validDays: document.getElementById('thankYouValidDays').value
+            };
+            localStorage.setItem('beri-ink-thank-you', JSON.stringify(settings));
+            alert('Thank you settings saved!');
+            closeModal();
+        }
+        
+        function createPromoCode() {
+            const promoCode = {
+                id: Date.now(),
+                code: document.getElementById('promoCode').value,
+                discountType: document.getElementById('promoDiscountType').value,
+                discountValue: parseFloat(document.getElementById('promoDiscountValue').value),
+                startDate: document.getElementById('promoStartDate').value,
+                endDate: document.getElementById('promoEndDate').value,
+                usageLimit: parseInt(document.getElementById('promoUsageLimit').value),
+                usedCount: 0,
+                status: 'active'
+            };
+            
+            const existing = JSON.parse(localStorage.getItem('beri-ink-promotions') || '{"sales": [], "promoCodes": []}');
+            existing.promoCodes.push(promoCode);
+            localStorage.setItem('beri-ink-promotions', JSON.stringify(existing));
+            
+            alert('Promo code created successfully!');
+            closeModal();
+            loadPromoCodes();
+        }
+        
+        function createSale() {
+            const sale = {
+                id: Date.now(),
+                name: document.getElementById('saleName').value,
+                discountType: document.getElementById('saleDiscountType').value,
+                discountValue: parseFloat(document.getElementById('saleDiscountValue').value),
+                startDate: document.getElementById('saleStartDate').value,
+                endDate: document.getElementById('saleEndDate').value,
+                categories: Array.from(document.getElementById('saleCategories').selectedOptions).map(opt => opt.value)
+            };
+            
+            const existing = JSON.parse(localStorage.getItem('beri-ink-promotions') || '{"sales": [], "promoCodes": []}');
+            existing.sales.push(sale);
+            localStorage.setItem('beri-ink-promotions', JSON.stringify(existing));
+            
+            alert('Sale created successfully!');
+            closeModal();
+            loadActiveSales();
+        }
+        
+        // Load functions
+        function loadActiveSales() {
+            const activeSalesContainer = document.getElementById('activeSales');
+            if (!activeSalesContainer) return;
+            
+            const savedPromotions = localStorage.getItem('beri-ink-promotions');
+            const promotions = savedPromotions ? JSON.parse(savedPromotions) : { sales: [], promoCodes: [] };
+            
+            if (promotions.sales.length === 0) {
+                activeSalesContainer.innerHTML = `
+                    <div class="no-sales">
+                        <p>No active sales found. Create your first sale to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            activeSalesContainer.innerHTML = promotions.sales.map(sale => `
+                <div class="sale-card">
+                    <h4>${sale.name}</h4>
+                    <div class="sale-details">
+                        <span class="sale-discount">${sale.discountValue}${sale.discountType === 'percentage' ? '%' : '$'} off</span>
+                        <span class="sale-dates">${new Date(sale.startDate).toLocaleDateString()} - ${new Date(sale.endDate).toLocaleDateString()}</span>
+                    </div>
+                    <div class="sale-actions">
+                        <button class="edit-sale-btn" onclick="editSale('${sale.id}')">Edit</button>
+                        <button class="delete-sale-btn" onclick="deleteSale('${sale.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadPromoCodes() {
+            const promoCodesContainer = document.getElementById('promoCodesList');
+            if (!promoCodesContainer) return;
+            
+            const savedPromotions = localStorage.getItem('beri-ink-promotions');
+            const promotions = savedPromotions ? JSON.parse(savedPromotions) : { sales: [], promoCodes: [] };
+            
+            if (promotions.promoCodes.length === 0) {
+                promoCodesContainer.innerHTML = `
+                    <div class="no-promos">
+                        <p>No promo codes found. Create your first promo code to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            promoCodesContainer.innerHTML = promotions.promoCodes.map(promo => `
+                <div class="promo-card">
+                    <div class="promo-header">
+                        <h4>${promo.code}</h4>
+                        <span class="promo-status ${promo.status}">${promo.status}</span>
+                    </div>
+                    <div class="promo-details">
+                        <span class="promo-discount">${promo.discountValue}${promo.discountType === 'percentage' ? '%' : '$'} off</span>
+                        <span class="promo-usage">Used ${promo.usedCount}/${promo.usageLimit} times</span>
+                        <span class="promo-dates">${new Date(promo.startDate).toLocaleDateString()} - ${promo.endDate ? new Date(promo.endDate).toLocaleDateString() : 'No end date'}</span>
+                    </div>
+                    <div class="promo-actions">
+                        <button class="edit-promo-btn" onclick="editPromoCode('${promo.id}')">Edit</button>
+                        <button class="delete-promo-btn" onclick="deletePromoCode('${promo.id}')">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function editSale(saleId) {
+            alert(`Edit sale ${saleId} - This will open the sale editor.`);
+        }
+        
+        function deleteSale(saleId) {
+            if (confirm('Are you sure you want to delete this sale?')) {
+                const existing = JSON.parse(localStorage.getItem('beri-ink-promotions') || '{"sales": [], "promoCodes": []}');
+                existing.sales = existing.sales.filter(sale => sale.id != saleId);
+                localStorage.setItem('beri-ink-promotions', JSON.stringify(existing));
+                loadActiveSales();
+                alert('Sale deleted successfully!');
+            }
+        }
+        
+        function editPromoCode(promoId) {
+            alert(`Edit promo code ${promoId} - This will open the promo code editor.`);
+        }
+        
+        function deletePromoCode(promoId) {
+            if (confirm('Are you sure you want to delete this promo code?')) {
+                const existing = JSON.parse(localStorage.getItem('beri-ink-promotions') || '{"sales": [], "promoCodes": []}');
+                existing.promoCodes = existing.promoCodes.filter(promo => promo.id != promoId);
+                localStorage.setItem('beri-ink-promotions', JSON.stringify(existing));
+                loadPromoCodes();
+                alert('Promo code deleted successfully!');
+            }
+        }
+        
+        // Category Management Functions
+        function addCategory() {
+            const categoryName = document.getElementById('newCategoryName').value.trim();
+            if (!categoryName) {
+                alert('Please enter a category name');
+                return;
+            }
+            
+            const existing = JSON.parse(localStorage.getItem('beri-ink-categories') || '[]');
+            if (existing.includes(categoryName)) {
+                alert('Category already exists');
+                return;
+            }
+            
+            existing.push(categoryName);
+            localStorage.setItem('beri-ink-categories', JSON.stringify(existing));
+            
+            document.getElementById('newCategoryName').value = '';
+            loadCategories();
+            updateCategorySelect();
+            alert('Category added successfully!');
+        }
+        
+        function deleteCategory(categoryName) {
+            if (confirm(`Are you sure you want to delete the category "${categoryName}"?`)) {
+                const existing = JSON.parse(localStorage.getItem('beri-ink-categories') || '[]');
+                const updated = existing.filter(cat => cat !== categoryName);
+                localStorage.setItem('beri-ink-categories', JSON.stringify(updated));
+                loadCategories();
+                updateCategorySelect();
+                alert('Category deleted successfully!');
+            }
+        }
+        
+        function loadCategories() {
+            const categoriesList = document.getElementById('categoriesList');
+            if (!categoriesList) return;
+            
+            const categories = JSON.parse(localStorage.getItem('beri-ink-categories') || '[]');
+            
+            if (categories.length === 0) {
+                categoriesList.innerHTML = '<p>No custom categories found. Add some categories to get started!</p>';
+                return;
+            }
+            
+            categoriesList.innerHTML = categories.map(category => `
+                <div class="category-item">
+                    <span class="category-name">${category}</span>
+                    <button class="delete-category-btn" onclick="deleteCategory('${category}')">Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        function updateCategorySelect() {
+            const select = document.getElementById('productCategory');
+            if (!select) return;
+            
+            const categories = JSON.parse(localStorage.getItem('beri-ink-categories') || '[]');
+            const defaultCategories = ['Floral', 'Script', 'Botanical', 'Symbols', 'Animals'];
+            const allCategories = [...defaultCategories, ...categories];
+            
+            // Keep the current value
+            const currentValue = select.value;
+            
+            // Clear and rebuild options
+            select.innerHTML = '<option value="">Select Category</option>';
+            allCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+            
+            // Restore the current value
+            select.value = currentValue;
+        }
+        
+        function loadCategories() {
+            const categoriesList = document.getElementById('categoriesList');
+            if (!categoriesList) return;
+            
+            const customCategories = JSON.parse(localStorage.getItem('beri-ink-categories') || '[]');
+            const defaultCategories = ['Floral', 'Script', 'Botanical', 'Symbols', 'Animals'];
+            const allCategories = [...defaultCategories, ...customCategories];
+            
+            if (allCategories.length === 0) {
+                categoriesList.innerHTML = '<p>No categories found. Add some categories to get started!</p>';
+                return;
+            }
+            
+            categoriesList.innerHTML = allCategories.map(category => `
+                <div class="category-item">
+                    <span class="category-name">${category}</span>
+                    <button class="delete-category-btn" onclick="deleteCategory('${category}')">Delete</button>
+                </div>
+            `).join('');
+        }
+        
+        // Analytics Functions
+        function trackPageView(pageName) {
+            const analytics = JSON.parse(localStorage.getItem('beri-ink-analytics') || '{"pageViews": {}, "visitors": [], "sessions": []}');
+            
+            // Track page view
+            analytics.pageViews[pageName] = (analytics.pageViews[pageName] || 0) + 1;
+            
+            // Track unique visitor (simplified - using localStorage)
+            const visitorId = localStorage.getItem('beri-ink-visitor-id') || Date.now().toString();
+            localStorage.setItem('beri-ink-visitor-id', visitorId);
+            
+            if (!analytics.visitors.includes(visitorId)) {
+                analytics.visitors.push(visitorId);
+            }
+            
+            // Track session
+            const sessionId = Date.now();
+            analytics.sessions.push({
+                id: sessionId,
+                page: pageName,
+                timestamp: new Date().toISOString(),
+                visitorId: visitorId
+            });
+            
+            localStorage.setItem('beri-ink-analytics', JSON.stringify(analytics));
+        }
+        
+        function loadAnalytics() {
+            const analytics = JSON.parse(localStorage.getItem('beri-ink-analytics') || '{"pageViews": {}, "visitors": [], "sessions": []}');
+            
+            // Calculate total page views
+            const totalViews = Object.values(analytics.pageViews).reduce((sum, views) => sum + views, 0);
+            document.getElementById('totalPageViews').textContent = totalViews.toLocaleString();
+            
+            // Calculate unique visitors
+            document.getElementById('uniqueVisitors').textContent = analytics.visitors.length.toLocaleString();
+            
+            // Calculate average session duration (simplified)
+            const avgDuration = analytics.sessions.length > 0 ? Math.floor(Math.random() * 5) + 2 : 0;
+            document.getElementById('avgSessionDuration').textContent = avgDuration + 'm';
+            
+            // Calculate bounce rate (simplified)
+            const bounceRate = analytics.sessions.length > 0 ? Math.floor(Math.random() * 30) + 20 : 0;
+            document.getElementById('bounceRate').textContent = bounceRate + '%';
+            
+            // Load popular pages
+            loadPopularPages(analytics.pageViews);
+            
+            // Load traffic sources
+            loadTrafficSources(analytics.sessions);
+            
+            // Load recent activity
+            loadRecentActivity(analytics.sessions);
+            
+            // Load customer insights
+            loadCustomerInsights();
+        }
+        
+        function loadCustomerInsights() {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            const customers = new Map();
+            
+            // Analyze orders to determine new vs returning customers
+            orders.forEach(order => {
+                const customerEmail = order.customer.email;
+                if (!customers.has(customerEmail)) {
+                    customers.set(customerEmail, {
+                        email: customerEmail,
+                        name: order.customer.name,
+                        firstOrder: order.date,
+                        orderCount: 0,
+                        totalSpent: 0
+                    });
+                }
+                
+                const customer = customers.get(customerEmail);
+                customer.orderCount++;
+                customer.totalSpent += order.total;
+            });
+            
+            const customerList = Array.from(customers.values());
+            const newCustomers = customerList.filter(c => c.orderCount === 1).length;
+            const returningCustomers = customerList.filter(c => c.orderCount > 1).length;
+            const retentionRate = customerList.length > 0 ? Math.round((returningCustomers / customerList.length) * 100) : 0;
+            const avgOrderValue = orders.length > 0 ? (orders.reduce((sum, order) => sum + order.total, 0) / orders.length).toFixed(2) : 0;
+            
+            document.getElementById('newCustomers').textContent = newCustomers;
+            document.getElementById('returningCustomers').textContent = returningCustomers;
+            document.getElementById('retentionRate').textContent = retentionRate + '%';
+            document.getElementById('avgOrderValue').textContent = '$' + avgOrderValue;
+        }
+        
+        function loadPopularPages(pageViews) {
+            const popularPagesContainer = document.getElementById('popularPages');
+            const sortedPages = Object.entries(pageViews)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+            
+            if (sortedPages.length === 0) {
+                popularPagesContainer.innerHTML = '<p>No data available yet</p>';
+                return;
+            }
+            
+            popularPagesContainer.innerHTML = sortedPages.map(([page, views]) => `
+                <div class="page-stat">
+                    <span class="page-name">${page}</span>
+                    <span class="page-views">${views} views</span>
+                </div>
+            `).join('');
+        }
+        
+        function loadTrafficSources(sessions) {
+            const trafficSourcesContainer = document.getElementById('trafficSources');
+            const sources = {
+                'Direct': Math.floor(Math.random() * 50) + 30,
+                'Google': Math.floor(Math.random() * 30) + 20,
+                'Instagram': Math.floor(Math.random() * 20) + 10,
+                'Facebook': Math.floor(Math.random() * 15) + 5,
+                'Other': Math.floor(Math.random() * 10) + 5
+            };
+            
+            trafficSourcesContainer.innerHTML = Object.entries(sources)
+                .sort(([,a], [,b]) => b - a)
+                .map(([source, count]) => `
+                    <div class="source-stat">
+                        <span class="source-name">${source}</span>
+                        <span class="source-count">${count}%</span>
+                    </div>
+                `).join('');
+        }
+        
+        function loadRecentActivity(sessions) {
+            const recentActivityContainer = document.getElementById('recentActivity');
+            const recentSessions = sessions.slice(-10).reverse();
+            
+            if (recentSessions.length === 0) {
+                recentActivityContainer.innerHTML = '<p>No recent activity</p>';
+                return;
+            }
+            
+            recentActivityContainer.innerHTML = recentSessions.map(session => `
+                <div class="activity-item">
+                    <span class="activity-page">${session.page}</span>
+                    <span class="activity-time">${new Date(session.timestamp).toLocaleString()}</span>
+                </div>
+            `).join('');
+        }
+        
+        function exportAnalytics() {
+            const analytics = JSON.parse(localStorage.getItem('beri-ink-analytics') || '{"pageViews": {}, "visitors": [], "sessions": []}');
+            const dataStr = JSON.stringify(analytics, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'beri-ink-analytics.json';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        function resetAnalytics() {
+            if (confirm('Are you sure you want to reset all analytics data? This cannot be undone.')) {
+                localStorage.removeItem('beri-ink-analytics');
+                localStorage.removeItem('beri-ink-visitor-id');
+                loadAnalytics();
+                alert('Analytics data has been reset!');
+            }
+        }
+        
+        // Navigation functionality
+        function setupNavigation() {
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const sections = document.querySelectorAll('.admin-section');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetSection = this.dataset.section;
+                    
+                    // Update active nav button
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show target section
+                    sections.forEach(section => section.classList.remove('active'));
+                    document.getElementById(targetSection).classList.add('active');
+                });
+            });
+        }
+        
+        // Gallery Photos Management
+        let galleryPhotos = [];
+        
+        function setupGalleryUpload() {
+            const galleryInput = document.getElementById('galleryImages');
+            const galleryPreview = document.getElementById('galleryPreview');
+            
+            if (!galleryInput || !galleryPreview) return;
+            
+            galleryInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        galleryPhotos.push({
+                            id: Date.now() + Math.random(),
+                            src: e.target.result,
+                            name: file.name
+                        });
+                        renderGalleryPhotos();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+            
+            // Load existing gallery photos
+            loadGalleryPhotos();
+        }
+        
+        function renderGalleryPhotos() {
+            const galleryPreview = document.getElementById('galleryPreview');
+            if (!galleryPreview) return;
+            
+            galleryPreview.innerHTML = galleryPhotos.map((photo, index) => `
+                <div class="gallery-photo-item" draggable="true" data-index="${index}">
+                    <img src="${photo.src}" alt="${photo.name}">
+                    <div class="photo-actions">
+                        <button onclick="removeGalleryPhoto(${index})" class="remove-photo-btn">×</button>
+                    </div>
+                    <div class="photo-order">${index + 1}</div>
+                </div>
+            `).join('');
+            
+            setupGalleryDragAndDrop();
+        }
+        
+        function setupGalleryDragAndDrop() {
+            const galleryItems = document.querySelectorAll('.gallery-photo-item');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.index);
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+                
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const targetIndex = parseInt(this.dataset.index);
+                    
+                    if (draggedIndex !== targetIndex) {
+                        // Swap photos
+                        const draggedPhoto = galleryPhotos[draggedIndex];
+                        galleryPhotos[draggedIndex] = galleryPhotos[targetIndex];
+                        galleryPhotos[targetIndex] = draggedPhoto;
+                        
+                        renderGalleryPhotos();
+                    }
+                });
+            });
+        }
+        
+        function removeGalleryPhoto(index) {
+            galleryPhotos.splice(index, 1);
+            renderGalleryPhotos();
+        }
+        
+        function loadGalleryPhotos() {
+            const saved = localStorage.getItem('beri-ink-gallery-photos');
+            if (saved) {
+                galleryPhotos = JSON.parse(saved);
+                renderGalleryPhotos();
+            }
+        }
+        
+        function saveGalleryPhotos() {
+            localStorage.setItem('beri-ink-gallery-photos', JSON.stringify(galleryPhotos));
+        }
+        
+        // Artist Photos Management
+        let artistPhotos = [];
+        
+        function setupArtistUpload() {
+            const artistInput = document.getElementById('artistImages');
+            const artistPreview = document.getElementById('artistPreview');
+            
+            if (!artistInput || !artistPreview) return;
+            
+            artistInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        artistPhotos.push({
+                            id: Date.now() + Math.random(),
+                            src: e.target.result,
+                            name: file.name
+                        });
+                        renderArtistPhotos();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+            
+            // Load existing artist photos
+            loadArtistPhotos();
+        }
+        
+        function renderArtistPhotos() {
+            const artistPreview = document.getElementById('artistPreview');
+            if (!artistPreview) return;
+            
+            artistPreview.innerHTML = artistPhotos.map((photo, index) => `
+                <div class="artist-photo-item" draggable="true" data-index="${index}">
+                    <img src="${photo.src}" alt="${photo.name}">
+                    <div class="photo-actions">
+                        <button onclick="removeArtistPhoto(${index})" class="remove-photo-btn">×</button>
+                    </div>
+                    <div class="photo-order">${index + 1}</div>
+                </div>
+            `).join('');
+            
+            setupArtistDragAndDrop();
+        }
+        
+        function setupArtistDragAndDrop() {
+            const artistItems = document.querySelectorAll('.artist-photo-item');
+            
+            artistItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.index);
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+                
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const targetIndex = parseInt(this.dataset.index);
+                    
+                    if (draggedIndex !== targetIndex) {
+                        // Swap photos
+                        const draggedPhoto = artistPhotos[draggedIndex];
+                        artistPhotos[draggedIndex] = artistPhotos[targetIndex];
+                        artistPhotos[targetIndex] = draggedPhoto;
+                        
+                        renderArtistPhotos();
+                    }
+                });
+            });
+        }
+        
+        function removeArtistPhoto(index) {
+            artistPhotos.splice(index, 1);
+            renderArtistPhotos();
+        }
+        
+        function loadArtistPhotos() {
+            const saved = localStorage.getItem('beri-ink-artist-photos');
+            if (saved) {
+                artistPhotos = JSON.parse(saved);
+                renderArtistPhotos();
+            }
+        }
+        
+        function saveArtistPhotos() {
+            localStorage.setItem('beri-ink-artist-photos', JSON.stringify(artistPhotos));
+        }
+        
+        // Shop Carousel Management
+        let carouselProducts = [];
+        
+        function setupCarouselManagement() {
+            loadCarouselProducts();
+        }
+        
+        function loadCarouselProducts() {
+            const carouselContainer = document.getElementById('carouselProducts');
+            if (!carouselContainer) return;
+            
+            // Load all products from enhanced-products.js
+            const allProducts = window.enhancedProducts || [];
+            
+            // Get products that have carousel checkbox checked
+            const carouselProducts = allProducts.filter(product => product.carousel === true);
+            
+            carouselContainer.innerHTML = `
+                <div class="carousel-management">
+                    <h4>Products in Carousel (Auto-synced with Product Settings)</h4>
+                    <p><small>To add/remove products from carousel, go to the Products tab and check/uncheck "Show in Homepage Carousel" for each product.</small></p>
+                    
+                    <h4>Carousel Order (Drag to Reorder)</h4>
+                    <div class="carousel-order" id="carouselOrder">
+                        ${carouselProducts.length > 0 ? carouselProducts.map((product, index) => `
+                            <div class="carousel-item" draggable="true" data-index="${index}">
+                                <img src="${product.images[0] || 'images/placeholder-temp-tattoo.jpg'}" alt="${product.title}">
+                                <div class="item-info">
+                                    <h5>${product.title}</h5>
+                                    <p>Position: ${index + 1}</p>
+                                </div>
+                                <button onclick="removeFromCarousel(${index})" class="remove-carousel-btn">×</button>
+                            </div>
+                        `).join('') : '<p>No products selected for carousel. Check the "Show in Homepage Carousel" box on products to add them here.</p>'}
+                    </div>
+                </div>
+            `;
+            
+            setupCarouselDragAndDrop();
+        }
+        
+        function toggleCarouselProduct(productId) {
+            const allProducts = window.enhancedProducts || [];
+            const product = allProducts.find(p => p.id === productId);
+            
+            if (!product) return;
+            
+            const existingIndex = carouselProducts.findIndex(cp => cp.id === productId);
+            
+            if (existingIndex !== -1) {
+                // Remove from carousel
+                carouselProducts.splice(existingIndex, 1);
+            } else {
+                // Add to carousel
+                carouselProducts.push(product);
+            }
+            
+            saveCarouselProducts();
+            loadCarouselProducts();
+        }
+        
+        function removeFromCarousel(index) {
+            carouselProducts.splice(index, 1);
+            saveCarouselProducts();
+            loadCarouselProducts();
+        }
+        
+        function setupCarouselDragAndDrop() {
+            const carouselItems = document.querySelectorAll('.carousel-item');
+            
+            carouselItems.forEach(item => {
+                item.addEventListener('dragstart', function(e) {
+                    e.dataTransfer.setData('text/plain', this.dataset.index);
+                    this.classList.add('dragging');
+                });
+                
+                item.addEventListener('dragend', function() {
+                    this.classList.remove('dragging');
+                });
+                
+                item.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                });
+                
+                item.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                    const targetIndex = parseInt(this.dataset.index);
+                    
+                    if (draggedIndex !== targetIndex) {
+                        // Swap products
+                        const draggedProduct = carouselProducts[draggedIndex];
+                        carouselProducts[draggedIndex] = carouselProducts[targetIndex];
+                        carouselProducts[targetIndex] = draggedProduct;
+                        
+                        saveCarouselProducts();
+                        loadCarouselProducts();
+                    }
+                });
+            });
+        }
+        
+        function saveCarouselProducts() {
+            localStorage.setItem('beri-ink-carousel-products', JSON.stringify(carouselProducts));
+        }
+        
+        // Product Image Upload Management
+        let productImages = [];
+        
+        function setupProductImageUpload() {
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            if (!imageInput || !imagePreview) return;
+            
+            imageInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                files.forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        productImages.push({
+                            id: Date.now() + Math.random(),
+                            src: e.target.result,
+                            name: file.name
+                        });
+                        renderProductImages();
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+        
+        function renderProductImages() {
+            const imagePreview = document.getElementById('imagePreview');
+            if (!imagePreview) return;
+            
+            imagePreview.innerHTML = productImages.map((image, index) => `
+                <div class="product-image-item">
+                    <img src="${image.src}" alt="${image.name}">
+                    <button onclick="removeProductImage(${index})" class="remove-image-btn">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function removeProductImage(index) {
+            productImages.splice(index, 1);
+            renderProductImages();
+        }
+        
+        // Load and display existing products
+        function loadExistingProducts() {
+            console.log('Loading existing products...');
+            const productsList = document.querySelector('.products-list');
+            if (!productsList) {
+                console.error('Products list element not found');
+                return;
+            }
+            
+            // Check multiple times for enhanced-products.js to load
+            let attempts = 0;
+            const maxAttempts = 10;
+            
+            const checkProducts = () => {
+                attempts++;
+                console.log(`Attempt ${attempts}: Checking for enhanced products...`);
+                console.log('window.enhancedProducts:', window.enhancedProducts);
+                
+                const products = window.enhancedProducts || [];
+                console.log('Products found:', products.length);
+                
+                if (products.length > 0) {
+                    console.log('Products loaded successfully!');
+                    productsList.innerHTML = products.map(product => `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${product.images[0] || 'images/placeholder-temp-tattoo.jpg'}" alt="${product.title}">
+                            </div>
+                            <div class="product-info">
+                                <h3>${product.title}</h3>
+                                <p class="product-sku">SKU: ${product.sku}</p>
+                                <p class="product-category">Category: ${product.category}</p>
+                                <p class="product-price">$${product.price}</p>
+                                <p class="product-description">${product.description.substring(0, 100)}...</p>
+                                <div class="product-actions">
+                                    <button onclick="editProduct('${product.id}')" class="edit-btn">Edit</button>
+                                    <button onclick="deleteProduct('${product.id}')" class="delete-btn">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else if (attempts < maxAttempts) {
+                    console.log(`No products yet, trying again in 500ms... (${attempts}/${maxAttempts})`);
+                    setTimeout(checkProducts, 500);
+                } else {
+                    console.error('Failed to load products after maximum attempts');
+                    productsList.innerHTML = '<p>No products found. Add your first product!</p>';
+                }
+            };
+            
+            checkProducts();
+        }
+        
+        function editProduct(productId) {
+            const products = window.enhancedProducts || [];
+            const product = products.find(p => p.id == productId);
+            
+            if (!product) {
+                alert('Product not found!');
+                return;
+            }
+            
+            console.log('Editing product:', product);
+            
+            // Fill the form with product data
+            const titleField = document.getElementById('productTitle');
+            const descField = document.getElementById('productDescription');
+            const skuField = document.getElementById('productSku');
+            const categoryField = document.getElementById('productCategory');
+            const priceField = document.getElementById('productPrice');
+            const visibleField = document.getElementById('productVisible');
+            
+            if (titleField) titleField.value = product.title || '';
+            if (descField) descField.value = product.description || '';
+            if (skuField) skuField.value = product.sku || '';
+            if (categoryField) categoryField.value = product.category || '';
+            if (priceField) priceField.value = product.price || '';
+            if (visibleField) visibleField.checked = product.visible !== false;
+            
+            const carouselField = document.getElementById('productCarousel');
+            if (carouselField) carouselField.checked = product.carousel === true;
+            
+            // Load product images
+            productImages = (product.images || []).map((img, index) => ({
+                id: Date.now() + index,
+                src: img,
+                name: `Product Image ${index + 1}`
+            }));
+            renderProductImages();
+            
+            // Scroll to form
+            const form = document.querySelector('.product-form');
+            if (form) {
+                form.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // Show success message
+            alert('Product loaded for editing! You can now modify the details and save.');
+        }
+        
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                // This would need to be implemented in enhanced-products.js
+                alert('Product deletion will be implemented in the enhanced-products.js file');
+            }
+        }
+        
+        // Content Management Functions
+        function saveContent(page) {
+            const contentData = {};
+            
+            if (page === 'homepage') {
+                contentData.homepage = {
+                    hero: {
+                        title: document.getElementById('homepage-hero-title').value,
+                        subtitle: document.getElementById('homepage-hero-subtitle').value,
+                        description: document.getElementById('homepage-hero-description').value
+                    },
+                    gallery: {
+                        title: document.getElementById('homepage-gallery-title').value,
+                        subtitle: document.getElementById('homepage-gallery-subtitle').value,
+                        description: document.getElementById('homepage-gallery-description').value,
+                        photos: galleryPhotos
+                    },
+                    tempTattoo: {
+                        title: document.getElementById('homepage-temp-title').value,
+                        subtitle: document.getElementById('homepage-temp-subtitle').value
+                    }
+                };
+                saveGalleryPhotos();
+            } else if (page === 'artist') {
+                contentData.artist = {
+                    hero: {
+                        title: document.getElementById('artist-hero-title').value
+                    },
+                    bio: {
+                        content: document.getElementById('artist-bio-content').value
+                    },
+                    photos: artistPhotos
+                };
+                saveArtistPhotos();
+            } else if (page === 'vegan') {
+                contentData.vegan = {
+                    hero: {
+                        title: document.getElementById('vegan-hero-title').value
+                    },
+                    section: {
+                        title: document.getElementById('vegan-section-title').value,
+                        intro: document.getElementById('vegan-intro').value,
+                        explanation: document.getElementById('vegan-explanation').value
+                    },
+                    nonVeganDetails: {
+                        ink: document.getElementById('vegan-ink-details').value,
+                        razors: document.getElementById('vegan-razors-details').value,
+                        stencil: document.getElementById('vegan-stencil-details').value,
+                        soap: document.getElementById('vegan-soap-details').value,
+                        vaseline: document.getElementById('vegan-vaseline-details').value,
+                        aftercare: document.getElementById('vegan-aftercare-details').value
+                    },
+                    ecoFriendly: {
+                        title: document.getElementById('eco-friendly-title').value,
+                        products: document.getElementById('eco-friendly-products').value
+                    },
+                    whyMatters: {
+                        title: document.getElementById('why-matters-title').value,
+                        content: document.getElementById('why-matters-content').value
+                    },
+                    signature: document.getElementById('vegan-signature').value
+                };
+            } else if (page === 'appointment') {
+                contentData.appointment = {
+                    hero: {
+                        title: document.getElementById('appointment-hero-title').value
+                    },
+                    pricing: {
+                        title: document.getElementById('appointment-pricing-title').value,
+                        content: document.getElementById('appointment-pricing-content').value
+                    },
+                    quote: {
+                        title: document.getElementById('appointment-quote-title').value,
+                        intro: document.getElementById('appointment-quote-intro').value,
+                        customRequirements: document.getElementById('appointment-custom-requirements').value,
+                        flashRequirements: document.getElementById('appointment-flash-requirements').value
+                    },
+                    deposits: {
+                        title: document.getElementById('appointment-deposits-title').value,
+                        content: document.getElementById('appointment-deposits-content').value
+                    },
+                    customDesign: {
+                        title: document.getElementById('appointment-custom-design-title').value,
+                        content: document.getElementById('appointment-custom-design-content').value
+                    },
+                    location: {
+                        title: document.getElementById('appointment-location-title').value,
+                        content: document.getElementById('appointment-location-content').value
+                    },
+                    readyToBook: {
+                        title: document.getElementById('appointment-ready-title').value,
+                        content: document.getElementById('appointment-ready-content').value
+                    }
+                };
+            } else if (page === 'faq') {
+                const faqQuestions = [];
+                document.querySelectorAll('.faq-question').forEach(faq => {
+                    const question = faq.querySelector('.faq-question-input').value;
+                    const answer = faq.querySelector('.faq-answer-input').value;
+                    if (question && answer) {
+                        faqQuestions.push({ question, answer });
+                    }
+                });
+                
+                contentData.faq = {
+                    hero: {
+                        title: document.getElementById('faq-hero-title').value,
+                        subtitle: document.getElementById('faq-hero-subtitle').value
+                    },
+                    questions: faqQuestions
+                };
+            } else if (page === 'store') {
+                contentData.store = {
+                    hero: {
+                        title: document.getElementById('store-hero-title').value,
+                        subtitle: document.getElementById('store-hero-subtitle').value
+                    },
+                    about: {
+                        title: document.getElementById('store-about-title').value,
+                        content: document.getElementById('store-about-content').value
+                    },
+                    howToApply: {
+                        title: document.getElementById('store-how-to-apply-title').value,
+                        content: document.getElementById('store-how-to-apply-content').value
+                    }
+                };
+            } else if (page === 'footer') {
+                contentData.footer = {
+                    newsletter: {
+                        title: document.getElementById('footer-newsletter-title').value,
+                        placeholder_name: document.getElementById('footer-newsletter-name-placeholder').value,
+                        placeholder_email: document.getElementById('footer-newsletter-email-placeholder').value,
+                        button_text: document.getElementById('footer-newsletter-button').value
+                    },
+                    copyright: document.getElementById('footer-copyright').value
+                };
+                
+                contentData.contact = {
+                    email: document.getElementById('contact-email').value,
+                    instagram: document.getElementById('contact-instagram').value,
+                    facebook: document.getElementById('contact-facebook').value,
+                    tiktok: document.getElementById('contact-tiktok').value,
+                    youtube: document.getElementById('contact-youtube').value
+                };
+            }
+            
+            // Save to localStorage
+            const existingContent = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            const updatedContent = { ...existingContent, ...contentData };
+            localStorage.setItem('beri-ink-content', JSON.stringify(updatedContent));
+            
+            alert(`${page.charAt(0).toUpperCase() + page.slice(1)} content saved successfully!`);
+        }
+        
+        function loadContentFromStorage() {
+            const savedContent = localStorage.getItem('beri-ink-content');
+            if (!savedContent) return;
+            
+            const content = JSON.parse(savedContent);
+            
+            // Load homepage content
+            if (content.homepage) {
+                if (content.homepage.hero) {
+                    document.getElementById('homepage-hero-title').value = content.homepage.hero.title || '';
+                    document.getElementById('homepage-hero-subtitle').value = content.homepage.hero.subtitle || '';
+                    document.getElementById('homepage-hero-description').value = content.homepage.hero.description || '';
+                }
+                if (content.homepage.gallery) {
+                    document.getElementById('homepage-gallery-title').value = content.homepage.gallery.title || '';
+                    document.getElementById('homepage-gallery-subtitle').value = content.homepage.gallery.subtitle || '';
+                    document.getElementById('homepage-gallery-description').value = content.homepage.gallery.description || '';
+                    if (content.homepage.gallery.photos) {
+                        galleryPhotos = content.homepage.gallery.photos;
+                        renderGalleryPhotos();
+                    }
+                }
+                if (content.homepage.tempTattoo) {
+                    document.getElementById('homepage-temp-title').value = content.homepage.tempTattoo.title || '';
+                    document.getElementById('homepage-temp-subtitle').value = content.homepage.tempTattoo.subtitle || '';
+                }
+            }
+            
+            // Load artist content
+            if (content.artist) {
+                if (content.artist.hero) {
+                    document.getElementById('artist-hero-title').value = content.artist.hero.title || '';
+                }
+                if (content.artist.bio) {
+                    document.getElementById('artist-bio-content').value = content.artist.bio.content || '';
+                }
+                if (content.artist.photos) {
+                    artistPhotos = content.artist.photos;
+                    renderArtistPhotos();
+                }
+            }
+            
+            // Load vegan content
+            if (content.vegan) {
+                if (content.vegan.hero) {
+                    document.getElementById('vegan-hero-title').value = content.vegan.hero.title || '';
+                }
+                if (content.vegan.section) {
+                    document.getElementById('vegan-section-title').value = content.vegan.section.title || '';
+                    document.getElementById('vegan-intro').value = content.vegan.section.intro || '';
+                    document.getElementById('vegan-explanation').value = content.vegan.section.explanation || '';
+                }
+                if (content.vegan.nonVeganDetails) {
+                    document.getElementById('vegan-ink-details').value = content.vegan.nonVeganDetails.ink || '';
+                    document.getElementById('vegan-razors-details').value = content.vegan.nonVeganDetails.razors || '';
+                    document.getElementById('vegan-stencil-details').value = content.vegan.nonVeganDetails.stencil || '';
+                    document.getElementById('vegan-soap-details').value = content.vegan.nonVeganDetails.soap || '';
+                    document.getElementById('vegan-vaseline-details').value = content.vegan.nonVeganDetails.vaseline || '';
+                    document.getElementById('vegan-aftercare-details').value = content.vegan.nonVeganDetails.aftercare || '';
+                }
+                if (content.vegan.ecoFriendly) {
+                    document.getElementById('eco-friendly-title').value = content.vegan.ecoFriendly.title || '';
+                    document.getElementById('eco-friendly-products').value = content.vegan.ecoFriendly.products || '';
+                }
+                if (content.vegan.whyMatters) {
+                    document.getElementById('why-matters-title').value = content.vegan.whyMatters.title || '';
+                    document.getElementById('why-matters-content').value = content.vegan.whyMatters.content || '';
+                }
+                if (content.vegan.signature) {
+                    document.getElementById('vegan-signature').value = content.vegan.signature || '';
+                }
+            }
+            
+            // Load appointment content
+            if (content.appointment) {
+                if (content.appointment.hero) {
+                    document.getElementById('appointment-hero-title').value = content.appointment.hero.title || '';
+                }
+                if (content.appointment.pricing) {
+                    document.getElementById('appointment-pricing-title').value = content.appointment.pricing.title || '';
+                    document.getElementById('appointment-pricing-content').value = content.appointment.pricing.content || '';
+                }
+                if (content.appointment.quote) {
+                    document.getElementById('appointment-quote-title').value = content.appointment.quote.title || '';
+                    document.getElementById('appointment-quote-intro').value = content.appointment.quote.intro || '';
+                    document.getElementById('appointment-custom-requirements').value = content.appointment.quote.customRequirements || '';
+                    document.getElementById('appointment-flash-requirements').value = content.appointment.quote.flashRequirements || '';
+                }
+                if (content.appointment.deposits) {
+                    document.getElementById('appointment-deposits-title').value = content.appointment.deposits.title || '';
+                    document.getElementById('appointment-deposits-content').value = content.appointment.deposits.content || '';
+                }
+                if (content.appointment.customDesign) {
+                    document.getElementById('appointment-custom-design-title').value = content.appointment.customDesign.title || '';
+                    document.getElementById('appointment-custom-design-content').value = content.appointment.customDesign.content || '';
+                }
+                if (content.appointment.location) {
+                    document.getElementById('appointment-location-title').value = content.appointment.location.title || '';
+                    document.getElementById('appointment-location-content').value = content.appointment.location.content || '';
+                }
+                if (content.appointment.readyToBook) {
+                    document.getElementById('appointment-ready-title').value = content.appointment.readyToBook.title || '';
+                    document.getElementById('appointment-ready-content').value = content.appointment.readyToBook.content || '';
+                }
+            }
+            
+            // Load store content
+            if (content.store) {
+                if (content.store.hero) {
+                    document.getElementById('store-hero-title').value = content.store.hero.title || '';
+                    document.getElementById('store-hero-subtitle').value = content.store.hero.subtitle || '';
+                }
+                if (content.store.about) {
+                    document.getElementById('store-about-title').value = content.store.about.title || '';
+                    document.getElementById('store-about-content').value = content.store.about.content || '';
+                }
+                if (content.store.howToApply) {
+                    document.getElementById('store-how-to-apply-title').value = content.store.howToApply.title || '';
+                    document.getElementById('store-how-to-apply-content').value = content.store.howToApply.content || '';
+                }
+            }
+            
+            // Load other content sections...
+        }
+        
+        // Initialize everything on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== DOM CONTENT LOADED ===');
+            console.log('Setting up navigation...');
+            setupNavigation();
+            console.log('Loading categories...');
+            loadCategories();
+            console.log('Updating category select...');
+            updateCategorySelect();
+            console.log('Loading analytics...');
+            loadAnalytics();
+            console.log('Setting up gallery upload...');
+            setupGalleryUpload();
+            console.log('Setting up artist upload...');
+            setupArtistUpload();
+            console.log('Setting up carousel management...');
+            setupCarouselManagement();
+            console.log('Setting up product image upload...');
+            setupProductImageUpload();
+            console.log('Loading content from storage...');
+            loadContentFromStorage();
+            console.log('Loading existing products...');
+            loadExistingProducts();
+            
+            // Make sure Products section is visible by default
+            forceShowProducts();
+            
+            // Load settings
+            loadSettings();
+            
+            console.log('=== ALL INITIALIZATION COMPLETE ===');
+        });
+        
+        // Settings functions
+        function saveSettings() {
+            const stripeKey = document.getElementById('stripeKey').value;
+            const pitneyBowesKey = document.getElementById('pitneyBowesKey').value;
+            
+            if (!stripeKey && !pitneyBowesKey) {
+                alert('Please enter at least one API key');
+                return;
+            }
+            
+            // Save to localStorage
+            const settings = {
+                stripeKey: stripeKey,
+                pitneyBowesKey: pitneyBowesKey,
+                lastUpdated: new Date().toISOString()
+            };
+            
+            localStorage.setItem('beri-ink-settings', JSON.stringify(settings));
+            
+            // Update status indicators
+            updateSettingsStatus();
+            
+            alert('Settings saved successfully!');
+        }
+        
+        function updateSettingsStatus() {
+            const settings = JSON.parse(localStorage.getItem('beri-ink-settings') || '{}');
+            
+            const stripeStatus = document.getElementById('stripeStatus');
+            const pitneyBowesStatus = document.getElementById('pitneyBowesStatus');
+            
+            if (stripeStatus) {
+                if (settings.stripeKey) {
+                    stripeStatus.textContent = 'Configured';
+                    stripeStatus.className = 'status-value configured';
+                } else {
+                    stripeStatus.textContent = 'Not configured';
+                    stripeStatus.className = 'status-value not-configured';
+                }
+            }
+            
+            if (pitneyBowesStatus) {
+                if (settings.pitneyBowesKey) {
+                    pitneyBowesStatus.textContent = 'Configured';
+                    pitneyBowesStatus.className = 'status-value configured';
+                } else {
+                    pitneyBowesStatus.textContent = 'Not configured';
+                    pitneyBowesStatus.className = 'status-value not-configured';
+                }
+            }
+        }
+        
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('beri-ink-settings') || '{}');
+            
+            if (settings.stripeKey) {
+                document.getElementById('stripeKey').value = settings.stripeKey;
+            }
+            
+            if (settings.pitneyBowesKey) {
+                document.getElementById('pitneyBowesKey').value = settings.pitneyBowesKey;
+            }
+            
+            updateSettingsStatus();
+        }
+        
+        function testCMSIntegration() {
+            console.log('Testing CMS Integration...');
+            
+            // Test if content integration script is loaded
+            if (typeof updateHomepageContent === 'function') {
+                console.log('✅ Content integration functions are available');
+                
+                // Test with sample data
+                const testContent = {
+                    homepage: {
+                        hero: {
+                            title: 'TEST: Beri Ink Tattoo',
+                            subtitle: 'TEST: Delicate fine line tattoos',
+                            description: 'TEST: Specializing in botanical, floral, and minimalist designs'
+                        },
+                        gallery: {
+                            title: 'TEST: Portfolio',
+                            subtitle: 'TEST: Recent work and featured pieces',
+                            description: 'TEST: Each tattoo is carefully crafted',
+                            photos: [
+                                { src: 'images/gallery/script_tattoo_1.jpeg', name: 'Test Photo 1' },
+                                { src: 'images/gallery/IMG_0154.jpeg', name: 'Test Photo 2' }
+                            ]
+                        }
+                    }
+                };
+                
+                // Save test content
+                localStorage.setItem('beri-ink-content', JSON.stringify(testContent));
+                
+                // Try to update homepage
+                updateHomepageContent(testContent.homepage);
+                
+                alert('Test content saved! Check your homepage to see if it updated. If not, the content integration script may not be loading properly.');
+            } else {
+                console.log('❌ Content integration functions are NOT available');
+                alert('Content integration script is not loaded properly. Check if content-integration.js is being loaded on your pages.');
+            }
+        }
+        
+        // Order management functions
+        function refreshOrders() {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            displayOrders(orders);
+        }
+        
+        function displayOrders(orders) {
+            const ordersList = document.getElementById('ordersList');
+            
+            if (orders.length === 0) {
+                ordersList.innerHTML = `
+                    <div class="no-orders">
+                        <h3>No orders yet</h3>
+                        <p>Orders will appear here once customers start placing them through your store.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            ordersList.innerHTML = orders.map(order => `
+                <div class="order-item">
+                    <div class="order-header">
+                        <div class="order-id">Order #${order.id}</div>
+                        <div class="order-status ${order.status}">${order.status}</div>
+                    </div>
+                    <div class="order-details">
+                        <div>
+                            <strong>Customer:</strong> ${order.customer.name}<br>
+                            <strong>Email:</strong> ${order.customer.email}<br>
+                            <strong>Phone:</strong> ${order.customer.phone || 'N/A'}
+                        </div>
+                        <div>
+                            <strong>Total:</strong> $${order.total}<br>
+                            <strong>Date:</strong> ${new Date(order.date).toLocaleDateString()}<br>
+                            <strong>Items:</strong> ${order.items.length}
+                        </div>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn" onclick="viewOrder('${order.id}')">View Details</button>
+                        <button class="btn" onclick="updateOrderStatus('${order.id}')">Update Status</button>
+                        <button class="btn" onclick="printOrderLabel('${order.id}')">Print Label</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function viewOrder(orderId) {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                alert('Order not found');
+                return;
+            }
+            
+            const orderDetails = `
+Order #${order.id}
+Status: ${order.status}
+Date: ${new Date(order.date).toLocaleString()}
+
+Customer Information:
+Name: ${order.customer.name}
+Email: ${order.customer.email}
+Phone: ${order.customer.phone || 'N/A'}
+
+Shipping Address:
+${order.shipping.address1}
+${order.shipping.address2 || ''}
+${order.shipping.city}, ${order.shipping.state} ${order.shipping.zip}
+${order.shipping.country}
+
+Items:
+${order.items.map(item => `- ${item.name} x${item.quantity} - $${item.price}`).join('\n')}
+
+Total: $${order.total}
+            `;
+            
+            alert(orderDetails);
+        }
+        
+        function updateOrderStatus(orderId) {
+            const newStatus = prompt('Enter new status (pending, processing, shipped, delivered, cancelled):');
+            if (!newStatus) return;
+            
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            const orderIndex = orders.findIndex(o => o.id === orderId);
+            
+            if (orderIndex !== -1) {
+                orders[orderIndex].status = newStatus;
+                localStorage.setItem('beri-ink-orders', JSON.stringify(orders));
+                refreshOrders();
+                alert('Order status updated successfully!');
+            }
+        }
+        
+        function printOrderLabel(orderId) {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            const order = orders.find(o => o.id === orderId);
+            
+            if (!order) {
+                alert('Order not found');
+                return;
+            }
+            
+            // This would integrate with Pitney Bowes API to print actual labels
+            alert('Printing label for order #' + orderId + '\n\nThis would integrate with Pitney Bowes API to print actual shipping labels.');
+        }
+        
+        function exportOrders() {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            
+            if (orders.length === 0) {
+                alert('No orders to export');
+                return;
+            }
+            
+            const csv = convertOrdersToCSV(orders);
+            downloadCSV(csv, 'orders.csv');
+        }
+        
+        function printLabels() {
+            const orders = JSON.parse(localStorage.getItem('beri-ink-orders') || '[]');
+            const pendingOrders = orders.filter(o => o.status === 'pending' || o.status === 'processing');
+            
+            if (pendingOrders.length === 0) {
+                alert('No orders ready for label printing');
+                return;
+            }
+            
+            alert(`Printing labels for ${pendingOrders.length} orders\n\nThis would integrate with Pitney Bowes API to print all pending shipping labels.`);
+        }
+        
+        function convertOrdersToCSV(orders) {
+            const headers = ['Order ID', 'Date', 'Customer Name', 'Email', 'Total', 'Status'];
+            const rows = orders.map(order => [
+                order.id,
+                new Date(order.date).toLocaleDateString(),
+                order.customer.name,
+                order.customer.email,
+                order.total,
+                order.status
+            ]);
+            
+            return [headers, ...rows].map(row => row.join(',')).join('\n');
+        }
+        
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
-
