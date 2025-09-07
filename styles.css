@@ -85,11 +85,11 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 0.25rem; /* Move navigation VERY CLOSE to logo */
-    margin-right: 0; /* Remove right margin */
+    margin-left: 0;
+    margin-right: 0;
     gap: 1.5rem; /* Reduce gap between nav items */
     position: absolute; /* Make it absolute positioned */
-    left: 120px; /* Move navigation to the LEFT */
+    left: 80px; /* Sweet spot - not too close to logo, not too far */
     z-index: 10;
 }
 
