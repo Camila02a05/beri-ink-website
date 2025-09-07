@@ -7,11 +7,11 @@ const enhancedProducts = [
         sku: "FLB-001",
         category: "Floral",
         images: [
-            "images/temp-product-1.png",
-            "images/temp-product-1-2.png",
-            "images/temp-product-1-3.png",
-            "images/temp-product-1-4.png",
-            "images/temp-product-1-5.png"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",
@@ -32,9 +32,9 @@ const enhancedProducts = [
         sku: "MSQ-002",
         category: "Script",
         images: [
-            "images/temp-product-2.png",
-            "images/temp-product-2-2.png",
-            "images/temp-product-2-3.png"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",
@@ -55,10 +55,10 @@ const enhancedProducts = [
         sku: "DBS-003",
         category: "Botanical",
         images: [
-            "images/temp-product-3.png",
-            "images/temp-product-3-2.png",
-            "images/temp-product-3-3.png",
-            "images/temp-product-3-4.png"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",
@@ -79,9 +79,9 @@ const enhancedProducts = [
         sku: "FRS-004",
         category: "Floral",
         images: [
-            "images/temp-product-4.png",
-            "images/temp-product-4-2.png",
-            "images/temp-product-4-3.png"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",
@@ -102,8 +102,8 @@ const enhancedProducts = [
         sku: "MHA-005",
         category: "Symbols",
         images: [
-            "images/temp-product-5.jpeg",
-            "images/temp-product-5-2.jpeg"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",
@@ -124,11 +124,11 @@ const enhancedProducts = [
         sku: "FBC-006",
         category: "Animals",
         images: [
-            "images/temp-product-6.jpeg",
-            "images/temp-product-6-2.jpeg",
-            "images/temp-product-6-3.jpeg",
-            "images/temp-product-6-4.jpeg",
-            "images/temp-product-6-5.jpeg"
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg",
+            "images/placeholder-temp-tattoo.jpg"
         ],
         variations: {
             type: "quantity",

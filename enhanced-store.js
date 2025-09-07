@@ -109,7 +109,6 @@ function createProductCard(product) {
                         `).join('')}
                     </div>
                 </div>
-                <div class="product-badge">${product.category}</div>
             </div>
             <div class="product-info">
                 <div class="product-header">
