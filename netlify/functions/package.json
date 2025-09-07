@@ -4,7 +4,7 @@
   "description": "Netlify functions for Beri Ink store",
   "main": "index.js",
   "dependencies": {
-    "stripe": "^14.0.0",
+    "stripe": "^13.0.0",
     "axios": "^1.6.0"
   }
 }
