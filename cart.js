@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const itemsEl = document.getElementById('cartItems');
     const subtotalEl = document.getElementById('cartSubtotal');
     const checkoutBtn = document.getElementById('cartCheckout');
+    const cartButton = document.getElementById('cartButton');
+    const cartCount = document.getElementById('cartCount');
 
     const cart = {
         items: JSON.parse(localStorage.getItem('beri-ink-cart') || '[]'),
@@ -17,10 +19,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveCart() {
         localStorage.setItem('beri-ink-cart', JSON.stringify(cart.items));
+        updateCartCount();
+    }
+
+    function updateCartCount() {
+        const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCount) {
+            cartCount.textContent = totalItems;
+            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        }
     }
 
     // Initialize cart on page load
     renderCart();
+    updateCartCount();
+
+    // Cart button click handler
+    if (cartButton) {
+        cartButton.addEventListener('click', openCart);
+    }
 
     function openCart() {
         drawer.classList.add('open');
