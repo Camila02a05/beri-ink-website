@@ -8,9 +8,8 @@ let currentProducts = [];
 let currentCategory = 'all';
 
 function loadProductsFromCMS() {
-    // Try to load products from CMS first
-    const cmsContent = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
-    const cmsProducts = cmsContent.store?.products || cmsContent.products;
+    // Try to load products from CMS first - check the correct localStorage key
+    const cmsProducts = JSON.parse(localStorage.getItem('beri-ink-products') || '[]');
     
     if (cmsProducts && cmsProducts.length > 0) {
         console.log('Loading products from CMS:', cmsProducts);
