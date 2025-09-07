@@ -43,7 +43,10 @@ exports.handler = async (event, context) => {
   }
 
   try {
+    console.log('Received event:', JSON.stringify(event, null, 2));
     const { items, shippingAddress } = JSON.parse(event.body);
+    console.log('Items:', items);
+    console.log('Shipping address:', shippingAddress);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
       return {
@@ -110,7 +113,11 @@ exports.handler = async (event, context) => {
     console.error('Error creating checkout session:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to create checkout session' })
+      body: JSON.stringify({ 
+        error: 'Failed to create checkout session',
+        details: error.message,
+        stack: error.stack
+      })
     };
   }
 };
