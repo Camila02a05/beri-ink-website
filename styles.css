@@ -85,9 +85,9 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 3rem; /* Move navigation further from logo */
-    margin-right: 15rem; /* Much more space for cart button */
-    gap: 1.5rem; /* Slightly larger gaps between nav items */
+    margin-left: 1.5rem; /* Close to small logo */
+    margin-right: 12rem; /* Space for cart button */
+    gap: 1.2rem; /* Good spacing between nav items */
     position: relative;
     z-index: 10;
 }
@@ -628,7 +628,7 @@ main {
     .mobile-menu-btn { display: flex; position: absolute; right: 1rem; top: 0.75rem; }
     .logo { position: static; left: auto; }
     .header-content { padding: 0 1rem; }
-    .logo-img { max-height: 44px !important; }
+    .logo-img { max-height: 32px !important; }
 }
 
 @media (max-width: 768px) {
@@ -644,8 +644,8 @@ main {
     }
     
     .logo-img {
-        height: 40px !important;
-        max-height: 40px !important;
+        height: 32px !important;
+        max-height: 32px !important;
     }
     
     .nav {
@@ -1036,14 +1036,14 @@ main {
 /* Mobile Responsiveness Fixes */
 @media (max-width: 768px) {
     .logo-img {
-        height: 60px !important;
-        max-height: 60px !important;
+        height: 32px !important;
+        max-height: 32px !important;
         width: auto !important;
     }
     
     .header-logo img {
-        height: 60px !important;
-        max-height: 60px !important;
+        height: 32px !important;
+        max-height: 32px !important;
     }
     
     .hero h1 {
@@ -1070,14 +1070,14 @@ main {
 
 @media (max-width: 480px) {
     .logo-img {
-        height: 40px !important;
-        max-height: 40px !important;
+        height: 32px !important;
+        max-height: 32px !important;
         width: auto !important;
     }
     
     .header-logo img {
-        height: 40px !important;
-        max-height: 40px !important;
+        height: 32px !important;
+        max-height: 32px !important;
     }
     
     .hero h1 {

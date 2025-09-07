@@ -101,7 +101,8 @@ function createProductCard(product) {
         <div class="product-card enhanced-card" data-product-id="${product.id}" data-order="${product.order}">
             <div class="product-image-container">
                 <div class="product-image-gallery">
-                    <img src="${mainImage}" alt="${product.title}" class="main-image" loading="lazy">
+                    <img src="${mainImage}" alt="${product.title}" class="main-image clickable-image" 
+                         onclick="openQuickView('${product.id}')" loading="lazy" style="cursor: pointer;">
                     <div class="image-thumbnails">
                         ${product.images.slice(0, 5).map((img, index) => `
                             <img src="${img}" alt="${product.title}" class="thumbnail ${index === 0 ? 'active' : ''}" 
@@ -131,9 +132,6 @@ function createProductCard(product) {
                         onclick="addToCartWithVariation('${product.id}')">
                     Add to cart
                 </button>
-            </div>
-            <div class="product-actions">
-                <button class="quick-view-btn" onclick="openQuickView('${product.id}')">Quick View</button>
             </div>
         </div>
     `;
