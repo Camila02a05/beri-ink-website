@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Debug - Beri Ink</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .debug-section h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .warning { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <h1>CMS Debug Tool</h1>
+    <p>This page helps debug why CMS changes aren't appearing on your live website.</p>
+
+    <div class="debug-section">
+        <h2>1. Check Content Integration Script</h2>
+        <button onclick="checkContentScript()">Check Script Loading</button>
+        <div id="script-status" class="debug-info"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>2. Check Local Storage Data</h2>
+        <button onclick="checkLocalStorage()">Check Stored Content</button>
+        <div id="storage-status" class="debug-info"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>3. Test Gallery Update</h2>
+        <button onclick="testGalleryUpdate()">Test Gallery Photos</button>
+        <div id="gallery-status" class="debug-info"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>4. Manual Content Test</h2>
+        <button onclick="createTestContent()">Create Test Content</button>
+        <button onclick="applyTestContent()">Apply Test Content</button>
+        <div id="test-status" class="debug-info"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>5. Gallery Preview</h2>
+        <div id="gallery-preview" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 10px;"></div>
+    </div>
+
+    <script src="content-integration.js"></script>
+    <script>
+        function checkContentScript() {
+            const status = document.getElementById('script-status');
+            if (typeof updateGalleryPhotos === 'function') {
+                status.innerHTML = '<span class="success">✅ Content integration script is loaded and working!</span>';
+            } else {
+                status.innerHTML = '<span class="error">❌ Content integration script is NOT loaded or not working!</span>';
+            }
+        }
+
+        function checkLocalStorage() {
+            const status = document.getElementById('storage-status');
+            const content = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            const galleryPhotos = JSON.parse(localStorage.getItem('beri-ink-gallery-photos') || '[]');
+            
+            let output = 'Main Content (beri-ink-content):\n';
+            output += JSON.stringify(content, null, 2);
+            output += '\n\nGallery Photos (beri-ink-gallery-photos):\n';
+            output += JSON.stringify(galleryPhotos, null, 2);
+            
+            if (content.homepage && content.homepage.galleryPhotos) {
+                output += '\n\n✅ Gallery photos found in main content!';
+            } else {
+                output += '\n\n❌ No gallery photos in main content!';
+            }
+            
+            status.textContent = output;
+        }
+
+        function testGalleryUpdate() {
+            const status = document.getElementById('gallery-status');
+            const content = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            
+            if (content.homepage && content.homepage.galleryPhotos) {
+                if (typeof updateGalleryPhotos === 'function') {
+                    updateGalleryPhotos(content.homepage.galleryPhotos);
+                    status.innerHTML = '<span class="success">✅ Gallery update function called successfully!</span>';
+                } else {
+                    status.innerHTML = '<span class="error">❌ updateGalleryPhotos function not available!</span>';
+                }
+            } else {
+                status.innerHTML = '<span class="warning">⚠️ No gallery photos found in content. Try uploading photos in the CMS first.</span>';
+            }
+        }
+
+        function createTestContent() {
+            const testContent = {
+                homepage: {
+                    galleryPhotos: [
+                        {
+                            id: 'test1',
+                            src: 'https://via.placeholder.com/300x300/ff6b6b/ffffff?text=Test+Photo+1',
+                            name: 'Test Photo 1'
+                        },
+                        {
+                            id: 'test2',
+                            src: 'https://via.placeholder.com/300x300/4ecdc4/ffffff?text=Test+Photo+2',
+                            name: 'Test Photo 2'
+                        },
+                        {
+                            id: 'test3',
+                            src: 'https://via.placeholder.com/300x300/45b7d1/ffffff?text=Test+Photo+3',
+                            name: 'Test Photo 3'
+                        }
+                    ]
+                }
+            };
+            
+            localStorage.setItem('beri-ink-content', JSON.stringify(testContent));
+            document.getElementById('test-status').innerHTML = '<span class="success">✅ Test content created and saved!</span>';
+        }
+
+        function applyTestContent() {
+            const content = JSON.parse(localStorage.getItem('beri-ink-content') || '{}');
+            if (content.homepage && content.homepage.galleryPhotos) {
+                if (typeof updateGalleryPhotos === 'function') {
+                    updateGalleryPhotos(content.homepage.galleryPhotos);
+                    document.getElementById('test-status').innerHTML = '<span class="success">✅ Test content applied! Check the gallery preview below.</span>';
+                } else {
+                    document.getElementById('test-status').innerHTML = '<span class="error">❌ updateGalleryPhotos function not available!</span>';
+                }
+            } else {
+                document.getElementById('test-status').innerHTML = '<span class="error">❌ No test content found!</span>';
+            }
+        }
+
+        // Auto-run checks on page load
+        window.addEventListener('load', function() {
+            checkContentScript();
+            checkLocalStorage();
+        });
+    </script>
+</body>
+</html>
