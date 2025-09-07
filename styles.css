@@ -85,9 +85,9 @@ p {
 .nav {
     display: flex;
     align-items: center;
-    margin-left: 1.5rem; /* Close to small logo */
-    margin-right: 12rem; /* Space for cart button */
-    gap: 1.2rem; /* Good spacing between nav items */
+    margin-left: 0.5rem; /* Very close to small logo */
+    margin-right: 10rem; /* Space for cart button */
+    gap: 1rem; /* Compact spacing between nav items */
     position: relative;
     z-index: 10;
 }
@@ -137,8 +137,8 @@ p {
 }
 
 .logo-img {
-    height: auto;
-    max-height: 32px; /* Even smaller logo */
+    height: 32px !important; /* Fixed height for consistent sizing */
+    max-height: 32px !important;
     width: auto;
     object-fit: contain;
     background: transparent !important;
@@ -603,9 +603,9 @@ main {
     .nav {
         display: flex;
         align-items: center;
-        margin-left: 2rem;
-        margin-right: 5rem;
-        gap: 2rem;
+        margin-left: 0.5rem; /* Keep close to small logo */
+        margin-right: 10rem; /* Space for cart button */
+        gap: 1rem; /* Compact spacing */
     }
     
     .social-icons {
