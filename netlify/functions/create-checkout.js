@@ -1,7 +1,7 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Helper function to calculate shipping
-function calculateShipping(address, items) {
+async function calculateShipping(address, items) {
   const isInternational = address.country !== 'US';
   
   // Calculate total order value
@@ -73,7 +73,7 @@ exports.handler = async (event, context) => {
     }
 
     // Calculate shipping
-    const shipping = calculateShipping(shippingAddress, items);
+    const shipping = await calculateShipping(shippingAddress, items);
 
     // Create line items for products
     const lineItems = items.map(item => ({
