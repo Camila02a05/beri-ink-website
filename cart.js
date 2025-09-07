@@ -25,9 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateCartCount() {
         const totalItems = cart.items.reduce((sum, item) => sum + item.quantity, 0);
         console.log('Updating cart count:', totalItems, 'cartCount element:', cartCount);
-        if (cartCount) {
-            cartCount.textContent = totalItems;
-            cartCount.style.display = 'flex'; // Always show the count, even when 0
+        
+        // Try to find the cart count element if it's not already found
+        const cartCountElement = document.getElementById('cartCount');
+        if (cartCountElement) {
+            cartCountElement.textContent = totalItems;
+            cartCountElement.style.display = 'flex'; // Always show the count, even when 0
+            console.log('Cart count updated to:', totalItems);
+        } else {
+            console.error('Cart count element not found!');
         }
     }
 
@@ -42,6 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Force updating cart count after delay');
         updateCartCount();
     }, 100);
+    
+    // Additional force update after longer delay
+    setTimeout(() => {
+        console.log('Second force update of cart count');
+        updateCartCount();
+    }, 500);
     
     // Update cart count when page becomes visible (in case of tab switching)
     document.addEventListener('visibilitychange', () => {
@@ -222,6 +234,25 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('Unable to start checkout. Please try again.');
         }
     });
+});
+
+// Global function to force update cart count from anywhere
+window.updateCartCountGlobal = function() {
+    const cartItems = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
+    const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountElement = document.getElementById('cartCount');
+    if (cartCountElement) {
+        cartCountElement.textContent = totalItems;
+        cartCountElement.style.display = 'flex';
+        console.log('Global cart count update:', totalItems);
+    }
+};
+
+// Call global update on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        window.updateCartCountGlobal();
+    }, 200);
 });
 
 
