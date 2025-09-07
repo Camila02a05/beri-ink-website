@@ -1,26 +1,17 @@
 // Enhanced Store with Variations, Multiple Photos, and Categories
 document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for simple-data-loader to finish
-    setTimeout(() => {
-        loadProductsFromCMS();
-        initializeEnhancedStore();
-    }, 100);
+    loadProductsFromCMS();
+    initializeEnhancedStore();
 });
 
 let currentProducts = [];
 let currentCategory = 'all';
 
 function loadProductsFromCMS() {
-    // Wait for simple-data-loader to load CMS data
-    if (window.cmsData && window.cmsData.products && window.cmsData.products.length > 0) {
-        console.log('Loading products from CMS:', window.cmsData.products);
-        currentProducts = [...window.cmsData.products];
-        window.enhancedProducts = window.cmsData.products;
-    } else {
-        // Fallback to default products
-        console.log('No CMS products found, using default products');
-        currentProducts = [...(window.enhancedProducts || enhancedProducts)];
-    }
+    // Always use default products for now (CMS integration disabled)
+    console.log('Using default products');
+    currentProducts = [...enhancedProducts];
+    window.enhancedProducts = enhancedProducts;
 }
 
 function initializeEnhancedStore() {
