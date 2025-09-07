@@ -36,24 +36,34 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Cart count element not found!');
         }
     }
+    
+    // Immediate update to prevent 0 flash
+    function immediateCartUpdate() {
+        const cartItems = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
+        const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        const cartCountElement = document.getElementById('cartCount');
+        if (cartCountElement) {
+            cartCountElement.textContent = totalItems;
+            cartCountElement.style.display = 'flex';
+        }
+    }
 
     // Initialize cart on page load
     console.log('Cart initialized with items:', cart.items);
     console.log('Cart count element found:', cartCount);
-    renderCart();
+    
+    // Immediate update to prevent 0 flash
+    immediateCartUpdate();
+    
+    // Update cart count immediately to prevent glitch
     updateCartCount();
+    renderCart();
     
-    // Force update cart count after a short delay to ensure DOM is ready
+    // Single delayed update to ensure everything is ready
     setTimeout(() => {
-        console.log('Force updating cart count after delay');
+        console.log('Final cart count update');
         updateCartCount();
-    }, 100);
-    
-    // Additional force update after longer delay
-    setTimeout(() => {
-        console.log('Second force update of cart count');
-        updateCartCount();
-    }, 500);
+    }, 50);
     
     // Update cart count when page becomes visible (in case of tab switching)
     document.addEventListener('visibilitychange', () => {
@@ -247,12 +257,5 @@ window.updateCartCountGlobal = function() {
         console.log('Global cart count update:', totalItems);
     }
 };
-
-// Call global update on page load
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        window.updateCartCountGlobal();
-    }, 200);
-});
 
 
