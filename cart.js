@@ -8,12 +8,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutBtn = document.getElementById('cartCheckout');
 
     const cart = {
-        items: [],
+        items: JSON.parse(localStorage.getItem('beri-ink-cart') || '[]'),
     };
 
     function formatPrice(cents) {
         return `$${(cents / 100).toFixed(2)}`;
     }
+
+    function saveCart() {
+        localStorage.setItem('beri-ink-cart', JSON.stringify(cart.items));
+    }
+
+    // Initialize cart on page load
+    renderCart();
 
     function openCart() {
         drawer.classList.add('open');
@@ -62,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             cart.items.push({ ...payload, quantity: 1 });
         }
+        saveCart();
         renderCart();
         openCart();
     }
@@ -144,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const op = e.target.getAttribute('data-op');
             if (op === 'inc') cart.items[idx].quantity += 1;
             if (op === 'dec') cart.items[idx].quantity = Math.max(1, cart.items[idx].quantity - 1);
+            saveCart();
             renderCart();
         }
     });
@@ -151,10 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutBtn.addEventListener('click', async () => {
         if (cart.items.length === 0) return;
         try {
+            // For now, we'll use a default shipping address
+            // In a real implementation, you'd collect this from the user
+            const shippingAddress = {
+                country: 'US' // This will be updated when user selects country
+            };
+            
             const res = await fetch('/.netlify/functions/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: cart.items }),
+                body: JSON.stringify({ 
+                    items: cart.items,
+                    shippingAddress: shippingAddress
+                }),
             });
             if (!res.ok) throw new Error('Checkout failed');
             const data = await res.json();
