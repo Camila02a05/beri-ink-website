@@ -44,11 +44,26 @@ exports.handler = async (event, context) => {
 
   try {
     console.log('Received event:', JSON.stringify(event, null, 2));
-    const { items, shippingAddress } = JSON.parse(event.body);
-    console.log('Items:', items);
-    console.log('Shipping address:', shippingAddress);
+    console.log('Event body:', event.body);
+    
+    // Parse the request body
+    let requestData;
+    try {
+      requestData = JSON.parse(event.body);
+    } catch (parseError) {
+      console.error('Failed to parse request body:', parseError);
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Invalid request format' })
+      };
+    }
+    
+    const { items, shippingAddress } = requestData;
+    console.log('Parsed items:', items);
+    console.log('Parsed shipping address:', shippingAddress);
 
     if (!items || !Array.isArray(items) || items.length === 0) {
+      console.error('No items provided or items is not an array');
       return {
         statusCode: 400,
         body: JSON.stringify({ error: 'No items provided' })
@@ -89,6 +104,10 @@ exports.handler = async (event, context) => {
     });
 
     // Create Stripe checkout session
+    console.log('Creating Stripe session with line items:', lineItems);
+    console.log('Success URL:', `${process.env.URL}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`);
+    console.log('Cancel URL:', `${process.env.URL}/store.html`);
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
@@ -103,6 +122,8 @@ exports.handler = async (event, context) => {
         shipping: JSON.stringify(shipping)
       }
     });
+    
+    console.log('Stripe session created successfully:', session.id);
 
     return {
       statusCode: 200,

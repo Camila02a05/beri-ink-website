@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const priceText = document.getElementById('qvPrice').textContent.replace(/[^0-9.]/g, '');
         const cents = Math.round(parseFloat(priceText || '0') * 100);
         const image = document.getElementById('qvImage').src;
-        addToCart({ id: pid, title, price: cents, image });
+        addToCart({ id: pid, title, price: cents, image, sku: 'QV-' + pid });
         closeQuickView();
     });
 
@@ -221,6 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: titleEl ? titleEl.textContent.trim() : 'Item',
                 price: isNaN(cents) ? 0 : cents,
                 image: img ? img.src : 'images/placeholder-temp-tattoo.jpg',
+                sku: 'CARD-' + (titleEl ? titleEl.textContent.trim().replace(/\s+/g, '-') : 'ITEM')
             });
         }
 
