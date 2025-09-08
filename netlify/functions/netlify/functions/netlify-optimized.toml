@@ -1,0 +1,24 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+  command = "echo 'Build complete'"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[plugins]]
+  package = "@netlify/plugin-functions-install-core"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin/index.html"
+  status = 200
+
+# Function-specific settings
+[[functions]]
+  path = "netlify/functions/create-checkout-optimized.js"
+  included_files = ["package.json"]
+

@@ -1,0 +1,10 @@
+{
+  "name": "beri-ink-store-functions",
+  "version": "1.0.0",
+  "description": "Netlify functions for Beri Ink store",
+  "main": "index.js",
+  "dependencies": {
+    "stripe": "^13.0.0",
+    "axios": "^1.6.0"
+  }
+}
