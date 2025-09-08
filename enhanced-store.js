@@ -113,10 +113,9 @@ function createProductCard(product) {
                 </div>
             </div>
             <div class="product-info">
-                <div class="product-header">
-                    <h3 class="product-title">${product.title}</h3>
-                    <div class="product-sku">SKU: ${product.sku}</div>
-                </div>
+                        <div class="product-header">
+                            <h3 class="product-title">${product.title}</h3>
+                        </div>
                 <p class="product-description">${product.description}</p>
                 <div class="product-variations">
                     <label for="variation-${product.id}">Quantity:</label>

@@ -59,11 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCartCount();
     renderCart();
     
-    // Single delayed update to ensure everything is ready
+    // Multiple updates to ensure persistence
     setTimeout(() => {
-        console.log('Final cart count update');
+        console.log('First delayed cart count update');
         updateCartCount();
-    }, 50);
+    }, 10);
+    
+    setTimeout(() => {
+        console.log('Second delayed cart count update');
+        updateCartCount();
+    }, 100);
     
     // Update cart count when page becomes visible (in case of tab switching)
     document.addEventListener('visibilitychange', () => {
