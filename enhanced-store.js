@@ -28,7 +28,7 @@ function createCategoryFilter() {
     const categories = window.categories || [
         { id: "all", name: "All Products" },
         { id: "animals", name: "Animals" },
-        { id: "botanical", name: "Botanicals" },
+        { id: "botanical", name: "Botanical" },
         { id: "ornamental", name: "Ornamentals" },
         { id: "others", name: "Others" }
     ];
@@ -203,6 +203,7 @@ function openQuickView(productId) {
     // Add image gallery to modal if it doesn't exist
     let imageGallery = modal.querySelector('.qv-image-gallery');
     if (!imageGallery) {
+        console.log('Creating quick view for product:', product.title, 'with', product.images.length, 'images');
         imageGallery = document.createElement('div');
         imageGallery.className = 'qv-image-gallery';
         imageGallery.innerHTML = `

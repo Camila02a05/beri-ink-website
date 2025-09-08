@@ -148,7 +148,7 @@ const enhancedProducts = [
 const categories = [
     { id: "all", name: "All Products" },
     { id: "animals", name: "Animals" },
-    { id: "botanical", name: "Botanicals" },
+    { id: "botanical", name: "Botanical" },
     { id: "ornamental", name: "Ornamentals" },
     { id: "others", name: "Others" }
 ];
