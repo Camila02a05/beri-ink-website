@@ -55,8 +55,8 @@ exports.handler = async (event, context) => {
       };
     }
 
-    // Calculate shipping
-    const shipping = await calculateShipping(shippingAddress, items);
+    // Calculate shipping (will be recalculated with actual address from Stripe)
+    const shipping = calculateShipping(shippingAddress, items);
 
     // Create line items for products
     const lineItems = items.map(item => ({

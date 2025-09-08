@@ -1301,3 +1301,52 @@ main {
     .temp-tattoo-carousel .carousel-item p { font-size: 1.05rem; margin: 2px 0 0; }
 }
 
+
+
+/* Thank You Page Styling */
+.order-info {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.order-info p {
+    font-weight: 600;
+    color: #8b7355;
+    margin-bottom: 1rem;
+}
+
+.order-info ul {
+    list-style: none;
+    padding: 0;
+}
+
+.order-info li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-info li:last-child {
+    border-bottom: none;
+}
+
+.thank-you-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.cta-button.secondary {
+    background: transparent;
+    color: #8b7355;
+    border: 2px solid #8b7355;
+}
+
+.cta-button.secondary:hover {
+    background: #8b7355;
+    color: white;
+}

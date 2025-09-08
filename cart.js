@@ -227,26 +227,29 @@ document.addEventListener('DOMContentLoaded', () => {
     checkoutBtn.addEventListener('click', async () => {
         if (cart.items.length === 0) return;
         try {
-            // For now, we'll use a default shipping address
-            // In a real implementation, you'd collect this from the user
-            const shippingAddress = {
-                country: 'US' // This will be updated when user selects country
-            };
-            
+            // Create checkout session - Stripe will collect shipping address
             const res = await fetch('/.netlify/functions/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     items: cart.items,
-                    shippingAddress: shippingAddress
+                    // Let Stripe collect the shipping address during checkout
+                    shippingAddress: { country: 'US' } // Default, will be updated by Stripe
                 }),
             });
-            if (!res.ok) throw new Error('Checkout failed');
+            
+            if (!res.ok) {
+                const errorData = await res.json();
+                console.error('Checkout error:', errorData);
+                throw new Error(errorData.error || 'Checkout failed');
+            }
+            
             const data = await res.json();
+            console.log('Checkout session created:', data);
             window.location.href = data.url;
         } catch (e) {
-            console.error(e);
-            alert('Unable to start checkout. Please try again.');
+            console.error('Checkout error:', e);
+            alert('Unable to start checkout. Please try again. Error: ' + e.message);
         }
     });
 });
