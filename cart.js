@@ -84,10 +84,28 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartCount();
     });
 
-    // Cart button click handler
-    if (cartButton) {
-        cartButton.addEventListener('click', openCart);
+    // Cart button click handler - ensure it's always attached
+    function attachCartButtonHandler() {
+        const cartButton = document.getElementById('cartButton');
+        if (cartButton && !cartButton.hasAttribute('data-listener-attached')) {
+            cartButton.addEventListener('click', openCart);
+            cartButton.setAttribute('data-listener-attached', 'true');
+            console.log('Cart button handler attached');
+        }
     }
+    
+    // Attach handler immediately and on page load
+    attachCartButtonHandler();
+    
+    // Also attach when DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', attachCartButtonHandler);
+    
+    // Attach when page becomes visible (for navigation between pages)
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            attachCartButtonHandler();
+        }
+    });
 
     function openCart() {
         drawer.classList.add('open');
@@ -121,7 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <button class="qty-btn" data-idx="${idx}" data-op="inc">+</button>
                     </div>
                 </div>
-                <div>${formatPrice(item.price * item.quantity)}</div>
+                <div class="cart-item-right">
+                    <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+                    <button class="cart-item-delete" data-idx="${idx}" title="Remove item">×</button>
+                </div>
             `;
             itemsEl.appendChild(row);
         });
@@ -219,6 +240,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const op = e.target.getAttribute('data-op');
             if (op === 'inc') cart.items[idx].quantity += 1;
             if (op === 'dec') cart.items[idx].quantity = Math.max(1, cart.items[idx].quantity - 1);
+            saveCart();
+            renderCart();
+        }
+
+        if (e.target.classList.contains('cart-item-delete')) {
+            const idx = parseInt(e.target.getAttribute('data-idx'), 10);
+            cart.items.splice(idx, 1);
             saveCart();
             renderCart();
         }
