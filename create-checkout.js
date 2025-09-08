@@ -1,5 +1,10 @@
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
+// Test Stripe connection
+console.log('Stripe secret key exists:', !!process.env.STRIPE_SECRET_KEY);
+console.log('Stripe secret key starts with sk_:', process.env.STRIPE_SECRET_KEY?.startsWith('sk_'));
+console.log('URL environment variable:', process.env.URL);
+
 // Helper function to calculate shipping (simplified)
 function calculateShipping(address, items) {
   const isInternational = address.country !== 'US';

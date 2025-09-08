@@ -257,6 +257,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (cart.items.length === 0) return;
         try {
             // Create checkout session - Stripe will collect shipping address
+            console.log('Sending cart items to checkout:', cart.items);
+            
             const res = await fetch('/.netlify/functions/create-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -267,9 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 }),
             });
             
+            console.log('Checkout response status:', res.status);
+            console.log('Checkout response headers:', res.headers);
+            
             if (!res.ok) {
                 const errorData = await res.json();
-                console.error('Checkout error:', errorData);
+                console.error('Checkout error details:', errorData);
                 throw new Error(errorData.error || 'Checkout failed');
             }
             
