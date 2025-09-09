@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Sending', validItems.length, 'valid items to checkout');
 
             // Make the request to the Netlify function
-            const response = await fetch('/.netlify/functions/create-checkout-optimized', {
+            const response = await fetch('/.netlify/functions/create-checkout-session', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json',
