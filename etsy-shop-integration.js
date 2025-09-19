@@ -1,60 +1,32 @@
 // Etsy Shop Integration for Beri Ink
 class EtsyShopIntegration {
     constructor() {
-        this.apiKey = 'pxqb8kr9sivd7fyemn37vnru';
-        this.shopId = 'BeriInk';
-        this.baseUrl = 'https://openapi.etsy.com/v3';
         this.products = [];
-        this.cart = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
     }
 
-    // Fetch products from Etsy shop
+    // Fetch products from Etsy shop via Netlify function
     async fetchProducts() {
         try {
-            console.log('Fetching products from Etsy shop...');
+            console.log('Fetching products from Etsy via Netlify function...');
             
-            // First, get shop listings with a simple call
-            const response = await fetch(
-                `${this.baseUrl}/application/shops/${this.shopId}/listings/active?api_key=${this.apiKey}&limit=50&includes=Images`
-            );
+            const response = await fetch('/.netlify/functions/etsy-products');
             
             console.log('Response status:', response.status);
             
             if (!response.ok) {
-                const errorText = await response.text();
-                console.error('Etsy API error:', response.status, errorText);
-                throw new Error(`Etsy API error: ${response.status} - ${errorText}`);
+                const errorData = await response.json();
+                console.error('Netlify function error:', response.status, errorData);
+                throw new Error(`Failed to fetch products: ${errorData.message || 'Unknown error'}`);
             }
             
             const data = await response.json();
-            console.log('Etsy API response:', data);
+            console.log('Products fetched successfully:', data);
             
-            if (!data.results || !Array.isArray(data.results)) {
-                throw new Error('Invalid response format from Etsy API');
+            if (!data.success || !data.products) {
+                throw new Error('Invalid response from server');
             }
             
-            // Process the listings
-            this.products = data.results.map(listing => {
-                const images = listing.Images || [];
-                const mainImage = images.length > 0 ? images[0].url_fullxfull : 'images/placeholder-temp-tattoo.jpg';
-                
-                return {
-                    id: listing.listing_id,
-                    title: listing.title,
-                    description: this.stripHtml(listing.description),
-                    price: parseFloat(listing.price.amount) / 100, // Convert from cents
-                    currency: listing.price.currency_code,
-                    images: images.map(img => img.url_fullxfull),
-                    url: listing.url,
-                    quantity: 1, // Default quantity
-                    tags: listing.tags || [],
-                    materials: listing.materials || [],
-                    views: listing.views || 0,
-                    num_favorers: listing.num_favorers || 0,
-                    etsy_shop_url: listing.url
-                };
-            });
-            
+            this.products = data.products;
             console.log('Products processed:', this.products.length);
             return this.products;
             
@@ -62,14 +34,6 @@ class EtsyShopIntegration {
             console.error('Error fetching Etsy products:', error);
             throw error;
         }
-    }
-
-    // Strip HTML tags from description
-    stripHtml(html) {
-        if (!html) return '';
-        const tmp = document.createElement('div');
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || '';
     }
 
     // Display products on the page
@@ -88,8 +52,7 @@ class EtsyShopIntegration {
         const productsHTML = this.products.map(product => this.createProductCard(product)).join('');
         container.innerHTML = productsHTML;
         
-        // Add event listeners for add to cart
-        this.addCartEventListeners();
+        console.log('Products displayed successfully');
     }
 
     // Create product card HTML
@@ -123,12 +86,6 @@ class EtsyShopIntegration {
                 </div>
             </div>
         `;
-    }
-
-    // Add event listeners for cart functionality
-    addCartEventListeners() {
-        // No cart functionality for now, just Etsy links
-        console.log('Etsy product event listeners added');
     }
 
     // Utility function to truncate text
