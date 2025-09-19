@@ -155,6 +155,34 @@
     font-style: italic;
 }
 
+/* Product Actions Styles */
+.product-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.etsy-button {
+    width: 100%;
+    padding: 0.8rem;
+    background: #8b7355;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.etsy-button:hover {
+    background: #6d5a42;
+    color: white;
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .products-grid {

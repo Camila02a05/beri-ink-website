@@ -80,13 +80,14 @@ class EtsyShopIntegration {
                     </div>
                     <div class="product-actions">
                         <a href="${product.etsy_shop_url}" target="_blank" class="product-button etsy-button">
-                            Buy on Etsy
+                            Buy on Etsy - $${price}
                         </a>
                     </div>
                 </div>
             </div>
         `;
     }
+
 
     // Utility function to truncate text
     truncateText(text, maxLength) {
