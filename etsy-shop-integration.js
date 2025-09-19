@@ -111,18 +111,69 @@ class EtsyShopIntegration {
             console.log('Etsy integration initialized successfully!');
         } catch (error) {
             console.error('Failed to initialize Etsy integration:', error);
-            // Show error message to user
-            const container = document.getElementById('etsy-products-container');
-            if (container) {
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: #666;">
-                        <h3>Unable to load products from Etsy</h3>
-                        <p>Please visit our <a href="https://www.etsy.com/shop/BeriInk" target="_blank" style="color: #8b7355; text-decoration: underline;">Etsy shop</a> directly.</p>
-                        <p style="font-size: 0.9em; margin-top: 1rem;">Error: ${error.message}</p>
-                    </div>
-                `;
-            }
+            // Show fallback with sample products
+            this.showFallbackProducts();
         }
+    }
+
+    // Show fallback products when Etsy API fails
+    showFallbackProducts() {
+        const container = document.getElementById('etsy-products-container');
+        if (!container) return;
+
+        // Sample products as fallback
+        const fallbackProducts = [
+            {
+                id: 'fallback-1',
+                title: 'Delicate Floral Temporary Tattoo',
+                description: 'Beautiful fine line floral design perfect for trying out tattoo placement',
+                price: 8.99,
+                images: ['images/placeholder-temp-tattoo.jpg'],
+                etsy_shop_url: 'https://www.etsy.com/shop/BeriInk'
+            },
+            {
+                id: 'fallback-2',
+                title: 'Minimalist Line Art Tattoo',
+                description: 'Clean, simple line work that matches your aesthetic',
+                price: 7.99,
+                images: ['images/placeholder-temp-tattoo.jpg'],
+                etsy_shop_url: 'https://www.etsy.com/shop/BeriInk'
+            },
+            {
+                id: 'fallback-3',
+                title: 'Geometric Temporary Tattoo',
+                description: 'Modern geometric design for the contemporary tattoo lover',
+                price: 9.99,
+                images: ['images/placeholder-temp-tattoo.jpg'],
+                etsy_shop_url: 'https://www.etsy.com/shop/BeriInk'
+            },
+            {
+                id: 'fallback-4',
+                title: 'Botanical Temporary Tattoo',
+                description: 'Nature-inspired design with delicate details',
+                price: 8.50,
+                images: ['images/placeholder-temp-tattoo.jpg'],
+                etsy_shop_url: 'https://www.etsy.com/shop/BeriInk'
+            }
+        ];
+
+        this.products = fallbackProducts;
+        this.displayProducts();
+
+        // Add a notice about the fallback
+        const notice = document.createElement('div');
+        notice.style.cssText = `
+            text-align: center; 
+            padding: 20px; 
+            background: #f8f9fa; 
+            border-radius: 8px; 
+            margin: 20px 0;
+            color: #666;
+        `;
+        notice.innerHTML = `
+            <p><strong>Note:</strong> Showing sample products. <a href="https://www.etsy.com/shop/BeriInk" target="_blank" style="color: #8b7355; text-decoration: underline;">Visit our Etsy shop</a> to see all available designs and make a purchase.</p>
+        `;
+        container.parentNode.insertBefore(notice, container.nextSibling);
     }
 }
 
