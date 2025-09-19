@@ -18,27 +18,32 @@ exports.handler = async (event) => {
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
     const shopId = 'BeriInk';
     
-    // Use a simpler API call without complex parameters
-    const url = `https://openapi.etsy.com/v3/application/shops/${shopId}/listings/active?api_key=${apiKey}&limit=12`;
+    // Use the correct API endpoint format from Etsy documentation
+    const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=12`;
     
     console.log('Fetching from URL:', url);
     
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'x-api-key': apiKey,
+        'Content-Type': 'application/json'
+      }
+    });
     
     console.log('Response status:', response.status);
     console.log('Response headers:', Object.fromEntries(response.headers.entries()));
     
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('API Error:', response.status, errorText);
+      console.log('Response status:', response.status, response.statusText);
       
-      // Try to parse error as JSON for better error messages
-      let errorMessage = errorText;
+      // For non-500 errors, the endpoints return a JSON object as an error response
+      let errorData;
       try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorData.error || errorText;
+        errorData = await response.json();
+        console.log('Error data:', errorData);
       } catch (e) {
-        // Keep original error text if not JSON
+        errorData = { error: 'Unknown error', error_description: 'Could not parse error response' };
       }
       
       return {
@@ -47,8 +52,8 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: false,
           error: `API Error: ${response.status}`,
-          message: errorMessage,
-          details: errorText
+          message: errorData.error_description || errorData.error || 'Unknown API error',
+          details: errorData
         })
       };
     }
@@ -69,50 +74,31 @@ exports.handler = async (event) => {
       };
     }
     
-    // Process products with better error handling
+    // Process products with minimal error handling
     const products = data.results.map((listing, index) => {
-      try {
-        // Handle price parsing more safely
-        let price = 0;
-        if (listing.price && typeof listing.price === 'object') {
-          price = parseFloat(listing.price.amount || 0) / 100;
-        } else if (typeof listing.price === 'number') {
-          price = listing.price / 100;
-        } else if (typeof listing.price === 'string') {
-          price = parseFloat(listing.price) / 100;
-        }
-
-        // Handle images - try to get actual images from Etsy
-        let images = ['images/placeholder-temp-tattoo.jpg'];
-        if (listing.images && Array.isArray(listing.images) && listing.images.length > 0) {
-          images = listing.images.map(img => img.url_fullxfull || img.url_570xN || img.url_75x75);
-        }
-
-        return {
-          id: listing.listing_id?.toString() || `product-${index}`,
-          title: listing.title || 'Temporary Tattoo',
-          description: listing.description || 'Beautiful temporary tattoo design',
-          price: isNaN(price) ? 0 : price,
-          currency: listing.price?.currency_code || 'USD',
-          images: images,
-          url: listing.url || `https://www.etsy.com/listing/${listing.listing_id}`,
-          quantity: 1,
-          etsy_shop_url: listing.url || `https://www.etsy.com/listing/${listing.listing_id}`
-        };
-      } catch (error) {
-        console.error(`Error processing product ${index}:`, error);
-        return {
-          id: `product-${index}`,
-          title: 'Temporary Tattoo',
-          description: 'Beautiful temporary tattoo design',
-          price: 0,
-          currency: 'USD',
-          images: ['images/placeholder-temp-tattoo.jpg'],
-          url: '#',
-          quantity: 1,
-          etsy_shop_url: '#'
-        };
+      // Simple price extraction
+      let price = 0;
+      if (listing.price && listing.price.amount) {
+        price = parseFloat(listing.price.amount) / 100;
       }
+
+      // Simple image extraction
+      let images = ['images/placeholder-temp-tattoo.jpg'];
+      if (listing.images && listing.images[0] && listing.images[0].url_570xN) {
+        images = [listing.images[0].url_570xN];
+      }
+
+      return {
+        id: String(listing.listing_id || index),
+        title: String(listing.title || 'Temporary Tattoo'),
+        description: String(listing.description || 'Beautiful temporary tattoo design'),
+        price: price || 0,
+        currency: 'USD',
+        images: images,
+        url: String(listing.url || `https://www.etsy.com/listing/${listing.listing_id}`),
+        quantity: 1,
+        etsy_shop_url: String(listing.url || `https://www.etsy.com/listing/${listing.listing_id}`)
+      };
     });
     
     console.log('Processed products:', products.length);
