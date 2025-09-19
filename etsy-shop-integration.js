@@ -13,68 +13,63 @@ class EtsyShopIntegration {
         try {
             console.log('Fetching products from Etsy shop...');
             
-            // First, get shop listings
-            const listingsResponse = await fetch(
-                `${this.baseUrl}/application/shops/${this.shopId}/listings/active?api_key=${this.apiKey}&limit=100`
+            // First, get shop listings with a simple call
+            const response = await fetch(
+                `${this.baseUrl}/application/shops/${this.shopId}/listings/active?api_key=${this.apiKey}&limit=50&includes=Images`
             );
             
-            if (!listingsResponse.ok) {
-                throw new Error(`Etsy API error: ${listingsResponse.status}`);
+            console.log('Response status:', response.status);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Etsy API error:', response.status, errorText);
+                throw new Error(`Etsy API error: ${response.status} - ${errorText}`);
             }
             
-            const listingsData = await listingsResponse.json();
-            console.log('Listings fetched:', listingsData.results.length);
+            const data = await response.json();
+            console.log('Etsy API response:', data);
             
-            // Get detailed product information
-            const products = await Promise.all(
-                listingsData.results.map(async (listing) => {
-                    try {
-                        // Get listing images
-                        const imagesResponse = await fetch(
-                            `${this.baseUrl}/application/listings/${listing.listing_id}/images?api_key=${this.apiKey}`
-                        );
-                        const imagesData = await imagesResponse.json();
-                        
-                        // Get listing inventory
-                        const inventoryResponse = await fetch(
-                            `${this.baseUrl}/application/listings/${listing.listing_id}/inventory?api_key=${this.apiKey}`
-                        );
-                        const inventoryData = await inventoryResponse.json();
-                        
-                        return {
-                            id: listing.listing_id,
-                            title: listing.title,
-                            description: listing.description,
-                            price: parseFloat(listing.price.amount) / 100, // Convert from cents
-                            currency: listing.price.currency_code,
-                            images: imagesData.results.map(img => img.url_fullxfull),
-                            url: listing.url,
-                            quantity: inventoryData.results[0]?.products[0]?.offerings[0]?.quantity || 1,
-                            tags: listing.tags,
-                            materials: listing.materials,
-                            shop_section_id: listing.shop_section_id,
-                            state: listing.state,
-                            views: listing.views,
-                            num_favorers: listing.num_favorers,
-                            etsy_shop_url: listing.url
-                        };
-                    } catch (error) {
-                        console.error('Error fetching details for listing:', listing.listing_id, error);
-                        return null;
-                    }
-                })
-            );
+            if (!data.results || !Array.isArray(data.results)) {
+                throw new Error('Invalid response format from Etsy API');
+            }
             
-            // Filter out null results
-            this.products = products.filter(product => product !== null);
+            // Process the listings
+            this.products = data.results.map(listing => {
+                const images = listing.Images || [];
+                const mainImage = images.length > 0 ? images[0].url_fullxfull : 'images/placeholder-temp-tattoo.jpg';
+                
+                return {
+                    id: listing.listing_id,
+                    title: listing.title,
+                    description: this.stripHtml(listing.description),
+                    price: parseFloat(listing.price.amount) / 100, // Convert from cents
+                    currency: listing.price.currency_code,
+                    images: images.map(img => img.url_fullxfull),
+                    url: listing.url,
+                    quantity: 1, // Default quantity
+                    tags: listing.tags || [],
+                    materials: listing.materials || [],
+                    views: listing.views || 0,
+                    num_favorers: listing.num_favorers || 0,
+                    etsy_shop_url: listing.url
+                };
+            });
+            
             console.log('Products processed:', this.products.length);
-            
             return this.products;
             
         } catch (error) {
             console.error('Error fetching Etsy products:', error);
             throw error;
         }
+    }
+
+    // Strip HTML tags from description
+    stripHtml(html) {
+        if (!html) return '';
+        const tmp = document.createElement('div');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
     }
 
     // Display products on the page
@@ -121,9 +116,6 @@ class EtsyShopIntegration {
                         <div class="product-price">$${price}</div>
                     </div>
                     <div class="product-actions">
-                        <button class="product-button add-to-cart" data-product-id="${product.id}">
-                            Add to Cart
-                        </button>
                         <a href="${product.etsy_shop_url}" target="_blank" class="product-button etsy-button">
                             Buy on Etsy
                         </a>
@@ -133,95 +125,15 @@ class EtsyShopIntegration {
         `;
     }
 
-    // Add to cart functionality
-    addToCart(productId) {
-        const product = this.products.find(p => p.id == productId);
-        if (!product) return;
-
-        const cartItem = {
-            id: `etsy-${product.id}`,
-            title: product.title,
-            price: Math.round(product.price * 100), // Convert to cents
-            image: product.images[0] || 'images/placeholder-temp-tattoo.jpg',
-            sku: `ETSY-${product.id}`,
-            source: 'etsy',
-            etsy_url: product.etsy_shop_url
-        };
-
-        // Check if item already exists in cart
-        const existingItem = this.cart.find(item => item.id === cartItem.id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            cartItem.quantity = 1;
-            this.cart.push(cartItem);
-        }
-
-        // Save to localStorage
-        localStorage.setItem('beri-ink-cart', JSON.stringify(this.cart));
-        
-        // Update cart count
-        this.updateCartCount();
-        
-        // Show success message
-        this.showCartMessage(`${product.title} added to cart!`);
-    }
-
-    // Update cart count display
-    updateCartCount() {
-        const totalItems = this.cart.reduce((sum, item) => sum + item.quantity, 0);
-        const cartCountElement = document.getElementById('cartCount');
-        if (cartCountElement) {
-            cartCountElement.textContent = totalItems;
-            cartCountElement.style.display = 'flex';
-        }
-    }
-
     // Add event listeners for cart functionality
     addCartEventListeners() {
-        document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('add-to-cart')) {
-                e.preventDefault();
-                const productId = e.target.getAttribute('data-product-id');
-                this.addToCart(productId);
-            }
-        });
-    }
-
-    // Show cart message
-    showCartMessage(message) {
-        // Create or update cart message element
-        let messageEl = document.getElementById('cart-message');
-        if (!messageEl) {
-            messageEl = document.createElement('div');
-            messageEl.id = 'cart-message';
-            messageEl.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #8b7355;
-                color: white;
-                padding: 12px 20px;
-                border-radius: 6px;
-                z-index: 10000;
-                font-size: 14px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            `;
-            document.body.appendChild(messageEl);
-        }
-        
-        messageEl.textContent = message;
-        messageEl.style.display = 'block';
-        
-        // Hide after 3 seconds
-        setTimeout(() => {
-            messageEl.style.display = 'none';
-        }, 3000);
+        // No cart functionality for now, just Etsy links
+        console.log('Etsy product event listeners added');
     }
 
     // Utility function to truncate text
     truncateText(text, maxLength) {
-        if (text.length <= maxLength) return text;
+        if (!text || text.length <= maxLength) return text || '';
         return text.substring(0, maxLength) + '...';
     }
 
@@ -229,9 +141,15 @@ class EtsyShopIntegration {
     async init() {
         try {
             console.log('Initializing Etsy shop integration...');
+            
+            // Show loading state
+            const container = document.getElementById('etsy-products-container');
+            if (container) {
+                container.innerHTML = '<div class="loading">Loading products from Etsy...</div>';
+            }
+            
             await this.fetchProducts();
             this.displayProducts();
-            this.updateCartCount();
             console.log('Etsy integration initialized successfully!');
         } catch (error) {
             console.error('Failed to initialize Etsy integration:', error);
@@ -240,8 +158,9 @@ class EtsyShopIntegration {
             if (container) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: #666;">
-                        <h3>Unable to load products</h3>
-                        <p>Please try again later or visit our <a href="https://www.etsy.com/shop/BeriInk" target="_blank">Etsy shop</a> directly.</p>
+                        <h3>Unable to load products from Etsy</h3>
+                        <p>Please visit our <a href="https://www.etsy.com/shop/BeriInk" target="_blank" style="color: #8b7355; text-decoration: underline;">Etsy shop</a> directly.</p>
+                        <p style="font-size: 0.9em; margin-top: 1rem;">Error: ${error.message}</p>
                     </div>
                 `;
             }
@@ -251,6 +170,7 @@ class EtsyShopIntegration {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded, initializing Etsy integration...');
     window.etsyIntegration = new EtsyShopIntegration();
     window.etsyIntegration.init();
 });
