@@ -1,14 +1,14 @@
-// Cart functionality for Beri Ink
+// Cart functionality for Beri Ink - v44
 document.addEventListener('DOMContentLoaded', function() {
-    const cartButton = document.getElementById('cartButton');
+    const cartButton = document.getElementById('cartButton') || document.getElementById('cartIcon');
     const cartDrawer = document.getElementById('cartDrawer');
     const cartOverlay = document.getElementById('cartOverlay');
     const cartClose = document.getElementById('cartClose');
     const cartItems = document.getElementById('cartItems');
-    const cartCount = document.getElementById('cartCount');
+    const cartCount = document.getElementById('cartCount') || document.getElementById('cart-count');
     const cartSubtotal = document.getElementById('cartSubtotal');
-    const cartTotal = document.getElementById('cartTotal');
-    const cartCheckout = document.getElementById('cartCheckout');
+    const cartTotal = document.getElementById('cartTotal') || document.getElementById('cart-total');
+    const cartCheckout = document.getElementById('cartCheckout') || document.getElementById('checkoutBtn');
 
     // Initialize cart from localStorage
     let cart = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
