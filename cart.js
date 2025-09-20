@@ -1,14 +1,13 @@
-// Cart functionality for Beri Ink - v44
+// Simple cart functionality for Beri Ink
 document.addEventListener('DOMContentLoaded', function() {
-    const cartButton = document.getElementById('cartButton') || document.getElementById('cartIcon');
+    const cartButton = document.getElementById('cartButton');
     const cartDrawer = document.getElementById('cartDrawer');
     const cartOverlay = document.getElementById('cartOverlay');
     const cartClose = document.getElementById('cartClose');
     const cartItems = document.getElementById('cartItems');
-    const cartCount = document.getElementById('cartCount') || document.getElementById('cart-count');
-    const cartSubtotal = document.getElementById('cartSubtotal');
-    const cartTotal = document.getElementById('cartTotal') || document.getElementById('cart-total');
-    const cartCheckout = document.getElementById('cartCheckout') || document.getElementById('checkoutBtn');
+    const cartCount = document.getElementById('cartCount');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartCheckout = document.getElementById('cartCheckout');
 
     // Initialize cart from localStorage
     let cart = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
@@ -46,10 +45,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Update totals
-        const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        if (cartSubtotal) cartSubtotal.textContent = `$${subtotal.toFixed(2)}`;
-        if (cartTotal) cartTotal.textContent = `$${subtotal.toFixed(2)}`;
+        // Update total
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        if (cartTotal) cartTotal.textContent = `$${total.toFixed(2)}`;
     }
     
     // Open cart drawer
