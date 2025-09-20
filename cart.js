@@ -52,13 +52,24 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Open cart drawer
     function openCart() {
+        console.log('Opening cart...');
+        console.log('Cart drawer element:', cartDrawer);
+        console.log('Cart overlay element:', cartOverlay);
+        
         if (cartDrawer) {
             cartDrawer.style.display = 'block';
             cartDrawer.style.right = '0';
             cartDrawer.setAttribute('aria-hidden', 'false');
+            console.log('Cart drawer opened');
+        } else {
+            console.log('Cart drawer not found!');
         }
+        
         if (cartOverlay) {
             cartOverlay.style.display = 'block';
+            console.log('Cart overlay shown');
+        } else {
+            console.log('Cart overlay not found!');
         }
     }
     
@@ -151,7 +162,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Event listeners
     if (cartButton) {
-        cartButton.addEventListener('click', openCart);
+        console.log('Cart button found, adding event listener');
+        cartButton.addEventListener('click', function() {
+            console.log('Cart button clicked!');
+            openCart();
+        });
+    } else {
+        console.log('Cart button not found!');
     }
     
     if (cartClose) {
@@ -180,6 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Ensure cart is hidden on page load
     if (cartDrawer) {
         cartDrawer.style.display = 'none';
+        cartDrawer.style.right = '-400px';
         cartDrawer.setAttribute('aria-hidden', 'true');
     }
     if (cartOverlay) {
