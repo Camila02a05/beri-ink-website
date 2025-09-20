@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function openCart() {
         if (cartDrawer) {
             cartDrawer.style.display = 'block';
+            cartDrawer.style.right = '0';
             cartDrawer.setAttribute('aria-hidden', 'false');
-            document.body.style.overflow = 'hidden';
         }
         if (cartOverlay) {
             cartOverlay.style.display = 'block';
@@ -65,9 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close cart drawer
     function closeCart() {
         if (cartDrawer) {
-            cartDrawer.style.display = 'none';
+            cartDrawer.style.right = '-400px';
             cartDrawer.setAttribute('aria-hidden', 'true');
-            document.body.style.overflow = 'auto';
+            setTimeout(() => {
+                cartDrawer.style.display = 'none';
+            }, 300);
         }
         if (cartOverlay) {
             cartOverlay.style.display = 'none';
