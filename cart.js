@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (cartDrawer) {
             cartDrawer.style.display = 'block';
+            cartDrawer.style.visibility = 'visible';
             cartDrawer.style.right = '0';
             cartDrawer.setAttribute('aria-hidden', 'false');
             console.log('Cart drawer opened');
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (cartOverlay) {
             cartOverlay.style.display = 'block';
+            cartOverlay.style.visibility = 'visible';
             console.log('Cart overlay shown');
         } else {
             console.log('Cart overlay not found!');
@@ -80,10 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
             cartDrawer.setAttribute('aria-hidden', 'true');
             setTimeout(() => {
                 cartDrawer.style.display = 'none';
+                cartDrawer.style.visibility = 'hidden';
             }, 300);
         }
         if (cartOverlay) {
             cartOverlay.style.display = 'none';
+            cartOverlay.style.visibility = 'hidden';
         }
     }
     
@@ -199,8 +203,10 @@ document.addEventListener('DOMContentLoaded', function() {
         cartDrawer.style.display = 'none';
         cartDrawer.style.right = '-400px';
         cartDrawer.setAttribute('aria-hidden', 'true');
+        cartDrawer.style.visibility = 'hidden';
     }
     if (cartOverlay) {
         cartOverlay.style.display = 'none';
+        cartOverlay.style.visibility = 'hidden';
     }
 });
