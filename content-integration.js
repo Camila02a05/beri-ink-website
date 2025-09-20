@@ -290,9 +290,16 @@ function updateGalleryPhotos(photos) {
     
     if (galleryContainer && galleryImages.length > 0) {
         console.log('Updating gallery with', galleryImages.length, 'photos in correct order');
-        galleryContainer.innerHTML = galleryImages.map(photo => `
+        
+        // Debug specific problematic photos
+        console.log('5th photo:', galleryImages[4]); // IMG_8885.PNG
+        console.log('24th photo:', galleryImages[23]); // IMG_7023.jpeg
+        console.log('33rd photo:', galleryImages[32]); // 7353CA5B-01FC-4DFD-8928-C80CC28F5CF7.JPG
+        console.log('35th photo:', galleryImages[34]); // IMG_2381.png
+        
+        galleryContainer.innerHTML = galleryImages.map((photo, index) => `
             <div class="gallery-item" data-src="${photo}">
-                <img src="${photo}" alt="Fine line tattoo work by Beri Ink" loading="lazy">
+                <img src="${photo}" alt="Fine line tattoo work by Beri Ink" loading="lazy" onerror="console.error('Failed to load image:', '${photo}')">
             </div>
         `).join('');
         console.log('Gallery updated successfully with all 35 photos');
