@@ -236,16 +236,68 @@ function updateGalleryPhotos(photos) {
     const galleryContainer = document.getElementById('galleryGrid');
     console.log('Gallery container found:', galleryContainer);
     
-    if (galleryContainer && photos && photos.length > 0) {
-        console.log('Updating gallery with', photos.length, 'photos');
-        galleryContainer.innerHTML = photos.map(photo => `
-            <div class="gallery-item" data-src="${photo.src}">
-                <img src="${photo.src}" alt="${photo.name}" loading="lazy">
+    // Use the 35 photos from script.js instead of CMS data
+    const galleryImages = [
+        // Row 1
+        'images/gallery/script_tattoo_1.jpeg',
+        'images/gallery/IMG_6969.jpeg',
+        'images/gallery/IMG_7727.jpeg',
+        'images/gallery/IMG_7021.jpeg',
+        'images/gallery/IMG_8885.PNG',
+        
+        // Row 2
+        'images/gallery/IMG_2213.jpeg',
+        'images/gallery/IMG_2863.jpeg',
+        'images/gallery/IMG_2599.jpeg',
+        'images/gallery/IMG_7150.jpeg',
+        'images/gallery/IMG_7025.png',
+        
+        // Row 3
+        'images/gallery/IMG_5201.jpeg',
+        'images/gallery/IMG_2195.jpeg',
+        'images/gallery/IMG_7049.jpeg',
+        'images/gallery/IMG_7380.jpeg',
+        'images/gallery/IMG_5350.png',
+        
+        // Row 4
+        'images/gallery/IMG_7040.jpeg',
+        'images/gallery/IMG_5712.jpeg',
+        'images/gallery/IMG_8550.jpeg',
+        'images/gallery/IMG_6950.jpeg',
+        'images/gallery/IMG_5338.jpeg',
+        
+        // Row 5
+        'images/gallery/IMG_7022.jpeg',
+        'images/gallery/IMG_0324.jpeg',
+        'images/gallery/IMG_7042.jpeg',
+        'images/gallery/IMG_0174.jpg',
+        'images/gallery/IMG_7023.jpeg',
+        
+        // Row 6
+        'images/gallery/IMG_7005.png',
+        'images/gallery/IMG_7026.jpeg',
+        'images/gallery/IMG_0343.jpeg',
+        'images/gallery/IMG_3065.jpeg',
+        'images/gallery/IMG_8285.jpeg',
+        
+        // Row 7
+        'images/gallery/IMG_4161.jpeg',
+        'images/gallery/IMG_0154.jpeg',
+        'images/gallery/7353CA5B-01FC-4DFD-8928-C80CC28F5CF7.JPG',
+        'images/gallery/IMG_7044.jpeg',
+        'images/gallery/IMG_2381.png'
+    ];
+    
+    if (galleryContainer && galleryImages.length > 0) {
+        console.log('Updating gallery with', galleryImages.length, 'photos in correct order');
+        galleryContainer.innerHTML = galleryImages.map(photo => `
+            <div class="gallery-item" data-src="${photo}">
+                <img src="${photo}" alt="Fine line tattoo work by Beri Ink" loading="lazy">
             </div>
         `).join('');
-        console.log('Gallery updated successfully');
+        console.log('Gallery updated successfully with all 35 photos');
     } else {
-        console.log('Gallery update failed - container:', galleryContainer, 'photos:', photos);
+        console.log('Gallery update failed - container:', galleryContainer);
     }
 }
 
