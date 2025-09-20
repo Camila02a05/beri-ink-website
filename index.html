@@ -79,46 +79,10 @@
         <section class="gallery" id="gallery">
             <!-- Gallery Grid -->
             <div class="gallery-grid" id="galleryGrid">
-                <!-- Gallery items with real images -->
-                <div class="gallery-item" data-src="images/gallery/script_tattoo_1.jpeg">
-                    <img src="images/gallery/script_tattoo_1.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_0154.jpeg">
-                    <img src="images/gallery/IMG_0154.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/80D7E5BB-99E1-484E-A632-8CB9E8A83E15.jpeg">
-                    <img src="images/gallery/80D7E5BB-99E1-484E-A632-8CB9E8A83E15.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_0324.jpeg">
-                    <img src="images/gallery/IMG_0324.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_0343.jpeg">
-                    <img src="images/gallery/IMG_0343.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_2195.jpeg">
-                    <img src="images/gallery/IMG_2195.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_2213.jpeg">
-                    <img src="images/gallery/IMG_2213.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_2599.jpeg">
-                    <img src="images/gallery/IMG_2599.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_2652.jpeg">
-                    <img src="images/gallery/IMG_2652.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_2863.jpeg">
-                    <img src="images/gallery/IMG_2863.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_3065.jpeg">
-                    <img src="images/gallery/IMG_3065.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
-                <div class="gallery-item" data-src="images/gallery/IMG_4161.jpeg">
-                    <img src="images/gallery/IMG_4161.jpeg" alt="Fine line tattoo work" loading="lazy">
-                </div>
+                <!-- Gallery items will be dynamically loaded in folder order -->
             </div>
 
-            <!-- Load More Button removed: show exactly 25 photos on homepage -->
+            <!-- Gallery now shows exactly 35 photos on homepage -->
         </section>
 
         <!-- Temporary Tattoo Carousel -->
@@ -170,6 +134,28 @@
         </section>
 
     </main>
+
+    <!-- Cart Drawer -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+        <div class="cart-header">
+            <h3>Shopping Cart</h3>
+            <button class="cart-close" id="cartClose" aria-label="Close cart">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be populated here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-subtotal"><span>Subtotal</span><span id="cartSubtotal">$0.00</span></div>
+            <div class="cart-total"><span>Total</span><span id="cartTotal">$0.00</span></div>
+            <button class="cart-checkout" id="cartCheckout">Checkout</button>
+        </div>
+    </aside>
 
     <!-- Footer -->
     <footer class="footer">
