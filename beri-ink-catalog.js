@@ -9,16 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
         ...BERI_INK_PRODUCTS_PART3
     ];
 
-    // Create product categories
+    // Create product categories matching Etsy
     const categories = {
         'All': allProducts,
-        'Floral': allProducts.filter(p => p.category === 'Floral'),
         'Animals': allProducts.filter(p => p.category === 'Animals'),
-        'Nature': allProducts.filter(p => p.category === 'Nature'),
-        'Geometric': allProducts.filter(p => p.category === 'Geometric'),
-        'Japanese': allProducts.filter(p => p.category === 'Japanese'),
-        'Abstract': allProducts.filter(p => p.category === 'Abstract'),
-        'Mixed': allProducts.filter(p => p.category === 'Mixed')
+        'Botanical': allProducts.filter(p => p.category === 'Botanical'),
+        'Ornamental': allProducts.filter(p => p.category === 'Ornamental'),
+        'Others': allProducts.filter(p => p.category === 'Others')
     };
 
     // Initialize the catalog
@@ -78,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const additionalImages = product.images.slice(1, 5);
         
         return `
-            <div class="product-card etsy-product" data-product-id="${product.id}">
+            <div class="product-card etsy-product" data-product-id="${product.id}" onclick="openProductModal('${product.id}')">
                 <div class="product-image-container">
                     <img src="${mainImage}" alt="${product.title}" class="product-image" loading="lazy">
                     ${additionalImages.length > 0 ? `
@@ -88,7 +85,6 @@ document.addEventListener('DOMContentLoaded', function() {
                             `).join('')}
                         </div>
                     ` : ''}
-                    <div class="product-category">${product.category}</div>
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.title}</h3>
@@ -97,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="product-price">$${product.price.toFixed(2)}</div>
                     </div>
                     <div class="product-actions">
-                        <a href="${product.etsy_url}" target="_blank" class="product-button etsy-link">
+                        <a href="${product.etsy_url}" target="_blank" class="product-button etsy-link" onclick="event.stopPropagation()">
                             View on Etsy - $${product.price.toFixed(2)}
                         </a>
                     </div>
@@ -142,6 +138,60 @@ document.addEventListener('DOMContentLoaded', function() {
         return text.substring(0, maxLength) + '...';
     }
 
+    // Product modal functionality
+    window.openProductModal = function(productId) {
+        const product = allProducts.find(p => p.id === productId);
+        if (!product) return;
+        
+        const modal = document.createElement('div');
+        modal.className = 'product-modal-overlay';
+        modal.innerHTML = `
+            <div class="product-modal">
+                <div class="product-modal-header">
+                    <h2>${product.title}</h2>
+                    <button class="product-modal-close">&times;</button>
+                </div>
+                <div class="product-modal-content">
+                    <div class="product-modal-image">
+                        <img src="${product.images[0] || 'images/placeholder-temp-tattoo.jpg'}" alt="${product.title}">
+                    </div>
+                    <div class="product-modal-info">
+                        <div class="product-modal-price">$${product.price.toFixed(2)}</div>
+                        <div class="product-modal-description">
+                            ${product.description.replace(/\n/g, '<br>')}
+                        </div>
+                        <div class="product-modal-actions">
+                            <a href="${product.etsy_url}" target="_blank" class="product-modal-etsy-btn">
+                                View on Etsy - $${product.price.toFixed(2)}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+        
+        // Close modal events
+        modal.querySelector('.product-modal-close').addEventListener('click', closeProductModal);
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeProductModal();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeProductModal();
+        });
+    };
+    
+    window.closeProductModal = function() {
+        const modal = document.querySelector('.product-modal-overlay');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = 'auto';
+        }
+    };
+
     // Initialize the catalog
     initCatalog();
 });
@@ -162,33 +212,23 @@ const catalogCSS = `
     }
     
     .filter-btn {
-        padding: 0.5rem 1rem;
-        border: 2px solid #8b7355;
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #c4a484;
         background: white;
-        color: #8b7355;
-        border-radius: 25px;
+        color: #c4a484;
+        border-radius: 20px;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-size: 0.9rem;
-        font-weight: 500;
+        font-size: 0.85rem;
+        font-weight: 300;
+        letter-spacing: 0.5px;
     }
     
     .filter-btn:hover,
     .filter-btn.active {
-        background: #8b7355;
+        background: #c4a484;
         color: white;
-    }
-    
-    .product-category {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: rgba(139, 115, 85, 0.9);
-        color: white;
-        padding: 0.25rem 0.5rem;
-        border-radius: 12px;
-        font-size: 0.75rem;
-        font-weight: 500;
+        border-color: #c4a484;
     }
     
     .image-thumbnails {
@@ -211,17 +251,17 @@ const catalogCSS = `
     }
     
     .thumbnail:hover {
-        border-color: #8b7355;
+        border-color: #c4a484;
     }
     
     .etsy-link {
-        background: #8b7355 !important;
+        background: #c4a484 !important;
         color: white !important;
         text-decoration: none !important;
         display: inline-block;
         padding: 0.75rem 1.5rem;
         border-radius: 25px;
-        font-weight: 500;
+        font-weight: 400;
         transition: all 0.3s ease;
         text-align: center;
         width: 100%;
@@ -229,9 +269,144 @@ const catalogCSS = `
     }
     
     .etsy-link:hover {
-        background: #6d5a42 !important;
+        background: #b8956b !important;
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(139, 115, 85, 0.3);
+        box-shadow: 0 4px 12px rgba(196, 164, 132, 0.3);
+    }
+    
+    .product-card {
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Product Modal Styles */
+    .product-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        box-sizing: border-box;
+    }
+    
+    .product-modal {
+        background: white;
+        border-radius: 12px;
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .product-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .product-modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #333;
+        font-weight: 400;
+    }
+    
+    .product-modal-close {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .product-modal-close:hover {
+        color: #333;
+    }
+    
+    .product-modal-content {
+        display: flex;
+        gap: 2rem;
+        padding: 1.5rem;
+    }
+    
+    .product-modal-image {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .product-modal-image img {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+    
+    .product-modal-info {
+        flex: 1;
+    }
+    
+    .product-modal-price {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #c4a484;
+        margin-bottom: 1rem;
+    }
+    
+    .product-modal-description {
+        line-height: 1.6;
+        color: #666;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+    }
+    
+    .product-modal-etsy-btn {
+        background: #c4a484;
+        color: white;
+        text-decoration: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-weight: 500;
+        display: inline-block;
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+    
+    .product-modal-etsy-btn:hover {
+        background: #b8956b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(196, 164, 132, 0.3);
+    }
+    
+    @media (max-width: 768px) {
+        .product-modal-content {
+            flex-direction: column;
+        }
+        
+        .product-modal-image {
+            min-width: auto;
+        }
+        
+        .product-modal-overlay {
+            padding: 1rem;
+        }
     }
 `;
 

@@ -18,7 +18,7 @@ const BERI_INK_PRODUCTS = [
         price: 9.30,
         images: ['images/products/product-2/1.jpg', 'images/products/product-2/2.jpg', 'images/products/product-2/3.jpg', 'images/products/product-2/4.jpg', 'images/products/product-2/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1757187717/lily-bouquet-temporary-tattoo-set-of-2?ref=shop_home_feat_2&logging_key=3fbff89560dfcfbcee3507f16da721a7ec8626af%3A1757187717',
-        category: 'Floral'
+        category: 'Botanical'
     },
     {
         id: 'product-3',
@@ -27,7 +27,7 @@ const BERI_INK_PRODUCTS = [
         price: 8.90,
         images: ['images/products/product-3/1.jpg', 'images/products/product-3/2.jpg', 'images/products/product-3/3.jpg', 'images/products/product-3/4.jpg', 'images/products/product-3/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1866211363/small-ornamental-temporary-tattoo-set-of?ref=shop_home_active_26&logging_key=e16ed37e3c21f353cf8692b7a3641078d8fa2591%3A1866211363',
-        category: 'Geometric'
+        category: 'Ornamental'
     },
     {
         id: 'product-4',
@@ -36,7 +36,7 @@ const BERI_INK_PRODUCTS = [
         price: 12.99,
         images: ['images/products/product-4/1.jpg', 'images/products/product-4/2.jpg', 'images/products/product-4/3.jpg', 'images/products/product-4/4.jpg', 'images/products/product-4/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1540382084/lily-flower-temporary-tattoo-1-small-or?ref=shop_home_active_31&crt=1&logging_key=b0ae62cc5e04f39126ad9de59abfce43850faae2%3A1540382084',
-        category: 'Floral'
+        category: 'Botanical'
     },
     {
         id: 'product-5',
@@ -45,7 +45,7 @@ const BERI_INK_PRODUCTS = [
         price: 9.30,
         images: ['images/products/product-5/1.jpg', 'images/products/product-5/2.jpg', 'images/products/product-5/3.jpg', 'images/products/product-5/4.jpg', 'images/products/product-5/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1757183579/poppy-bouquet-temporary-tattoo-set-of-2?ref=shop_home_feat_3&logging_key=c2a1e4378b8f7ce463525e2a2fe7dc188637e591%3A1757183579',
-        category: 'Floral'
+        category: 'Botanical'
     },
     {
         id: 'product-6',
@@ -54,7 +54,7 @@ const BERI_INK_PRODUCTS = [
         price: 8.50,
         images: ['images/products/product-6/1.jpg', 'images/products/product-6/2.jpg', 'images/products/product-6/3.jpg', 'images/products/product-6/4.jpg', 'images/products/product-6/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1887764970/aster-flower-temporary-tattoo-set-of-2?ref=shop_home_active_5&logging_key=5cdc65c69d835b945c83e5dbe7de76771b42c78d%3A1887764970',
-        category: 'Floral'
+        category: 'Botanical'
     },
     {
         id: 'product-7',
@@ -63,7 +63,7 @@ const BERI_INK_PRODUCTS = [
         price: 9.50,
         images: ['images/products/product-7/1.jpg', 'images/products/product-7/2.jpg', 'images/products/product-7/3.jpg', 'images/products/product-7/4.jpg', 'images/products/product-7/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/4340471403/sword-eye-temporary-tattoo-set-of-2?ref=shop_home_active_21&logging_key=48852ca12a0eed18ae203f280519db4cdebe5422%3A4340471403',
-        category: 'Geometric'
+        category: 'Others'
     },
     {
         id: 'product-8',
@@ -72,7 +72,7 @@ const BERI_INK_PRODUCTS = [
         price: 8.90,
         images: ['images/products/product-8/1.jpg', 'images/products/product-8/2.jpg', 'images/products/product-8/3.jpg', 'images/products/product-8/4.jpg', 'images/products/product-8/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1757203351/single-line-roses-temporary-tattoo-set?ref=shop_home_active_3&logging_key=b8ff9f9161161b13775484ac5759a9ac04c5b048%3A1757203351',
-        category: 'Floral'
+        category: 'Botanical'
     },
     {
         id: 'product-9',
@@ -90,7 +90,7 @@ const BERI_INK_PRODUCTS = [
         price: 12.99,
         images: ['images/products/product-10/1.jpg', 'images/products/product-10/2.jpg', 'images/products/product-10/3.jpg', 'images/products/product-10/4.jpg', 'images/products/product-10/5.jpg'],
         etsy_url: 'https://www.etsy.com/listing/1852043564/japanese-temporary-tattoo-set-sakura?ref=shop_home_active_15&logging_key=0fc4e515f8b0be5d75267670248bd7f946da266b%3A1852043564',
-        category: 'Japanese'
+        category: 'Others'
     }
     // Note: I'll add the remaining 26 products in the next part due to length limits
 ];
