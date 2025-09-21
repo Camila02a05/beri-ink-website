@@ -12,6 +12,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize cart from localStorage
     let cart = JSON.parse(localStorage.getItem('beri-ink-cart') || '[]');
     
+    // Clear any corrupted cart data
+    if (cart.some(item => item.price > 100)) {
+        console.log('Clearing corrupted cart data with prices:', cart.map(item => item.price));
+        cart = [];
+        localStorage.setItem('beri-ink-cart', JSON.stringify(cart));
+    }
+    
+    // Debug: Log current cart state
+    console.log('Current cart:', cart);
+    
     // Update cart UI
     function updateCartUI() {
         const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -59,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cartDrawer) {
             cartDrawer.classList.add('open');
             cartDrawer.setAttribute('aria-hidden', 'false');
-            console.log('Cart drawer opened');
+            console.log('Cart drawer opened, classes:', cartDrawer.className);
         } else {
             console.log('Cart drawer not found!');
         }

@@ -55,6 +55,9 @@ class EtsyShopIntegration {
         const productsHTML = this.products.map(product => this.createProductCard(product)).join('');
         container.innerHTML = productsHTML;
         
+        // Add event listeners for add to cart buttons
+        this.addCartEventListeners();
+        
         console.log('Products displayed successfully');
     }
 
@@ -95,7 +98,30 @@ class EtsyShopIntegration {
     }
 
 
-    // Cart event listeners removed - now handled by cart.js
+    // Add event listeners for cart buttons
+    addCartEventListeners() {
+        const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                const productId = e.target.getAttribute('data-product-id');
+                const product = this.products.find(p => p.id === productId);
+                if (product) {
+                    // Call the global addToCart function from cart.js
+                    if (window.addToCart) {
+                        window.addToCart({
+                            id: product.id,
+                            name: product.title,
+                            price: parseFloat(product.price),
+                            image: product.images ? product.images[0] : 'images/placeholder-temp-tattoo.jpg',
+                            quantity: 1
+                        });
+                    } else {
+                        console.error('addToCart function not found');
+                    }
+                }
+            });
+        });
+    }
 
     // Utility function to truncate text
     truncateText(text, maxLength) {
