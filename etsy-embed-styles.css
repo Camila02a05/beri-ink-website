@@ -169,16 +169,23 @@
 
 /* Cart Drawer Styles */
 .cart-drawer {
-    position: fixed;
-    top: 0;
-    right: -400px;
-    width: 400px;
-    height: 100vh;
-    background: white;
-    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transition: right 0.3s ease;
-    display: none;
+    position: fixed !important;
+    top: 0 !important;
+    right: -400px !important;
+    width: 400px !important;
+    height: 100vh !important;
+    background: white !important;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1) !important;
+    z-index: 1000 !important;
+    transition: right 0.3s ease !important;
+    display: none !important;
+    visibility: hidden !important;
+}
+
+.cart-drawer.open {
+    right: 0 !important;
+    display: block !important;
+    visibility: visible !important;
 }
 
 .cart-drawer-content {

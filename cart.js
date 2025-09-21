@@ -57,9 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Cart overlay element:', cartOverlay);
         
         if (cartDrawer) {
-            cartDrawer.style.display = 'block';
-            cartDrawer.style.visibility = 'visible';
-            cartDrawer.style.right = '0';
+            cartDrawer.classList.add('open');
             cartDrawer.setAttribute('aria-hidden', 'false');
             console.log('Cart drawer opened');
         } else {
@@ -68,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (cartOverlay) {
             cartOverlay.style.display = 'block';
-            cartOverlay.style.visibility = 'visible';
             console.log('Cart overlay shown');
         } else {
             console.log('Cart overlay not found!');
@@ -78,16 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close cart drawer
     function closeCart() {
         if (cartDrawer) {
-            cartDrawer.style.right = '-400px';
+            cartDrawer.classList.remove('open');
             cartDrawer.setAttribute('aria-hidden', 'true');
-            setTimeout(() => {
-                cartDrawer.style.display = 'none';
-                cartDrawer.style.visibility = 'hidden';
-            }, 300);
         }
         if (cartOverlay) {
             cartOverlay.style.display = 'none';
-            cartOverlay.style.visibility = 'hidden';
         }
     }
     
@@ -200,13 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Ensure cart is hidden on page load
     if (cartDrawer) {
-        cartDrawer.style.display = 'none';
-        cartDrawer.style.right = '-400px';
+        cartDrawer.classList.remove('open');
         cartDrawer.setAttribute('aria-hidden', 'true');
-        cartDrawer.style.visibility = 'hidden';
     }
     if (cartOverlay) {
         cartOverlay.style.display = 'none';
-        cartOverlay.style.visibility = 'hidden';
     }
 });
