@@ -17,9 +17,15 @@ exports.handler = async (event) => {
     
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
     // Use the numeric shop ID found from the Etsy URL
-    const shopId = 43441673;
+    // IMPORTANT: This must be a number, not a string
+    const shopId = 1757183579;
     
-    console.log('Using shop ID:', shopId);
+    // Verify it's a number
+    if (typeof shopId !== 'number') {
+      throw new Error(`Shop ID must be a number, got ${typeof shopId}: ${shopId}`);
+    }
+    
+    console.log('Using shop ID:', shopId, 'Type:', typeof shopId);
     
     // Use the correct API endpoint format from Etsy documentation
     // Fetch all active listings (limit 100 per request, can paginate if needed)
