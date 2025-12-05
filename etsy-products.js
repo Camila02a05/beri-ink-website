@@ -19,7 +19,8 @@ exports.handler = async (event) => {
     const shopId = 'BeriInk';
     
     // Use the correct API endpoint format from Etsy documentation
-    const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=12`;
+    // Fetch all active listings (limit 100 per request, can paginate if needed)
+    const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=100&includes=Images,Shop`;
     
     console.log('Fetching from URL:', url);
     
@@ -74,30 +75,66 @@ exports.handler = async (event) => {
       };
     }
     
-    // Process products with minimal error handling
+    // Process products with full details
     const products = data.results.map((listing, index) => {
-      // Simple price extraction
+      // Price extraction
       let price = 0;
       if (listing.price && listing.price.amount) {
         price = parseFloat(listing.price.amount) / 100;
+      } else if (listing.price) {
+        price = parseFloat(listing.price);
       }
 
-      // Simple image extraction
-      let images = ['images/placeholder-temp-tattoo.jpg'];
-      if (listing.images && listing.images[0] && listing.images[0].url_570xN) {
-        images = [listing.images[0].url_570xN];
+      // Extract all images (up to 5)
+      let images = [];
+      if (listing.images && Array.isArray(listing.images)) {
+        images = listing.images
+          .slice(0, 5)
+          .map(img => img.url_570xN || img.url_fullxfull || img.url_75x75 || 'images/placeholder-temp-tattoo.jpg')
+          .filter(img => img !== 'images/placeholder-temp-tattoo.jpg' || images.length === 0);
+      }
+      
+      // Fallback to placeholder if no images
+      if (images.length === 0) {
+        images = ['images/placeholder-temp-tattoo.jpg'];
+      }
+
+      // Extract category/tags for filtering
+      const tags = listing.tags || [];
+      let category = 'Others';
+      if (tags.some(tag => /animal|bird|hummingbird|swallow|toucan/i.test(tag))) {
+        category = 'Animals';
+      } else if (tags.some(tag => /botanical|floral|flower|rose|lily|poppy|aster|cosmos/i.test(tag))) {
+        category = 'Botanical';
+      } else if (tags.some(tag => /ornamental|ornament|decorative/i.test(tag))) {
+        category = 'Ornamental';
+      }
+
+      // Clean description (remove HTML tags if present)
+      let description = listing.description || 'Beautiful temporary tattoo design';
+      if (typeof description === 'string') {
+        // Remove HTML tags
+        description = description.replace(/<[^>]*>/g, '');
+        // Decode HTML entities
+        description = description.replace(/&nbsp;/g, ' ')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"')
+          .replace(/&#39;/g, "'");
       }
 
       return {
-        id: String(listing.listing_id || index),
+        id: String(listing.listing_id || `etsy-${index}`),
         title: String(listing.title || 'Temporary Tattoo'),
-        description: String(listing.description || 'Beautiful temporary tattoo design'),
+        description: description,
         price: price || 0,
-        currency: 'USD',
+        currency: listing.price?.currency_code || 'USD',
         images: images,
         url: String(listing.url || `https://www.etsy.com/listing/${listing.listing_id}`),
-        quantity: 1,
-        etsy_shop_url: String(listing.url || `https://www.etsy.com/listing/${listing.listing_id}`)
+        etsy_url: String(listing.url || `https://www.etsy.com/listing/${listing.listing_id}`),
+        category: category,
+        quantity: 1
       };
     });
     
