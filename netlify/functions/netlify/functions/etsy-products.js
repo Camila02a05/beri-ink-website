@@ -99,6 +99,10 @@ exports.handler = async (event) => {
     
     const data = await response.json();
     console.log('Raw API response:', JSON.stringify(data, null, 2));
+    console.log('Response has results?', !!data.results);
+    console.log('Results count:', data.results ? data.results.length : 0);
+    console.log('Response keys:', Object.keys(data));
+    console.log('First result sample:', data.results && data.results.length > 0 ? JSON.stringify(data.results[0], null, 2) : 'No results');
     
     if (!data || !data.results) {
       console.error('Invalid response structure:', data);
@@ -108,7 +112,28 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: false,
           error: 'Invalid response structure',
-          message: 'No results found in API response'
+          message: 'No results found in API response',
+          debug: {
+            hasData: !!data,
+            hasResults: !!data?.results,
+            dataKeys: data ? Object.keys(data) : [],
+            fullResponse: data
+          }
+        })
+      };
+    }
+    
+    if (data.results.length === 0) {
+      console.log('No listings found for this shop');
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          products: [],
+          count: 0,
+          message: 'No active listings found for this shop',
+          shopId: shopId
         })
       };
     }
