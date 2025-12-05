@@ -16,12 +16,43 @@ exports.handler = async (event) => {
     console.log('Starting Etsy products fetch...');
     
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
-    const shopId = 'BeriInk';
+    const shopName = 'BeriInk';
+    
+    // First, try to get the shop by name to get the numeric shop ID
+    let shopId = shopName;
+    let numericShopId = null;
+    
+    try {
+      const shopUrl = `https://api.etsy.com/v3/application/shops/${shopName}`;
+      console.log('Fetching shop info from:', shopUrl);
+      
+      const shopResponse = await fetch(shopUrl, {
+        method: 'GET',
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (shopResponse.ok) {
+        const shopData = await shopResponse.json();
+        numericShopId = shopData.shop_id || shopData.results?.shop_id;
+        console.log('Shop ID found:', numericShopId);
+        // Use numeric ID if available, otherwise use shop name
+        shopId = numericShopId || shopName;
+      } else {
+        console.log('Could not fetch shop by name, using shop name directly');
+      }
+    } catch (shopError) {
+      console.log('Error fetching shop info, using shop name directly:', shopError.message);
+    }
     
     // Use the correct API endpoint format from Etsy documentation
     // Fetch all active listings (limit 100 per request, can paginate if needed)
     const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=100&includes=Images,Shop`;
     
+    console.log('API Key:', apiKey ? 'Present' : 'Missing');
+    console.log('Using Shop ID:', shopId);
     console.log('Fetching from URL:', url);
     
     const response = await fetch(url, {
@@ -38,23 +69,33 @@ exports.handler = async (event) => {
     if (!response.ok) {
       console.log('Response status:', response.status, response.statusText);
       
+      // Get error response text first
+      const errorText = await response.text();
+      console.log('Error response text:', errorText);
+      
       // For non-500 errors, the endpoints return a JSON object as an error response
       let errorData;
       try {
-        errorData = await response.json();
+        errorData = JSON.parse(errorText);
         console.log('Error data:', errorData);
       } catch (e) {
-        errorData = { error: 'Unknown error', error_description: 'Could not parse error response' };
+        errorData = { 
+          error: 'Unknown error', 
+          error_description: errorText || 'Could not parse error response',
+          raw_response: errorText
+        };
       }
       
       return {
-        statusCode: 500,
+        statusCode: response.status,
         headers,
         body: JSON.stringify({
           success: false,
           error: `API Error: ${response.status}`,
-          message: errorData.error_description || errorData.error || 'Unknown API error',
-          details: errorData
+          message: errorData.error_description || errorData.error || errorData.message || 'Unknown API error',
+          details: errorData,
+          shopId: shopId,
+          url: url
         })
       };
     }
