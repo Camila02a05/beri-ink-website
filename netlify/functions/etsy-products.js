@@ -18,7 +18,7 @@ exports.handler = async (event) => {
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
     // Use the numeric shop ID found from the Etsy URL
     // IMPORTANT: This must be a number, not a string
-    const shopId = 1757183579;
+    const shopId = 43441673;
     
     // Verify it's a number
     if (typeof shopId !== 'number') {
