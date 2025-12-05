@@ -16,36 +16,10 @@ exports.handler = async (event) => {
     console.log('Starting Etsy products fetch...');
     
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
-    const shopName = 'BeriInk';
+    // Use the numeric shop ID found from the Etsy URL
+    const shopId = 43441673;
     
-    // First, try to get the shop by name to get the numeric shop ID
-    let shopId = shopName;
-    let numericShopId = null;
-    
-    try {
-      const shopUrl = `https://api.etsy.com/v3/application/shops/${shopName}`;
-      console.log('Fetching shop info from:', shopUrl);
-      
-      const shopResponse = await fetch(shopUrl, {
-        method: 'GET',
-        headers: {
-          'x-api-key': apiKey,
-          'Content-Type': 'application/json'
-        }
-      });
-      
-      if (shopResponse.ok) {
-        const shopData = await shopResponse.json();
-        numericShopId = shopData.shop_id || shopData.results?.shop_id;
-        console.log('Shop ID found:', numericShopId);
-        // Use numeric ID if available, otherwise use shop name
-        shopId = numericShopId || shopName;
-      } else {
-        console.log('Could not fetch shop by name, using shop name directly');
-      }
-    } catch (shopError) {
-      console.log('Error fetching shop info, using shop name directly:', shopError.message);
-    }
+    console.log('Using shop ID:', shopId);
     
     // Use the correct API endpoint format from Etsy documentation
     // Fetch all active listings (limit 100 per request, can paginate if needed)
