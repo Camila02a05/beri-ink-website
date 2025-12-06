@@ -22,16 +22,6 @@
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Main image container - square aspect ratio */
-.product-image,
-.product-card .product-image,
-.etsy-product .product-image {
-    width: 100% !important;
-    aspect-ratio: 1 / 1 !important; /* Square aspect ratio like Etsy */
-    overflow: hidden;
-    position: relative;
-}
-
 /* Container that holds main image + thumbnails */
 .product-image-container,
 .product-card .product-image-container,
@@ -41,15 +31,17 @@
     position: relative;
 }
 
-/* Main product image */
-.product-image img,
-.product-card .product-image img,
-.etsy-product .product-image img {
+/* Main product image - square aspect ratio */
+.product-image-container > img.product-image,
+.product-image-container img:first-of-type,
+.product-card .product-image-container > img.product-image,
+.etsy-product .product-image-container > img.product-image,
+img.product-image {
     width: 100% !important;
-    height: 100% !important;
+    aspect-ratio: 1 / 1 !important; /* Square aspect ratio like Etsy */
     object-fit: cover !important; /* Fill the square like Etsy */
+    display: block !important;
     transition: transform 0.3s ease;
-    display: block;
 }
 
 /* Thumbnails styling */
