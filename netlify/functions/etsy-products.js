@@ -218,7 +218,8 @@ exports.handler = async (event) => {
     }
     
     // Process products with full details
-    const products = data.results.map((listing, index) => {
+    // Fetch images for each listing separately if not in response
+    const products = await Promise.all(data.results.map(async (listing, index) => {
       // Price extraction
       let price = 0;
       if (listing.price && listing.price.amount) {
@@ -313,6 +314,43 @@ exports.handler = async (event) => {
         console.log('Full listing object:', JSON.stringify(listing, null, 2));
       }
       
+      // If still no images, fetch them separately for this listing
+      if (images.length === 0 && listing.listing_id) {
+        try {
+          const imagesUrl = `https://api.etsy.com/v3/application/listings/${listing.listing_id}/images`;
+          console.log(`Fetching images separately for listing ${listing.listing_id}:`, imagesUrl);
+          
+          const imagesResponse = await fetch(imagesUrl, {
+            method: 'GET',
+            headers: {
+              'x-api-key': apiKey,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (imagesResponse.ok) {
+            const imagesData = await imagesResponse.json();
+            console.log(`Images response for listing ${listing.listing_id}:`, JSON.stringify(imagesData, null, 2));
+            
+            if (imagesData.results && Array.isArray(imagesData.results)) {
+              images = imagesData.results
+                .slice(0, 5)
+                .map(img => img.url_570xN || img.url_fullxfull || img.url_340xN || img.url_75x75 || img.url || null)
+                .filter(img => img);
+              
+              if (index < 3) {
+                console.log(`Fetched ${images.length} images separately for listing ${listing.listing_id}`);
+              }
+            }
+          } else {
+            const errorText = await imagesResponse.text();
+            console.log(`Failed to fetch images for listing ${listing.listing_id}:`, imagesResponse.status, errorText);
+          }
+        } catch (imgError) {
+          console.log(`Error fetching images for listing ${listing.listing_id}:`, imgError.message);
+        }
+      }
+      
       // Fallback to placeholder if no images
       if (images.length === 0) {
         images = ['images/placeholder-temp-tattoo.jpg'];
@@ -376,7 +414,7 @@ exports.handler = async (event) => {
         category: category,
         quantity: 1
       };
-    });
+    }));
     
     console.log('Processed products:', products.length);
     
