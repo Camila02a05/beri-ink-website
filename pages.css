@@ -796,9 +796,19 @@
     flex-direction: column;
 }
 
-.product-card .product-image img { width: 100%; height: 260px; object-fit: cover; display:block; }
+.product-card .product-image {
+    aspect-ratio: 1 / 1; /* Square aspect ratio like Etsy */
+}
+.product-card .product-image img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    display: block; 
+}
 @media (max-width: 768px) {
-    .product-card .product-image img { height: 145px; }
+    .product-card .product-image {
+        aspect-ratio: 1 / 1; /* Keep square on mobile too */
+    }
 }
 
 .product-card .product-info {
