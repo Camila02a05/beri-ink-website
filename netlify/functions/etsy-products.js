@@ -197,8 +197,12 @@ exports.handler = async (event) => {
     // Check if images are in a separate includes section
     const imagesByListingId = {};
     if (data.Includes && data.Includes.Images) {
-      console.log('Found Images in Includes section');
-      data.Includes.Images.forEach(img => {
+      console.log('=== FOUND IMAGES IN INCLUDES SECTION ===');
+      console.log('Total images in Includes:', data.Includes.Images.length);
+      data.Includes.Images.forEach((img, idx) => {
+        if (idx < 3) {
+          console.log(`Image ${idx + 1}:`, JSON.stringify(img, null, 2));
+        }
         if (img.listing_id) {
           if (!imagesByListingId[img.listing_id]) {
             imagesByListingId[img.listing_id] = [];
@@ -207,6 +211,10 @@ exports.handler = async (event) => {
         }
       });
       console.log('Images by listing ID:', Object.keys(imagesByListingId).length, 'listings have images');
+      console.log('Sample listing IDs with images:', Object.keys(imagesByListingId).slice(0, 3));
+    } else {
+      console.log('No Images found in Includes section');
+      console.log('Includes keys:', data.Includes ? Object.keys(data.Includes) : 'No Includes');
     }
     
     // Process products with full details
@@ -230,7 +238,19 @@ exports.handler = async (event) => {
           .map(img => {
             // Handle different image object structures
             if (typeof img === 'string') return img;
-            return img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url || null;
+            // Try multiple possible URL fields
+            return img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url_340xN || img.url || null;
+          })
+          .filter(img => img && img !== 'images/placeholder-temp-tattoo.jpg');
+      }
+      
+      // Method 1b: Check if images are in listing.images as object with array property
+      if (images.length === 0 && listing.images && listing.images.results && Array.isArray(listing.images.results)) {
+        images = listing.images.results
+          .slice(0, 5)
+          .map(img => {
+            if (typeof img === 'string') return img;
+            return img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url_340xN || img.url || null;
           })
           .filter(img => img && img !== 'images/placeholder-temp-tattoo.jpg');
       }
@@ -264,20 +284,33 @@ exports.handler = async (event) => {
       if (images.length === 0 && listing.listing_id && imagesByListingId[listing.listing_id]) {
         images = imagesByListingId[listing.listing_id]
           .slice(0, 5)
-          .map(img => img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url || null)
+          .map(img => {
+            // Try all possible URL fields
+            return img.url_570xN || img.url_fullxfull || img.url_340xN || img.url_75x75 || img.url || null;
+          })
           .filter(img => img);
+        
+        if (index < 3) {
+          console.log(`Found ${images.length} images from Includes for listing ${listing.listing_id}`);
+        }
       }
       
-      // Log for debugging first product
-      if (index === 0) {
-        console.log('=== IMAGE EXTRACTION DEBUG ===');
+      // Log for debugging (first 3 products)
+      if (index < 3) {
+        console.log(`=== IMAGE EXTRACTION DEBUG - Product ${index + 1} ===`);
         console.log('Listing ID:', listing.listing_id);
+        console.log('Title:', listing.title);
         console.log('Has listing.images?', !!listing.images);
+        console.log('listing.images:', listing.images);
         console.log('listing.images type:', typeof listing.images);
         console.log('listing.images is array?', Array.isArray(listing.images));
         console.log('Has listing.Images?', !!listing.Images);
-        console.log('Extracted images:', images);
-        console.log('Full listing object keys:', Object.keys(listing));
+        console.log('listing.Images:', listing.Images);
+        console.log('Has listing.image_url?', !!listing.image_url);
+        console.log('listing.image_url:', listing.image_url);
+        console.log('Extracted images array:', images);
+        console.log('First image URL:', images[0]);
+        console.log('Full listing object:', JSON.stringify(listing, null, 2));
       }
       
       // Fallback to placeholder if no images
