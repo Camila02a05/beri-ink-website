@@ -16,9 +16,53 @@ exports.handler = async (event) => {
     console.log('Starting Etsy products fetch...');
     
     const apiKey = 'pxqb8kr9sivd7fyemn37vnru';
-    // Use the numeric shop ID found from the Etsy URL
-    // IMPORTANT: This must be a number, not a string
-    const shopId = 43441673;
+    
+    // Get shop ID from a listing
+    const listingId = 4344167315;
+    let shopId = null;
+    
+    // First, get the shop_id from the listing
+    try {
+      const listingUrl = `https://api.etsy.com/v3/application/listings/${listingId}`;
+      console.log('Getting shop ID from listing:', listingUrl);
+      
+      const listingResponse = await fetch(listingUrl, {
+        method: 'GET',
+        headers: {
+          'x-api-key': apiKey,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (listingResponse.ok) {
+        const listingData = await listingResponse.json();
+        console.log('Listing response:', JSON.stringify(listingData, null, 2));
+        
+        // Extract shop_id from listing
+        if (listingData.shop_id) {
+          shopId = listingData.shop_id;
+        } else if (listingData.results && listingData.results.shop_id) {
+          shopId = listingData.results.shop_id;
+        }
+        
+        if (shopId) {
+          console.log('Found shop ID from listing:', shopId);
+        } else {
+          console.log('Could not find shop_id in listing response');
+        }
+      } else {
+        const errorText = await listingResponse.text();
+        console.log('Failed to get listing:', listingResponse.status, errorText);
+      }
+    } catch (listingError) {
+      console.log('Error getting listing:', listingError.message);
+    }
+    
+    // If we couldn't get shop ID, use fallback
+    if (!shopId) {
+      shopId = 1757203351; // Fallback
+      console.log('Using fallback shop ID:', shopId);
+    }
     
     // Verify it's a number
     if (typeof shopId !== 'number') {
@@ -66,6 +110,23 @@ exports.handler = async (event) => {
         };
       }
       
+      // If 404, the shop ID might be wrong
+      if (response.status === 404) {
+        return {
+          statusCode: 404,
+          headers,
+          body: JSON.stringify({
+            success: false,
+            error: `Shop not found (404)`,
+            message: `The shop ID ${shopId} was not found. This might not be your correct shop ID. Please verify your shop ID from your Etsy account.`,
+            details: errorData,
+            shopId: shopId,
+            url: url,
+            help: 'To find your shop ID: 1) Check your Etsy shop settings URL, 2) Look in your Etsy API dashboard, or 3) Contact Etsy support'
+          })
+        };
+      }
+      
       return {
         statusCode: response.status,
         headers,
@@ -81,7 +142,22 @@ exports.handler = async (event) => {
     }
     
     const data = await response.json();
-    console.log('Raw API response:', JSON.stringify(data, null, 2));
+    console.log('=== FULL API RESPONSE ===');
+    console.log(JSON.stringify(data, null, 2));
+    console.log('=== RESPONSE ANALYSIS ===');
+    console.log('Response type:', typeof data);
+    console.log('Response keys:', Object.keys(data));
+    console.log('Has results property?', 'results' in data);
+    console.log('Results type:', typeof data.results);
+    console.log('Results is array?', Array.isArray(data.results));
+    console.log('Results count:', data.results ? data.results.length : 'N/A');
+    
+    if (data.results && data.results.length > 0) {
+      console.log('First result:', JSON.stringify(data.results[0], null, 2));
+    } else {
+      console.log('No results in response');
+      console.log('Full data structure:', data);
+    }
     
     if (!data || !data.results) {
       console.error('Invalid response structure:', data);
@@ -91,7 +167,28 @@ exports.handler = async (event) => {
         body: JSON.stringify({
           success: false,
           error: 'Invalid response structure',
-          message: 'No results found in API response'
+          message: 'No results found in API response',
+          debug: {
+            hasData: !!data,
+            hasResults: !!data?.results,
+            dataKeys: data ? Object.keys(data) : [],
+            fullResponse: data
+          }
+        })
+      };
+    }
+    
+    if (data.results.length === 0) {
+      console.log('No listings found for this shop');
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          success: true,
+          products: [],
+          count: 0,
+          message: 'No active listings found for this shop',
+          shopId: shopId
         })
       };
     }
