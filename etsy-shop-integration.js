@@ -12,30 +12,86 @@ class EtsyShopIntegration {
         try {
             console.log('Fetching products from Etsy via Netlify function...');
             
-            const response = await fetch('/.netlify/functions/etsy-products');
+            const functionUrl = '/.netlify/functions/etsy-products';
+            console.log('Function URL:', functionUrl);
+            
+            // Add timeout to prevent hanging
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+            
+            const response = await fetch(functionUrl, {
+                signal: controller.signal
+            });
+            
+            clearTimeout(timeoutId);
             
             console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+            
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            console.log('Content-Type:', contentType);
             
             if (!response.ok) {
-                const errorData = await response.json();
+                let errorData;
+                try {
+                    const text = await response.text();
+                    console.log('Error response text:', text);
+                    errorData = JSON.parse(text);
+                } catch (e) {
+                    errorData = { 
+                        message: `HTTP ${response.status}: ${response.statusText}`,
+                        error: 'Could not parse error response'
+                    };
+                }
                 console.error('Netlify function error:', response.status, errorData);
-                throw new Error(`Failed to fetch products: ${errorData.message || 'Unknown error'}`);
+                throw new Error(`Failed to fetch products: ${errorData.message || errorData.error || 'Unknown error'}`);
             }
             
             const data = await response.json();
             console.log('Products fetched successfully:', data);
+            console.log('Response structure:', {
+                success: data.success,
+                hasProducts: !!data.products,
+                productsLength: data.products ? data.products.length : 0,
+                count: data.count,
+                message: data.message,
+                fullData: data
+            });
             
-            if (!data.success || !data.products) {
-                throw new Error('Invalid response from server');
+            if (!data.success) {
+                console.error('API returned success: false', data);
+                throw new Error(data.message || 'API returned unsuccessful response');
+            }
+            
+            if (!data.products) {
+                console.error('No products array in response:', data);
+                throw new Error('No products array in response');
             }
             
             this.products = data.products;
             console.log('Products processed:', this.products.length);
+            
+            if (this.products.length === 0) {
+                console.warn('No products returned from API. Response:', data);
+            }
+            
             return this.products;
             
         } catch (error) {
             console.error('Error fetching Etsy products:', error);
-            throw error;
+            console.error('Error name:', error.name);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            
+            // Provide more specific error messages
+            if (error.name === 'AbortError') {
+                throw new Error('Request timed out. The function may not be deployed or is taking too long to respond.');
+            } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                throw new Error('Network error: Could not reach the function. Please check if the function is deployed.');
+            } else {
+                throw error;
+            }
         }
     }
 
@@ -159,9 +215,19 @@ class EtsyShopIntegration {
 
     // Create category filter UI
     createCategoryFilter() {
-        const categories = ['All', ...new Set(this.products.map(p => p.category).filter(c => c))];
+        // Use Etsy's actual categories in the correct order
+        const etsyCategories = ['All', 'Animals', 'Botanical', 'Halloween', 'Ornamental', 'Others'];
+        
+        // Get unique categories from products
+        const productCategories = new Set(this.products.map(p => p.category).filter(c => c));
+        
+        // Filter to only show categories that have products
+        const availableCategories = etsyCategories.filter(cat => 
+            cat === 'All' || productCategories.has(cat)
+        );
+        
         const container = document.getElementById('etsy-products-container');
-        if (!container || categories.length <= 1) return;
+        if (!container || availableCategories.length <= 1) return;
 
         // Check if filter already exists
         if (document.getElementById('category-filter')) return;
@@ -171,7 +237,7 @@ class EtsyShopIntegration {
         filterDiv.className = 'product-filter';
         filterDiv.innerHTML = `
             <div class="filter-buttons">
-                ${categories.map(cat => `
+                ${availableCategories.map(cat => `
                     <button class="filter-btn ${cat === 'All' ? 'active' : ''}" data-category="${cat}">
                         ${cat}
                     </button>
@@ -291,15 +357,34 @@ class EtsyShopIntegration {
             console.log('Etsy integration initialized successfully!', this.products.length, 'products loaded');
         } catch (error) {
             console.error('Failed to initialize Etsy integration:', error);
+            console.error('Error details:', {
+                name: error.name,
+                message: error.message,
+                stack: error.stack
+            });
+            
             const container = document.getElementById('etsy-products-container');
             if (container) {
+                const errorMessage = error.message || 'Unknown error occurred';
+                const errorDetails = error.stack ? error.stack.substring(0, 200) : '';
+                
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px;">
-                        <p style="color: #666; margin-bottom: 20px;">Unable to load products from Etsy at the moment.</p>
+                    <div style="text-align: center; padding: 40px; max-width: 600px; margin: 0 auto;">
+                        <p style="color: #666; margin-bottom: 10px; font-size: 1.1rem;">Unable to load products from Etsy at the moment.</p>
+                        <p style="color: #d32f2f; font-size: 0.9rem; margin-bottom: 20px; padding: 10px; background: #ffebee; border-radius: 4px;">
+                            <strong>Error:</strong> ${errorMessage}
+                        </p>
+                        <details style="text-align: left; margin: 20px 0; padding: 10px; background: #f5f5f5; border-radius: 4px;">
+                            <summary style="cursor: pointer; color: #666; font-size: 0.85rem;">Technical Details (click to expand)</summary>
+                            <pre style="font-size: 0.75rem; color: #666; margin-top: 10px; overflow-x: auto;">${errorDetails}</pre>
+                        </details>
                         <a href="https://www.etsy.com/shop/BeriInk" target="_blank" 
-                           style="color: #c4a484; text-decoration: underline; font-weight: 500;">
-                            Please visit our Etsy shop directly
+                           style="color: #c4a484; text-decoration: underline; font-weight: 500; display: inline-block; margin-top: 10px;">
+                            Visit our Etsy shop directly
                         </a>
+                        <p style="color: #999; font-size: 0.85rem; margin-top: 20px;">
+                            Test the function: <a href="/.netlify/functions/etsy-products" target="_blank" style="color: #c4a484;">/.netlify/functions/etsy-products</a>
+                        </p>
                     </div>
                 `;
             }
