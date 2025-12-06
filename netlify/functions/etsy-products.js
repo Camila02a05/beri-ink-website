@@ -73,7 +73,8 @@ exports.handler = async (event) => {
     
     // Use the correct API endpoint format from Etsy documentation
     // Fetch all active listings (limit 100 per request, can paginate if needed)
-    const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=100&includes=Images,Shop`;
+    // Request Images to be included in the response
+    const url = `https://api.etsy.com/v3/application/shops/${shopId}/listings/active?limit=100&includes=Images`;
     
     console.log('API Key:', apiKey ? 'Present' : 'Missing');
     console.log('Using Shop ID:', shopId);
@@ -193,6 +194,21 @@ exports.handler = async (event) => {
       };
     }
     
+    // Check if images are in a separate includes section
+    const imagesByListingId = {};
+    if (data.Includes && data.Includes.Images) {
+      console.log('Found Images in Includes section');
+      data.Includes.Images.forEach(img => {
+        if (img.listing_id) {
+          if (!imagesByListingId[img.listing_id]) {
+            imagesByListingId[img.listing_id] = [];
+          }
+          imagesByListingId[img.listing_id].push(img);
+        }
+      });
+      console.log('Images by listing ID:', Object.keys(imagesByListingId).length, 'listings have images');
+    }
+    
     // Process products with full details
     const products = data.results.map((listing, index) => {
       // Price extraction
@@ -204,12 +220,64 @@ exports.handler = async (event) => {
       }
 
       // Extract all images (up to 5)
+      // Etsy API v3 can return images in different structures
       let images = [];
+      
+      // Method 1: Check if images are in listing.images array
       if (listing.images && Array.isArray(listing.images)) {
         images = listing.images
           .slice(0, 5)
-          .map(img => img.url_570xN || img.url_fullxfull || img.url_75x75 || 'images/placeholder-temp-tattoo.jpg')
-          .filter(img => img !== 'images/placeholder-temp-tattoo.jpg' || images.length === 0);
+          .map(img => {
+            // Handle different image object structures
+            if (typeof img === 'string') return img;
+            return img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url || null;
+          })
+          .filter(img => img && img !== 'images/placeholder-temp-tattoo.jpg');
+      }
+      
+      // Method 2: Check if images are in Images (capital I) from includes
+      if (images.length === 0 && listing.Images && Array.isArray(listing.Images)) {
+        images = listing.Images
+          .slice(0, 5)
+          .map(img => {
+            if (typeof img === 'string') return img;
+            return img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url || null;
+          })
+          .filter(img => img && img !== 'images/placeholder-temp-tattoo.jpg');
+      }
+      
+      // Method 3: Check if there's a single image URL
+      if (images.length === 0 && listing.image_url) {
+        images = [listing.image_url];
+      }
+      
+      // Method 4: Check if images are in a nested structure
+      if (images.length === 0 && listing.images && typeof listing.images === 'object' && !Array.isArray(listing.images)) {
+        // Try to extract from object structure
+        const imageObj = listing.images;
+        if (imageObj.url_570xN) images.push(imageObj.url_570xN);
+        else if (imageObj.url_fullxfull) images.push(imageObj.url_fullxfull);
+        else if (imageObj.url) images.push(imageObj.url);
+      }
+      
+      // Method 5: Check includes section for images
+      if (images.length === 0 && listing.listing_id && imagesByListingId[listing.listing_id]) {
+        images = imagesByListingId[listing.listing_id]
+          .slice(0, 5)
+          .map(img => img.url_570xN || img.url_fullxfull || img.url_75x75 || img.url || null)
+          .filter(img => img);
+      }
+      
+      // Log for debugging first product
+      if (index === 0) {
+        console.log('=== IMAGE EXTRACTION DEBUG ===');
+        console.log('Listing ID:', listing.listing_id);
+        console.log('Has listing.images?', !!listing.images);
+        console.log('listing.images type:', typeof listing.images);
+        console.log('listing.images is array?', Array.isArray(listing.images));
+        console.log('Has listing.Images?', !!listing.Images);
+        console.log('Extracted images:', images);
+        console.log('Full listing object keys:', Object.keys(listing));
       }
       
       // Fallback to placeholder if no images
@@ -217,15 +285,36 @@ exports.handler = async (event) => {
         images = ['images/placeholder-temp-tattoo.jpg'];
       }
 
-      // Extract category/tags for filtering
-      const tags = listing.tags || [];
+      // Extract category - use Etsy's category if available, otherwise detect from tags
       let category = 'Others';
-      if (tags.some(tag => /animal|bird|hummingbird|swallow|toucan/i.test(tag))) {
-        category = 'Animals';
-      } else if (tags.some(tag => /botanical|floral|flower|rose|lily|poppy|aster|cosmos/i.test(tag))) {
-        category = 'Botanical';
-      } else if (tags.some(tag => /ornamental|ornament|decorative/i.test(tag))) {
-        category = 'Ornamental';
+      
+      // First, check if Etsy provides a category directly
+      if (listing.category_path && listing.category_path.length > 0) {
+        const categoryPath = listing.category_path[listing.category_path.length - 1];
+        // Map Etsy categories to our categories
+        if (/botanical|floral|flower/i.test(categoryPath)) {
+          category = 'Botanical';
+        } else if (/animal|bird/i.test(categoryPath)) {
+          category = 'Animals';
+        } else if (/ornamental|ornament/i.test(categoryPath)) {
+          category = 'Ornamental';
+        } else if (/halloween|spooky|scary/i.test(categoryPath)) {
+          category = 'Halloween';
+        }
+      }
+      
+      // If no category from Etsy, detect from tags
+      if (category === 'Others') {
+        const tags = listing.tags || [];
+        if (tags.some(tag => /animal|bird|hummingbird|swallow|toucan/i.test(tag))) {
+          category = 'Animals';
+        } else if (tags.some(tag => /botanical|floral|flower|rose|lily|poppy|aster|cosmos/i.test(tag))) {
+          category = 'Botanical';
+        } else if (tags.some(tag => /halloween|spooky|scary|pumpkin|ghost|witch/i.test(tag))) {
+          category = 'Halloween';
+        } else if (tags.some(tag => /ornamental|ornament|decorative/i.test(tag))) {
+          category = 'Ornamental';
+        }
       }
 
       // Clean description (remove HTML tags if present)
