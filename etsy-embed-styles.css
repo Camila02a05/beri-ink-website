@@ -79,12 +79,12 @@
     /* Set fixed height for image containers to ensure alignment */
     .product-image-container {
         margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
+        padding-bottom: 0.5rem !important; /* Add padding at bottom */
         flex-shrink: 0 !important;
         height: 280px !important; /* Fixed height: main image (220px) + thumbnails (60px) */
         display: flex !important;
         flex-direction: column !important;
-        overflow: hidden !important;
+        overflow: visible !important; /* Allow content to show */
     }
     
     .product-image-wrapper {
@@ -111,7 +111,7 @@
     
     /* Product-info: flexible height but titles aligned at bottom */
     .product-info {
-        margin-top: 1rem !important; /* Space after image container to prevent overlap */
+        margin-top: 2rem !important; /* Significant space after image container to prevent overlap */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
         border-top: none !important;
@@ -120,6 +120,8 @@
         justify-content: flex-end !important; /* Push content to bottom */
         min-height: 120px !important; /* Minimum height */
         flex: 1 1 auto !important; /* Allow to grow */
+        position: relative !important;
+        z-index: 2 !important; /* Ensure product-info is above image container */
     }
     
     .product-title {
@@ -128,6 +130,8 @@
         margin-bottom: 1.5rem !important; /* Gap between title and button */
         flex-shrink: 0 !important;
         order: 1; /* Title comes first */
+        position: relative !important;
+        z-index: 1 !important; /* Ensure title is above any overlapping elements */
     }
     
     .product-actions {
