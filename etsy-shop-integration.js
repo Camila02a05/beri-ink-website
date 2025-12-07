@@ -156,8 +156,7 @@ class EtsyShopIntegration {
                     </div>
                     <div class="product-actions">
                         <a href="${product.etsy_url || product.url}" target="_blank" class="product-button etsy-link" onclick="event.stopPropagation()">
-                            <span class="button-text-full">View on Etsy - $${price}</span>
-                            <span class="button-text-mobile">Etsy - $${price}</span>
+                            Shop - $${price}
                         </a>
                     </div>
                 </div>
@@ -267,8 +266,23 @@ class EtsyShopIntegration {
             const product = this.products.find(p => p.id === productId);
             if (!product) return;
             
+            let currentImageIndex = 0;
+            const images = product.images || [product.images[0] || 'images/placeholder-temp-tattoo.jpg'];
+            
             const modal = document.createElement('div');
             modal.className = 'product-modal-overlay';
+            
+            const updateModalImage = () => {
+                const imgElement = modal.querySelector('.product-modal-main-image img');
+                if (imgElement && images[currentImageIndex]) {
+                    imgElement.src = images[currentImageIndex];
+                }
+                // Update thumbnail active state
+                modal.querySelectorAll('.product-modal-thumbnail').forEach((thumb, idx) => {
+                    thumb.classList.toggle('active', idx === currentImageIndex);
+                });
+            };
+            
             modal.innerHTML = `
                 <div class="product-modal">
                     <div class="product-modal-header">
@@ -276,8 +290,21 @@ class EtsyShopIntegration {
                         <button class="product-modal-close">&times;</button>
                     </div>
                     <div class="product-modal-content">
-                        <div class="product-modal-image">
-                            <img src="${product.images[0] || 'images/placeholder-temp-tattoo.jpg'}" alt="${product.title}">
+                        <div class="product-modal-image-section">
+                            <div class="product-modal-main-image">
+                                ${images.length > 1 ? '<button class="product-modal-nav product-modal-prev">&lt;</button>' : ''}
+                                <img src="${images[0] || 'images/placeholder-temp-tattoo.jpg'}" alt="${product.title}">
+                                ${images.length > 1 ? '<button class="product-modal-nav product-modal-next">&gt;</button>' : ''}
+                            </div>
+                            ${images.length > 1 ? `
+                                <div class="product-modal-thumbnails">
+                                    ${images.map((img, index) => `
+                                        <img src="${img}" alt="${product.title} image ${index + 1}" 
+                                             class="product-modal-thumbnail ${index === 0 ? 'active' : ''}" 
+                                             data-index="${index}">
+                                    `).join('')}
+                                </div>
+                            ` : ''}
                         </div>
                         <div class="product-modal-info">
                             <div class="product-modal-price">$${product.price.toFixed(2)}</div>
@@ -286,7 +313,7 @@ class EtsyShopIntegration {
                             </div>
                             <div class="product-modal-actions">
                                 <a href="${product.etsy_url || product.url}" target="_blank" class="product-modal-etsy-btn">
-                                    View on Etsy - $${product.price.toFixed(2)}
+                                    Shop - $${product.price.toFixed(2)}
                                 </a>
                             </div>
                         </div>
@@ -296,6 +323,37 @@ class EtsyShopIntegration {
             
             document.body.appendChild(modal);
             document.body.style.overflow = 'hidden';
+            
+            // Image navigation
+            if (images.length > 1) {
+                const prevBtn = modal.querySelector('.product-modal-prev');
+                const nextBtn = modal.querySelector('.product-modal-next');
+                const thumbnails = modal.querySelectorAll('.product-modal-thumbnail');
+                
+                if (prevBtn) {
+                    prevBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                        updateModalImage();
+                    });
+                }
+                
+                if (nextBtn) {
+                    nextBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        currentImageIndex = (currentImageIndex + 1) % images.length;
+                        updateModalImage();
+                    });
+                }
+                
+                thumbnails.forEach((thumb, index) => {
+                    thumb.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        currentImageIndex = index;
+                        updateModalImage();
+                    });
+                });
+            }
             
             // Close modal events
             modal.querySelector('.product-modal-close').addEventListener('click', () => {
@@ -315,6 +373,12 @@ class EtsyShopIntegration {
                     modal.remove();
                     document.body.style.overflow = 'auto';
                     document.removeEventListener('keydown', closeOnEscape);
+                } else if (e.key === 'ArrowLeft' && images.length > 1) {
+                    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+                    updateModalImage();
+                } else if (e.key === 'ArrowRight' && images.length > 1) {
+                    currentImageIndex = (currentImageIndex + 1) % images.length;
+                    updateModalImage();
                 }
             });
         };
@@ -569,15 +633,87 @@ class EtsyShopIntegration {
                 min-height: 0;
             }
             
-            .product-modal-image {
+            .product-modal-image-section {
                 flex: 1;
                 min-width: 300px;
             }
             
-            .product-modal-image img {
+            .product-modal-main-image {
+                position: relative;
                 width: 100%;
-                height: auto;
+                aspect-ratio: 1 / 1;
+                overflow: hidden;
                 border-radius: 8px;
+                background: #f8f8f8;
+            }
+            
+            .product-modal-main-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+            
+            .product-modal-nav {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(255, 255, 255, 0.9);
+                border: none;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                font-size: 1.5rem;
+                color: #333;
+                cursor: pointer;
+                z-index: 10;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            .product-modal-nav:hover {
+                background: white;
+                transform: translateY(-50%) scale(1.1);
+            }
+            
+            .product-modal-prev {
+                left: 10px;
+            }
+            
+            .product-modal-next {
+                right: 10px;
+            }
+            
+            .product-modal-thumbnails {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            .product-modal-thumbnail {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 4px;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: all 0.3s ease;
+                opacity: 0.7;
+            }
+            
+            .product-modal-thumbnail:hover {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+            
+            .product-modal-thumbnail.active {
+                border-color: #c4a484;
+                opacity: 1;
             }
             
             .product-modal-info {
@@ -649,7 +785,7 @@ class EtsyShopIntegration {
                     flex-direction: column;
                 }
                 
-                .product-modal-image {
+                .product-modal-image-section {
                     min-width: auto;
                 }
                 
@@ -663,6 +799,17 @@ class EtsyShopIntegration {
                 
                 .product-modal {
                     max-height: 90vh;
+                }
+                
+                .product-modal-nav {
+                    width: 35px;
+                    height: 35px;
+                    font-size: 1.2rem;
+                }
+                
+                .product-modal-thumbnail {
+                    width: 50px;
+                    height: 50px;
                 }
             }
         `;

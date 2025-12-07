@@ -15,6 +15,9 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure all cards have same height */
 }
 
 .product-card:hover {
@@ -28,6 +31,7 @@
 .etsy-product .product-image-container {
     width: 100% !important;
     position: relative;
+    flex-shrink: 0; /* Don't shrink */
 }
 
 /* Main product image wrapper - square container */
@@ -60,13 +64,14 @@
     display: flex !important;
     gap: 0.5rem;
     margin-top: 0.75rem;
-    padding-top: 0.75rem;
+    padding: 0.75rem 0 0 0;
     justify-content: center;
     flex-wrap: wrap;
     width: 100%;
     clear: both;
     position: relative;
     z-index: 1;
+    border-top: 1px solid #f0f0f0; /* Visual separator */
 }
 
 .thumbnail {
@@ -89,6 +94,9 @@
 
 .product-info {
     padding: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .product-title {
@@ -104,6 +112,8 @@
     font-size: 0.9rem;
     margin-bottom: 1rem;
     line-height: 1.5;
+    flex: 1;
+    min-height: 3em; /* Ensure minimum height */
 }
 
 .product-price {
@@ -490,6 +500,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    margin-top: auto; /* Push to bottom */
 }
 
 .add-to-cart-btn {
@@ -523,19 +534,6 @@
     box-sizing: border-box;
 }
 
-/* Button text - show full on desktop, short on mobile */
-.button-text-mobile {
-    display: none;
-}
-
-@media (max-width: 768px) {
-    .button-text-full {
-        display: none;
-    }
-    .button-text-mobile {
-        display: inline;
-    }
-}
 
 .etsy-link:hover {
     background: #8b7355;
@@ -548,10 +546,23 @@
         grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile - same card style */
         gap: 1rem;
         padding: 1rem;
+        align-items: stretch; /* Make all cards same height */
+    }
+    
+    .product-card {
+        height: 100%; /* Ensure cards fill grid cell */
     }
     
     .product-info {
         padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .product-description {
+        margin-bottom: 0.75rem;
+        flex: 1;
     }
     
     .products-section h2,
