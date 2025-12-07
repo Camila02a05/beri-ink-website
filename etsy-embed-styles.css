@@ -77,8 +77,9 @@
 /* Mobile: Ensure thumbnails are contained and don't overlap */
 @media (max-width: 768px) {
     .product-image-container {
-        margin-bottom: 1rem !important; /* Add space below image container */
-        padding-bottom: 0.5rem;
+        margin-bottom: 0 !important;
+        padding-bottom: 0;
+        flex-shrink: 0 !important;
     }
     
     .image-thumbnails {
@@ -90,25 +91,32 @@
     }
     
     .product-info {
-        margin-top: 0.75rem !important; /* Extra space above product info */
-        padding-top: 0.75rem !important;
-        border-top: 1px solid #f0f0f0; /* Visual separator */
+        margin-top: 0 !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        border-top: 1px solid #f0f0f0 !important; /* Visual separator */
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important; /* Push title to top, button to bottom */
-        min-height: 120px; /* Ensure consistent minimum height */
+        justify-content: flex-start !important; /* Start from top */
+        min-height: 140px !important; /* Ensure consistent minimum height for alignment */
+        flex: 1 1 0 !important; /* Take equal space */
+        position: relative !important;
     }
     
     .product-title {
-        font-size: 1.1rem !important; /* Larger font on mobile */
+        font-size: 1.15rem !important; /* Larger font on mobile */
         margin-top: 0 !important;
-        margin-bottom: auto !important; /* Push title to top */
+        margin-bottom: 1rem !important; /* Space between title and button */
         flex-shrink: 0 !important;
+        position: relative !important;
+        top: 0 !important; /* Ensure titles start at same position */
     }
     
     .product-actions {
         margin-top: auto !important; /* Push button to bottom */
+        margin-bottom: 0 !important;
         flex-shrink: 0 !important;
+        position: relative !important;
     }
 }
 
@@ -142,7 +150,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: auto; /* Push title to top */
+    margin-bottom: 1.5rem; /* Space between title and button */
     margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
@@ -581,28 +589,35 @@
     
     .product-card {
         height: 100%; /* Ensure cards fill grid cell */
-    }
-    
-    .product-info {
-        padding: 1rem !important;
-        flex: 1 !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
-        min-height: 120px !important;
     }
     
-    .product-title {
-        font-size: 1.15rem !important; /* Larger font on mobile */
-        margin-bottom: auto !important; /* Push title to top */
-        margin-top: 0 !important;
+    /* Ensure image containers have consistent height for alignment */
+    .product-image-container {
+        flex-shrink: 0 !important;
+        min-height: 280px !important; /* Minimum height: main image (220px) + thumbnails (60px) */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+    }
+    
+    /* Main image wrapper - consistent height */
+    .product-image-wrapper {
+        height: 220px !important;
+        width: 100% !important;
         flex-shrink: 0 !important;
     }
     
-    .product-actions {
-        margin-top: auto !important; /* Push button to bottom */
+    /* Thumbnails container - consistent height whether thumbnails exist or not */
+    .image-thumbnails {
+        min-height: 60px !important;
         flex-shrink: 0 !important;
+        margin-top: 0.5rem !important;
+        padding-top: 0.5rem !important;
     }
+    
+    /* Remove duplicate - handled in earlier mobile section */
     
     .products-section h2,
     .reviews-section h2 {
