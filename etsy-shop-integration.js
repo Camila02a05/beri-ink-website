@@ -150,7 +150,6 @@ class EtsyShopIntegration {
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.title}</h3>
-                    <p class="product-description">${this.truncateText(product.description, 120)}</p>
                     <div class="product-price-container">
                         <div class="product-price">$${price}</div>
                     </div>
