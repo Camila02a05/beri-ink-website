@@ -77,9 +77,15 @@
 /* Mobile: Ensure thumbnails are contained and don't overlap */
 @media (max-width: 768px) {
     .product-image-container {
-        margin-bottom: 0 !important;
+        margin-bottom: 0.5rem !important;
         padding-bottom: 0;
         flex-shrink: 0 !important;
+        min-height: auto !important; /* Remove fixed height */
+    }
+    
+    .product-image-wrapper {
+        height: auto !important; /* Let it be natural height */
+        aspect-ratio: 1 / 1 !important; /* Keep square */
     }
     
     .image-thumbnails {
@@ -88,19 +94,19 @@
         margin-bottom: 0 !important;
         max-width: 100%;
         overflow: hidden;
+        min-height: auto !important; /* Remove fixed height */
     }
     
     .product-info {
-        margin-top: 0 !important;
+        margin-top: 0.75rem !important; /* Space after image container */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
         border-top: 1px solid #f0f0f0 !important; /* Visual separator */
         display: flex !important;
         flex-direction: column !important;
-        justify-content: flex-start !important; /* Start from top */
-        min-height: 140px !important; /* Ensure consistent minimum height for alignment */
-        flex: 1 1 0 !important; /* Take equal space */
-        position: relative !important;
+        justify-content: flex-end !important; /* Push content to bottom */
+        min-height: 120px !important; /* Consistent minimum height for alignment */
+        flex: 1 1 auto !important;
     }
     
     .product-title {
@@ -108,15 +114,14 @@
         margin-top: 0 !important;
         margin-bottom: 1rem !important; /* Space between title and button */
         flex-shrink: 0 !important;
-        position: relative !important;
-        top: 0 !important; /* Ensure titles start at same position */
+        order: 1; /* Title comes first */
     }
     
     .product-actions {
-        margin-top: auto !important; /* Push button to bottom */
+        margin-top: 0 !important;
         margin-bottom: 0 !important;
         flex-shrink: 0 !important;
-        position: relative !important;
+        order: 2; /* Button comes last */
     }
 }
 
@@ -150,7 +155,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 1.5rem; /* Space between title and button */
+    margin-bottom: 2.5rem; /* More space between title and button */
     margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
@@ -593,31 +598,7 @@
         flex-direction: column !important;
     }
     
-    /* Ensure image containers have consistent height for alignment */
-    .product-image-container {
-        flex-shrink: 0 !important;
-        min-height: 280px !important; /* Minimum height: main image (220px) + thumbnails (60px) */
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: flex-start !important;
-    }
-    
-    /* Main image wrapper - consistent height */
-    .product-image-wrapper {
-        height: 220px !important;
-        width: 100% !important;
-        flex-shrink: 0 !important;
-    }
-    
-    /* Thumbnails container - consistent height whether thumbnails exist or not */
-    .image-thumbnails {
-        min-height: 60px !important;
-        flex-shrink: 0 !important;
-        margin-top: 0.5rem !important;
-        padding-top: 0.5rem !important;
-    }
-    
-    /* Remove duplicate - handled in earlier mobile section */
+    /* Image container styles handled in earlier mobile section above */
     
     .products-section h2,
     .reviews-section h2 {
