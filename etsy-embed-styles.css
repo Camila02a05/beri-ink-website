@@ -71,14 +71,14 @@
     clear: both;
     position: relative;
     z-index: 1;
-    border-top: 1px solid #f0f0f0; /* Visual separator */
+    border-top: none; /* Removed border to prevent line across wrapped thumbnails */
 }
 
 /* Mobile: Ensure thumbnails are contained and don't overlap */
 @media (max-width: 768px) {
     .product-image-container {
-        margin-bottom: 0.5rem !important;
-        padding-bottom: 0;
+        margin-bottom: 0 !important;
+        padding-bottom: 0.5rem !important; /* Add padding instead of margin */
         flex-shrink: 0 !important;
         min-height: auto !important; /* Remove fixed height */
     }
@@ -91,17 +91,19 @@
     .image-thumbnails {
         margin-top: 0.5rem !important;
         padding: 0.5rem 0 0.5rem 0 !important;
-        margin-bottom: 0 !important;
+        margin-bottom: 0.5rem !important; /* Add margin to separate from product-info */
         max-width: 100%;
         overflow: hidden;
         min-height: auto !important; /* Remove fixed height */
+        border-top: none !important; /* Remove border that appears across wrapped thumbnails */
+        border-bottom: none !important; /* Ensure no border */
     }
     
     .product-info {
-        margin-top: 0.75rem !important; /* Space after image container */
+        margin-top: 0 !important; /* Remove margin to prevent overlap */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
-        border-top: 1px solid #f0f0f0 !important; /* Visual separator */
+        border-top: 1px solid #f0f0f0 !important; /* Visual separator - should be below thumbnails */
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-end !important; /* Push content to bottom */
@@ -155,7 +157,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 2.5rem; /* More space between title and button */
+    margin-bottom: 3.5rem; /* Even more space between title and button */
     margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
