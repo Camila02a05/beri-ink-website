@@ -100,7 +100,7 @@
     }
     
     .product-info {
-        margin-top: 0.75rem !important; /* Space after image container */
+        margin-top: 1rem !important; /* More space after image container to prevent overlap */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
         border-top: none !important; /* Remove border that appears across thumbnails */
@@ -113,7 +113,7 @@
     
     .product-title {
         font-size: 1.15rem !important; /* Larger font on mobile */
-        margin-top: 0 !important;
+        margin-top: auto !important; /* Push title down, closer to button */
         margin-bottom: 1rem !important; /* Space between title and button */
         flex-shrink: 0 !important;
         order: 1; /* Title comes first */
@@ -158,8 +158,8 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 4rem !important; /* Significant space between title and button */
-    margin-top: 0 !important;
+    margin-bottom: 1.5rem; /* Moderate space between title and button */
+    margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
 }
