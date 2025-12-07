@@ -74,6 +74,32 @@
     border-top: 1px solid #f0f0f0; /* Visual separator */
 }
 
+/* Mobile: Ensure thumbnails are contained and don't overlap */
+@media (max-width: 768px) {
+    .product-image-container {
+        margin-bottom: 1rem !important; /* Add space below image container */
+        padding-bottom: 0.5rem;
+    }
+    
+    .image-thumbnails {
+        margin-top: 0.5rem !important;
+        padding: 0.5rem 0 0.5rem 0 !important;
+        margin-bottom: 0 !important;
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .product-info {
+        margin-top: 0.75rem !important; /* Extra space above product info */
+        padding-top: 0.75rem !important;
+        border-top: 1px solid #f0f0f0; /* Visual separator */
+    }
+    
+    .product-title {
+        margin-top: 0 !important;
+    }
+}
+
 .thumbnail {
     width: 40px !important;
     height: 40px !important;
