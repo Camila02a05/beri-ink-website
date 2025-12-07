@@ -76,45 +76,56 @@
 
 /* Mobile: Ensure thumbnails are contained and don't overlap */
 @media (max-width: 768px) {
+    /* Set fixed height for image containers to ensure alignment */
     .product-image-container {
         margin-bottom: 0 !important;
-        padding-bottom: 0.5rem !important; /* Add padding instead of margin */
+        padding-bottom: 0 !important;
         flex-shrink: 0 !important;
-        min-height: auto !important; /* Remove fixed height */
+        height: 280px !important; /* Fixed height: main image (220px) + thumbnails (60px) */
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important;
     }
     
     .product-image-wrapper {
-        height: auto !important; /* Let it be natural height */
+        height: 220px !important; /* Fixed height for main image */
+        width: 100% !important;
+        flex-shrink: 0 !important;
         aspect-ratio: 1 / 1 !important; /* Keep square */
     }
     
     .image-thumbnails {
-        margin-top: 0.5rem !important;
-        padding: 0.5rem 0 0.5rem 0 !important;
-        margin-bottom: 0.5rem !important; /* Add margin to separate from product-info */
+        height: 60px !important; /* Fixed height for thumbnails area */
+        margin-top: 0 !important;
+        padding: 0.5rem 0 0 0 !important;
+        margin-bottom: 0 !important;
         max-width: 100%;
         overflow: hidden;
-        min-height: auto !important; /* Remove fixed height */
-        border-top: none !important; /* Remove border that appears across wrapped thumbnails */
-        border-bottom: none !important; /* Ensure no border */
+        flex-shrink: 0 !important;
+        border-top: none !important;
+        border-bottom: none !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
     
+    /* Ensure all product-info sections have the same height */
     .product-info {
-        margin-top: 1rem !important; /* More space after image container to prevent overlap */
+        margin-top: 0 !important; /* No margin - starts right after image container */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
-        border-top: none !important; /* Remove border that appears across thumbnails */
+        border-top: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-end !important; /* Push content to bottom */
-        min-height: 120px !important; /* Consistent minimum height for alignment */
-        flex: 1 1 auto !important;
+        height: 140px !important; /* Fixed height to ensure titles align */
+        flex-shrink: 0 !important;
     }
     
     .product-title {
         font-size: 1.15rem !important; /* Larger font on mobile */
-        margin-top: auto !important; /* Push title down, closer to button */
-        margin-bottom: 1rem !important; /* Space between title and button */
+        margin-top: 0 !important;
+        margin-bottom: 1.5rem !important; /* Gap between title and button */
         flex-shrink: 0 !important;
         order: 1; /* Title comes first */
     }
@@ -158,7 +169,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 1.5rem; /* Moderate space between title and button */
+    margin-bottom: 2.5rem; /* Good space between title and button */
     margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
