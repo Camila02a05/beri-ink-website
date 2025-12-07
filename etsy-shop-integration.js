@@ -137,9 +137,11 @@ class EtsyShopIntegration {
         return `
             <div class="product-card etsy-product" data-product-id="${product.id}" onclick="window.openProductModal && window.openProductModal('${product.id}')">
                 <div class="product-image-container">
-                    <img src="${mainImage}" alt="${product.title}" class="product-image" loading="lazy">
+                    <div class="product-image-wrapper">
+                        <img src="${mainImage}" alt="${product.title}" class="product-image" loading="lazy">
+                    </div>
                     ${additionalImages.length > 0 ? `
-                        <div class="image-thumbnails desktop-only">
+                        <div class="image-thumbnails">
                             ${additionalImages.map((img, index) => `
                                 <img src="${img}" alt="${product.title}" class="thumbnail" loading="lazy">
                             `).join('')}
@@ -154,7 +156,8 @@ class EtsyShopIntegration {
                     </div>
                     <div class="product-actions">
                         <a href="${product.etsy_url || product.url}" target="_blank" class="product-button etsy-link" onclick="event.stopPropagation()">
-                            View on Etsy - $${price}
+                            <span class="button-text-full">View on Etsy - $${price}</span>
+                            <span class="button-text-mobile">Etsy - $${price}</span>
                         </a>
                     </div>
                 </div>
@@ -329,10 +332,50 @@ class EtsyShopIntegration {
         // This function is kept empty to avoid conflicts
     }
 
+    // Initialize mobile menu (ensure it works on store page)
+    initMobileMenu() {
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        if (mobileBtn && mobileMenu) {
+            // Remove any existing listeners
+            const newBtn = mobileBtn.cloneNode(true);
+            mobileBtn.parentNode.replaceChild(newBtn, mobileBtn);
+            
+            // Add click listener
+            newBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                mobileMenu.classList.toggle('active');
+                newBtn.classList.toggle('active');
+            });
+            
+            // Close menu when clicking links
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                    newBtn.classList.remove('active');
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!mobileMenu.contains(e.target) && !newBtn.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                    newBtn.classList.remove('active');
+                }
+            });
+            
+            console.log('Mobile menu initialized on store page');
+        }
+    }
+
     // Initialize the integration
     async init() {
         try {
             console.log('Initializing Etsy shop integration...');
+            
+            // Initialize mobile menu first
+            this.initMobileMenu();
             
             // Inject CSS styles
             this.injectStyles();

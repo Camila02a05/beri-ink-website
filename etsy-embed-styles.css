@@ -39,24 +39,22 @@
     display: block;
 }
 
-/* Main product image - square aspect ratio */
+/* Hide any images outside the wrapper */
+.product-image-container > img.product-image:not(.thumbnail) {
+    display: none !important;
+}
+
+/* Main product image - only the one inside wrapper */
 .product-image-wrapper img,
-.product-image-wrapper .product-image,
-.product-image-container .product-image-wrapper img,
-.product-image-container > img.product-image,
-.product-image-container img:first-of-type,
-.product-card .product-image-container > img.product-image,
-.etsy-product .product-image-container > img.product-image,
-img.product-image {
+.product-image-wrapper .product-image {
     width: 100% !important;
     height: 100% !important;
-    aspect-ratio: 1 / 1 !important; /* Square aspect ratio like Etsy */
     object-fit: cover !important; /* Fill the square like Etsy */
     display: block !important;
     transition: transform 0.3s ease;
 }
 
-/* Thumbnails styling - positioned below main image */
+/* Thumbnails styling - positioned below main image - show on both desktop and mobile */
 .image-thumbnails,
 .image-thumbnails.desktop-only {
     display: flex !important;
@@ -69,13 +67,6 @@ img.product-image {
     clear: both;
     position: relative;
     z-index: 1;
-}
-
-/* Hide thumbnails on mobile */
-@media (max-width: 768px) {
-    .image-thumbnails.desktop-only {
-        display: none !important;
-    }
 }
 
 .thumbnail {
@@ -532,6 +523,20 @@ img.product-image {
     box-sizing: border-box;
 }
 
+/* Button text - show full on desktop, short on mobile */
+.button-text-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .button-text-full {
+        display: none;
+    }
+    .button-text-mobile {
+        display: inline;
+    }
+}
+
 .etsy-link:hover {
     background: #8b7355;
     color: white;
@@ -540,8 +545,8 @@ img.product-image {
 /* Mobile responsiveness */
 @media (max-width: 768px) {
     .products-grid {
-        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile */
-        gap: 1.5rem;
+        grid-template-columns: repeat(2, 1fr); /* 2 columns on mobile - same card style */
+        gap: 1rem;
         padding: 1rem;
     }
     
@@ -571,18 +576,32 @@ img.product-image {
         right: -100%;
     }
     
-    /* Mobile button fixes */
+    /* Mobile button fixes - shorter text */
     .etsy-link {
-        font-size: 0.8rem;
-        padding: 0.6rem 0.5rem;
+        font-size: 0.75rem;
+        padding: 0.6rem 0.4rem;
         white-space: normal;
-        line-height: 1.3;
-        word-wrap: break-word;
+        line-height: 1.2;
+        min-height: 44px; /* Touch target size */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .product-button {
-        font-size: 0.85rem;
-        padding: 0.7rem 0.5rem;
+        font-size: 0.8rem;
+        padding: 0.65rem 0.4rem;
+        min-height: 44px;
+    }
+    
+    /* Ensure thumbnails show on mobile too */
+    .image-thumbnails {
+        display: flex !important;
+    }
+    
+    .thumbnail {
+        width: 35px !important;
+        height: 35px !important;
     }
 }
 
