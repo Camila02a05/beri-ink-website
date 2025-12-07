@@ -109,17 +109,17 @@
         justify-content: center !important;
     }
     
-    /* Ensure all product-info sections have the same height */
+    /* Product-info: flexible height but titles aligned at bottom */
     .product-info {
-        margin-top: 0 !important; /* No margin - starts right after image container */
+        margin-top: 1rem !important; /* Space after image container to prevent overlap */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
         border-top: none !important;
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-end !important; /* Push content to bottom */
-        height: 140px !important; /* Fixed height to ensure titles align */
-        flex-shrink: 0 !important;
+        min-height: 120px !important; /* Minimum height */
+        flex: 1 1 auto !important; /* Allow to grow */
     }
     
     .product-title {
@@ -169,7 +169,7 @@
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 2.5rem; /* Good space between title and button */
+    margin-bottom: 3rem; /* More space between title and button */
     margin-top: 0;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
