@@ -100,10 +100,10 @@
     }
     
     .product-info {
-        margin-top: 0 !important; /* Remove margin to prevent overlap */
+        margin-top: 0.75rem !important; /* Space after image container */
         padding-top: 1rem !important;
         padding-bottom: 1rem !important;
-        border-top: 1px solid #f0f0f0 !important; /* Visual separator - should be below thumbnails */
+        border-top: none !important; /* Remove border that appears across thumbnails */
         display: flex !important;
         flex-direction: column !important;
         justify-content: flex-end !important; /* Push content to bottom */
@@ -150,21 +150,24 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Push title to top, button to bottom */
+    justify-content: flex-start; /* Start from top */
+    gap: 0; /* Reset gap, we'll use margins */
 }
 
 .product-title {
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 3.5rem; /* Even more space between title and button */
-    margin-top: 0;
+    margin-bottom: 4rem !important; /* Significant space between title and button */
+    margin-top: 0 !important;
     line-height: 1.4;
     flex-shrink: 0; /* Don't shrink */
 }
 
 .product-actions {
-    margin-top: auto; /* Push button to bottom */
+    margin-top: auto !important; /* Push button to bottom */
+    margin-bottom: 0 !important;
+    padding-top: 0 !important;
     flex-shrink: 0; /* Don't shrink */
 }
 
