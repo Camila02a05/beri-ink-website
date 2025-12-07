@@ -93,10 +93,22 @@
         margin-top: 0.75rem !important; /* Extra space above product info */
         padding-top: 0.75rem !important;
         border-top: 1px solid #f0f0f0; /* Visual separator */
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important; /* Push title to top, button to bottom */
+        min-height: 120px; /* Ensure consistent minimum height */
     }
     
     .product-title {
+        font-size: 1.1rem !important; /* Larger font on mobile */
         margin-top: 0 !important;
+        margin-bottom: auto !important; /* Push title to top */
+        flex-shrink: 0 !important;
+    }
+    
+    .product-actions {
+        margin-top: auto !important; /* Push button to bottom */
+        flex-shrink: 0 !important;
     }
 }
 
@@ -123,21 +135,22 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* Push title to top, button to bottom */
 }
 
 .product-title {
     font-size: 1.2rem;
     font-weight: 500;
     color: #2c2c2c;
-    margin-bottom: 1rem;
+    margin-bottom: auto; /* Push title to top */
+    margin-top: 0;
     line-height: 1.4;
+    flex-shrink: 0; /* Don't shrink */
 }
 
-.product-price {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #8b7355;
-    margin-bottom: 1rem;
+.product-actions {
+    margin-top: auto; /* Push button to bottom */
+    flex-shrink: 0; /* Don't shrink */
 }
 
 .product-button {
@@ -571,14 +584,24 @@
     }
     
     .product-info {
-        padding: 1rem;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
+        padding: 1rem !important;
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        min-height: 120px !important;
     }
     
     .product-title {
-        margin-bottom: 0.75rem;
+        font-size: 1.15rem !important; /* Larger font on mobile */
+        margin-bottom: auto !important; /* Push title to top */
+        margin-top: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .product-actions {
+        margin-top: auto !important; /* Push button to bottom */
+        flex-shrink: 0 !important;
     }
     
     .products-section h2,

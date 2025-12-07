@@ -150,9 +150,6 @@ class EtsyShopIntegration {
                 </div>
                 <div class="product-info">
                     <h3 class="product-title">${product.title}</h3>
-                    <div class="product-price-container">
-                        <div class="product-price">$${price}</div>
-                    </div>
                     <div class="product-actions">
                         <a href="${product.etsy_url || product.url}" target="_blank" class="product-button etsy-link" onclick="event.stopPropagation()">
                             Shop - $${price}
