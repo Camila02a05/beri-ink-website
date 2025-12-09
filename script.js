@@ -183,6 +183,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Tag children with stable indices so click -> product mapping survives DOM reordering
         Array.from(carouselTrack.children).forEach((child, idx) => child.setAttribute('data-index', String(idx + 1)));
 
+        // Populate carousel with Etsy products
+        populateCarouselWithProducts(carouselTrack);
+        
         // Navigate to store product when clicking an item
         Array.from(carouselTrack.children).forEach((item, index) => {
             item.style.cursor = 'pointer';
@@ -351,4 +354,63 @@ function initializeInstagramCarousel() {
 // Initialize Instagram carousel when page loads
 document.addEventListener('DOMContentLoaded', initializeInstagramCarousel);
 
-console.log('Gallery images count:', galleryImages.length); console.log('First 5 images:', galleryImages.slice(0, 5));
+// Populate carousel with Etsy products
+async function populateCarouselWithProducts(carouselTrack) {
+    if (!carouselTrack) return;
+    
+    try {
+        // Fetch products from Etsy
+        const response = await fetch('/.netlify/functions/etsy-products');
+        
+        if (!response.ok) {
+            console.error('Failed to fetch products for carousel');
+            return;
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success || !data.products || data.products.length === 0) {
+            console.error('No products found for carousel');
+            return;
+        }
+        
+        // Get first 8-12 products for carousel
+        const products = data.products.slice(0, 12);
+        
+        // Clear existing placeholder items
+        carouselTrack.innerHTML = '';
+        
+        // Create carousel items from products
+        products.forEach((product, index) => {
+            const carouselItem = document.createElement('div');
+            carouselItem.className = 'carousel-item';
+            carouselItem.setAttribute('data-index', String(index + 1));
+            carouselItem.style.cursor = 'pointer';
+            
+            const mainImage = product.images && product.images.length > 0 
+                ? product.images[0] 
+                : 'images/placeholder-temp-tattoo.jpg';
+            
+            carouselItem.innerHTML = `
+                <img src="${mainImage}" alt="${product.title}" loading="lazy">
+                <div class="carousel-item-content">
+                    <h3>${product.title}</h3>
+                    <p>$${product.price.toFixed(2)}</p>
+                </div>
+            `;
+            
+            // Make item clickable - link to store page
+            carouselItem.addEventListener('click', () => {
+                window.location.href = 'store.html';
+            });
+            
+            carouselTrack.appendChild(carouselItem);
+        });
+        
+        console.log(`Carousel populated with ${products.length} products`);
+        
+    } catch (error) {
+        console.error('Error populating carousel:', error);
+    }
+}
+
