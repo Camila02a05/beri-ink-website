@@ -7,23 +7,49 @@
 // ============================================
 const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx9eMJHvS8ss_s8gI-0OJZYCF7cm6IgCMpyfo0h1CIzpQkURcrIiSGJJ1X8sIrAoX5iCw/exec';
 
-document.addEventListener('DOMContentLoaded', function() {
+function initNewsletterForms() {
+    console.log('Newsletter form handler loading...');
     // Find all newsletter forms on the page
     const forms = document.querySelectorAll('.newsletter-form, form[name="newsletter"]');
+    console.log('Found forms:', forms.length);
     
-    forms.forEach(form => {
+    if (forms.length === 0) {
+        console.warn('No newsletter forms found on this page');
+        return;
+    }
+    
+    forms.forEach((form, index) => {
+        console.log(`Setting up form ${index + 1}`);
+        
+        // Check if listener already attached
+        if (form.dataset.listenerAttached === 'true') {
+            console.log('Listener already attached, skipping');
+            return;
+        }
+        form.dataset.listenerAttached = 'true';
+        
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
             e.stopPropagation();
-            return false;
+            
+            console.log('Form submitted!');
             
             // Get form inputs
             const nameInput = form.querySelector('input[type="text"], input[name="name"]');
             const emailInput = form.querySelector('input[type="email"], input[name="email"]');
             const submitButton = form.querySelector('button[type="submit"]');
             
+            console.log('Inputs found:', { nameInput: !!nameInput, emailInput: !!emailInput, submitButton: !!submitButton });
+            
             if (!nameInput || !emailInput) {
                 console.error('Form inputs not found');
+                alert('Form error: Could not find form fields. Please refresh the page.');
+                return;
+            }
+            
+            if (!submitButton) {
+                console.error('Submit button not found');
+                alert('Form error: Could not find submit button. Please refresh the page.');
                 return;
             }
             
@@ -84,7 +110,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-});
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNewsletterForms);
+} else {
+    // DOM is already loaded
+    initNewsletterForms();
+}
 
 // Submit to Google Sheets
 async function submitToGoogleSheets(name, email) {
