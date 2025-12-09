@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     forms.forEach(form => {
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            return false;
             
             // Get form inputs
             const nameInput = form.querySelector('input[type="text"], input[name="name"]');
@@ -86,21 +88,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Submit to Google Sheets
 async function submitToGoogleSheets(name, email) {
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            name: name,
-            email: email,
-            timestamp: new Date().toISOString()
-        })
-    });
+    const data = {
+        name: name,
+        email: email,
+        timestamp: new Date().toISOString()
+    };
     
-    // Note: no-cors mode doesn't return response, so we assume success
-    return { success: true };
+    try {
+        // Try with CORS to see if it works
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Submission successful:', result);
+            return result;
+        } else {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('CORS submission failed, trying no-cors:', error);
+        
+        // Fallback: Use no-cors (required for some Google Apps Script deployments)
+        // Note: We can't see the response with no-cors, but it usually works
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+            
+            // With no-cors, assume success (data should still be saved)
+            console.log('Form submitted (no-cors mode)');
+            return { success: true };
+        } catch (fallbackError) {
+            console.error('Both submission methods failed:', fallbackError);
+            throw new Error('Failed to submit. Please check your Google Script URL and try again.');
+        }
+    }
 }
 
 function showThankYouMessage(form) {
